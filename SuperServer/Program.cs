@@ -1,13 +1,17 @@
 ﻿using System.Net;
+using SuperServer.Data;
 
 namespace SuperServer
 {
-    internal class Program
+    class Program
     {
-        IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
         static void Main(string[] args)
         {
-            
+            ConfigManager.LoadConfigData();
+
+
+            IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);
+            IPEndPoint endPoint = new IPEndPoint(hostIP, ConfigManager.Config.port);
         }
     }
 }
