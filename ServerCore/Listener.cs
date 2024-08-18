@@ -7,16 +7,18 @@ namespace ServerCore
     public class Listener
     {
         Socket _listenSocket;
-        void Open(IPEndPoint endPoint, int backlog = 100)
+        Func<Session> _session;
+
+        public void Open(IPEndPoint endPoint, Func<Session> session, int backlog = 100)
         {
             //데이터 중복이나 경계 유지 없이 신뢰성 있는 양방향 연결 기반의 바이트 스트림을 지원합니다.
             //이 종류의 Socket은 단일 피어와 통신하며 이 소켓을 사용할 경우 !!!!!통신을 시작하기 전에 원격 호스트에 연결!!!!해야 합니다
+            _session = session;
             _listenSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             _listenSocket.Bind(endPoint);
 
             _listenSocket.Listen(backlog);
-
 
             SocketAsyncEventArgs acceptEventArg = new SocketAsyncEventArgs();
             acceptEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CompletedAccept);
@@ -42,9 +44,9 @@ namespace ServerCore
 
         void CompletedAccept(object sender, SocketAsyncEventArgs args)
         {
-            ProcessAccept(args);
-
             // Accept the next connection request
+            Session session = _session.Invoke();
+            session.Start(_listenSocket);
             StartAccept(args);
         }
     }
