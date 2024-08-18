@@ -45,8 +45,13 @@ namespace ServerCore
         void CompletedAccept(object sender, SocketAsyncEventArgs args)
         {
             // Accept the next connection request
-            Session session = _session.Invoke();
-            session.Start(_listenSocket);
+            if (args.SocketError == SocketError.Success)
+            {
+                Session session = _session.Invoke();
+                session.Start(_listenSocket);
+                session.OnConnected();
+            }
+
             StartAccept(args);
         }
     }

@@ -38,10 +38,16 @@ namespace ServerCore
     }
     public abstract class Session
     {
+        public static readonly int CapacitySize = 1000;
+        object _lock = new object();
         Socket _socket;
+
         SocketAsyncEventArgs _receiveArgs = new SocketAsyncEventArgs();
         BufferManager _buffManager = new BufferManager(1024 * 10);
 
+        SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();
+        Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>(CapacitySize);
+        List<ArraySegment<byte>> _sendList = new List<ArraySegment<byte>>(CapacitySize);
 
         public abstract void OnConnected();
         public abstract int OnRecv(ArraySegment<byte> buffer);
@@ -53,9 +59,64 @@ namespace ServerCore
             _socket = socket;
 
             _receiveArgs.Completed += CompleteReceive;
-
+            _sendArgs.Completed += CompleteSend;
 
             ProcessReceive();
+        }
+
+        public void Send(ArraySegment<byte> segment)
+        {
+            lock (_lock)
+            {
+                _sendQueue.Enqueue(segment);
+                if (_sendList.Count == 0)
+                    ProcessSend();
+            }
+        }
+
+        private void Clear()
+        {
+            lock (_lock)
+            {
+                _sendQueue.Clear();
+                _sendList.Clear();
+                _socket?.Dispose();
+            }
+        }
+
+        private void ProcessSend()
+        {
+            while (_sendQueue.Count > 0)
+            {
+                ArraySegment<byte> segment = _sendQueue.Dequeue();
+                _sendList.Add(segment);
+            }
+            _sendArgs.BufferList = _sendList;
+
+            bool willRaiseEvent = _socket.SendAsync(_sendArgs);
+            if (willRaiseEvent == false)
+                CompleteSend(null, _sendArgs);
+        }
+
+        private void CompleteSend(object? sneder, SocketAsyncEventArgs args)
+        {
+            lock (_lock)
+            {
+                if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
+                {
+                    _sendArgs.BufferList = null;
+                    _sendList.Clear();
+
+                    OnSend();
+
+                    if (_sendQueue.Count > 0)
+                        ProcessSend();
+                }
+                else
+                {
+                    CloseClientSocket();
+                }
+            }
         }
 
         private void ProcessReceive()
@@ -110,6 +171,7 @@ namespace ServerCore
 
         private void CloseClientSocket()
         {
+            OnDisconnected();
             // close the socket associated with the client
             try
             {
@@ -118,6 +180,8 @@ namespace ServerCore
             // throws if client process has already closed
             catch (Exception e) { Console.WriteLine(e); }
             _socket.Close();
+            Clear();
+
         }
     }
 }
