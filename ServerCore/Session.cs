@@ -93,9 +93,18 @@ namespace ServerCore
             }
             _sendArgs.BufferList = _sendList;
 
-            bool willRaiseEvent = _socket.SendAsync(_sendArgs);
-            if (willRaiseEvent == false)
-                CompleteSend(null, _sendArgs);
+            try
+            {
+                bool willRaiseEvent = _socket.SendAsync(_sendArgs);
+                if (willRaiseEvent == false)
+                    CompleteSend(null, _sendArgs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Send Failed {e}");
+                CloseClientSocket();
+            }
+
         }
 
         private void CompleteSend(object? sneder, SocketAsyncEventArgs args)
@@ -125,15 +134,22 @@ namespace ServerCore
             ArraySegment<byte> segment = _buffManager.RentBuffer();
             _receiveArgs.SetBuffer(segment.Array, segment.Offset, segment.Count);
 
-
-            bool willRaiseEvent = _socket.ReceiveAsync(_receiveArgs);
-            if (willRaiseEvent == false)
+            try
             {
-                CompleteReceive(null, _receiveArgs);
+                bool willRaiseEvent = _socket.ReceiveAsync(_receiveArgs);
+                if (willRaiseEvent == false)
+                {
+                    CompleteReceive(null, _receiveArgs);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine($"RegisterRecv Failed {e}");
+            }
+
         }
 
-        private void CompleteReceive(object? sender, SocketAsyncEventArgs args)
+        private void CompleteReceive(object sender, SocketAsyncEventArgs args)
         {
             if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
             {

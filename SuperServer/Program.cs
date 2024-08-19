@@ -16,6 +16,13 @@ namespace SuperServer
             IPEndPoint endPoint = new IPEndPoint(hostIP, ConfigManager.Config.port);
 
             _listener.Open(endPoint, () => { return new ClientSession(); });
+
+
+            Console.WriteLine("Listen...");
+            while (true)
+            {
+
+            }
         }
     }
 }
