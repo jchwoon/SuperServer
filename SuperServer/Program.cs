@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using ServerCore;
 using SuperServer.Data;
 
@@ -9,7 +10,7 @@ namespace SuperServer
         static Listener _listener = new Listener();
         static void Main(string[] args)
         {
-            ConfigManager.LoadConfigData();
+            ConfigManager.LoadConfigData(path:"../../.././config.json");
 
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);

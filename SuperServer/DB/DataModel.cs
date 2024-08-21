@@ -22,8 +22,9 @@ namespace SuperServer.DB
     [Index(nameof(PlayerName), IsUnique = true)]
     public class Player
     {
-        public int PlayerId {get; set;}
+        public int PlayerId { get; set; }
         [ForeignKey("PlayerName")]
         public string PlayerName { get; set; }
         public Account Account { get; set; }
+    }
 }
