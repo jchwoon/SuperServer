@@ -12,13 +12,13 @@ namespace SuperServer.Data
     {
         public string ip;
         public int port;
+        public string connectionString;
     }
     public class ConfigManager
     {
         public static ConfigData Config { get; private set; }
         
-
-        public void LoadConfigData(string path = "./config.json")
+        public static void LoadConfigData(string path = "./config.json")
         {
             string text = File.ReadAllText(path);
             Config = JsonConvert.DeserializeObject<ConfigData>(text);
