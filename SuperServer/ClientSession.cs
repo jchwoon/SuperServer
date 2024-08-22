@@ -28,9 +28,8 @@ namespace SuperServer
         }
         public override void OnConnected()
         {
-            S_Test test = new S_Test();
-            test.Name = "Welcome To Super World";
-            Send(Send(test));
+            ConnectToC connectPacket = new ConnectToC();
+            Send(Send(connectPacket));
         }
 
         public override void OnDisconnected()

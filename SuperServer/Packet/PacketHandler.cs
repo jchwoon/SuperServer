@@ -6,15 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuperServer.Packet
+class PacketHandler
 {
-    class PacketHandler
+    public static void LoginToSHandler(IMessage packet)
     {
-        public static void C_TestHandler(IMessage packet)
-        {
-            C_Test test = packet as C_Test;
+        LoginToS loginPacket = packet as LoginToS;
 
-            Console.WriteLine(test.Name);
-        }
     }
 }
