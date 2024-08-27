@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Google.Protobuf.Enum;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,23 +9,16 @@ using System.Threading.Tasks;
 
 namespace SuperServer.DB
 {
-    [Table("Account")]
-    [Index(nameof(AccountName), IsUnique = true)]
-    public class Account
+    [Table("Hero")]
+    [Index(nameof(HeroName), IsUnique = true)]
+    public class Hero
     {
+        public int HeroId { get; set; }
         public int AccountId { get; set; }
-
-        public string AccountName { get; set; }
-        public ICollection<Player> Players { get; set; }
-    }
-
-    [Table("Player")]
-    [Index(nameof(PlayerName), IsUnique = true)]
-    public class Player
-    {
-        public int PlayerId { get; set; }
-        [ForeignKey("PlayerName")]
-        public string PlayerName { get; set; }
-        public Account Account { get; set; }
+        public string HeroName { get; set; }
+        public EHeroGender Gender { get; set; }
+        public EHeroClassType Class { get; set; }
+        public DateTime CreateAt { get; set; }
+        public int Level { get; set; }
     }
 }

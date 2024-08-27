@@ -18,7 +18,7 @@ namespace SuperServer.Data
     {
         public static ConfigData Config { get; private set; }
         
-        public static void LoadConfigData(string path = "./config.json")
+        public static void LoadConfigData(string path = "../../.././config.json")
         {
             string text = File.ReadAllText(path);
             Config = JsonConvert.DeserializeObject<ConfigData>(text);

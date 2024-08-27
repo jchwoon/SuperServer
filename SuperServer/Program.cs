@@ -1,16 +1,36 @@
 ﻿using System.IO;
 using System.Net;
 using ServerCore;
+using SuperServer.Commander;
 using SuperServer.Data;
+using SuperServer.Session;
 
 namespace SuperServer
 {
     class Program
     {
         static Listener _listener = new Listener();
+
+        static void GameLoop()
+        {
+            while (true)
+            {
+                GameCommander.Instance.Update();
+                Thread.Sleep(100);
+            }
+        }
+
+        static void DBLoop()
+        {
+            while (true)
+            {
+                DBCommander.Instance.Update();
+                Thread.Sleep(100);
+            }
+        }
         static void Main(string[] args)
         {
-            ConfigManager.LoadConfigData(path:"../../.././config.json");
+            ConfigManager.LoadConfigData();
 
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);
@@ -20,10 +40,13 @@ namespace SuperServer
 
 
             Console.WriteLine("Listen...");
-            while (true)
-            {
 
-            }
+            Thread dbThread = new Thread(DBLoop);
+            dbThread.Name = "dbThread";
+            dbThread.Start();
+
+            //MainLoop
+            GameLoop();
         }
     }
 }

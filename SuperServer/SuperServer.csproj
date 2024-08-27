@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\Common\Protocol\bin\Enum.proto" Link="Packet\ProtoBuff\Schema\Enum.proto" />
+    <None Include="..\..\Common\Protocol\bin\Protocol.proto" Link="Packet\ProtoBuff\Schema\Protocol.proto" />
+    <None Include="..\..\Common\Protocol\bin\Struct.proto" Link="Packet\ProtoBuff\Schema\Struct.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.27.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.33" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.33">
@@ -22,7 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Packet\ProtoBuff\" />
+    <Folder Include="Game\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Packet\ProtoBuff\Schema\" />
   </ItemGroup>
 
 </Project>
