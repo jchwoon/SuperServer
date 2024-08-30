@@ -40,6 +40,7 @@ namespace ServerCore
     {
         public static readonly int CapacitySize = 1000;
         object _lock = new object();
+        bool _disconnected = false;
         Socket _socket;
 
         SocketAsyncEventArgs _receiveArgs = new SocketAsyncEventArgs();
@@ -187,17 +188,20 @@ namespace ServerCore
 
         private void CloseClientSocket()
         {
-            OnDisconnected();
-            // close the socket associated with the client
+            lock (_lock)
+            {
+                if (_disconnected == true) return;
+                _disconnected = true;
+            }
             try
             {
                 _socket.Shutdown(SocketShutdown.Both);
             }
-            // throws if client process has already closed
             catch (Exception e) { Console.WriteLine(e); }
+
             _socket.Close();
             Clear();
-
+            OnDisconnected();
         }
     }
 }

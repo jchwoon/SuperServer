@@ -31,7 +31,7 @@ namespace SuperServer
         static void Main(string[] args)
         {
             ConfigManager.LoadConfigData();
-
+            DataManager.Init();
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);
             IPEndPoint endPoint = new IPEndPoint(hostIP, ConfigManager.Config.port);

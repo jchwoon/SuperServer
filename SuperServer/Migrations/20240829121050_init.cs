@@ -17,10 +17,18 @@ namespace SuperServer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     HeroName = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Gender = table.Column<int>(type: "int", nullable: false),
                     Class = table.Column<int>(type: "int", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Level = table.Column<int>(type: "int", nullable: false)
+                    Level = table.Column<int>(type: "int", nullable: false),
+                    HeroStat_MaxHp = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_MaxMp = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_HP = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_MP = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_AttackDamage = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_Defense = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_MoveSpeed = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_AtkSpeed = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_Exp = table.Column<float>(type: "real", nullable: true)
                 },
                 constraints: table =>
                 {

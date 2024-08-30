@@ -78,7 +78,11 @@ class PacketManager
         packet.MergeFrom(segment.Array, segment.Offset + 4, segment.Count - 4);
 
         Action<PacketSession, IMessage> action = null;
-        if (_handler.TryGetValue(id, out action) == true)
+        if (ClientHandler != null)
+        {{
+            ClientHandler.Invoke(id, packet);
+        }}
+        else if (_handler.TryGetValue(id, out action) == true)
         {{
             action.Invoke(session, packet);
         }}

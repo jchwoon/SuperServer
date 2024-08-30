@@ -13,6 +13,7 @@ namespace SuperServer.Session
 {
     public partial class ClientSession : PacketSession
     {
+        public int AccountId { get; set; }
         public void Send(IMessage packet)
         {
             Send(MakePacketToBuffer(packet));
@@ -42,6 +43,7 @@ namespace SuperServer.Session
 
         public override void OnDisconnected()
         {
+            Console.WriteLine("Disconnected");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> segment)

@@ -13,13 +13,26 @@ class PacketHandler
     public static void ReqHeroListToSHandler(PacketSession session, IMessage packet)
     {
         ClientSession cSession = (ClientSession) session;
-        ReqHeroListToS reqHeroListPacket = new ReqHeroListToS();
+        ReqHeroListToS reqHeroListPacket = (ReqHeroListToS)packet;
 
         cSession.HandleReqHeroList(reqHeroListPacket);
     }
 
     public static void ReqCreateHeroToSHandler(PacketSession session, IMessage packet)
     {
+        ClientSession cSession = (ClientSession)session;
 
+        ReqCreateHeroToS reqHeroListPacket = (ReqCreateHeroToS)packet;
+
+        cSession.HandleReqCreateHero(reqHeroListPacket);
+    }
+    
+    public static void ReqDeleteHeroToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+
+        ReqDeleteHeroToS reqDeleteHeroPacket = (ReqDeleteHeroToS)packet;
+
+        cSession.HandleReqDeleteHero(reqDeleteHeroPacket);
     }
 }

@@ -39,9 +39,6 @@ namespace SuperServer.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
                     b.Property<string>("HeroName")
                         .HasColumnType("nvarchar(450)");
 
@@ -55,6 +52,51 @@ namespace SuperServer.Migrations
                         .HasFilter("[HeroName] IS NOT NULL");
 
                     b.ToTable("Hero");
+                });
+
+            modelBuilder.Entity("SuperServer.DB.Hero", b =>
+                {
+                    b.OwnsOne("SuperServer.DB.Stats", "HeroStat", b1 =>
+                        {
+                            b1.Property<int>("HeroId")
+                                .HasColumnType("int");
+
+                            b1.Property<float>("AtkSpeed")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("AttackDamage")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("Defense")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("Exp")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("HP")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("MP")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("MaxHp")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("MaxMp")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("MoveSpeed")
+                                .HasColumnType("real");
+
+                            b1.HasKey("HeroId");
+
+                            b1.ToTable("Hero");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HeroId");
+                        });
+
+                    b.Navigation("HeroStat");
                 });
 #pragma warning restore 612, 618
         }

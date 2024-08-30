@@ -20,7 +20,8 @@ namespace SuperServer.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<Hero>()
+                .OwnsOne(h => h.HeroStat);
         }
     }
 }

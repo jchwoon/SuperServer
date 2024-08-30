@@ -12,6 +12,8 @@ public enum PacketId
   ResHeroListToC = 3,
   ReqCreateHeroToS = 4,
   ResCreateHeroToC = 5,
+  ReqDeleteHeroToS = 6,
+  ResDeleteHeroToC = 7,
 
 }
 
@@ -50,6 +52,8 @@ class PacketManager
         _handler.Add((ushort)PacketId.ReqHeroListToS, PacketHandler.ReqHeroListToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqCreateHeroToS, ParsePacket<ReqCreateHeroToS>);
         _handler.Add((ushort)PacketId.ReqCreateHeroToS, PacketHandler.ReqCreateHeroToSHandler);
+        _parseHandler.Add((ushort)PacketId.ReqDeleteHeroToS, ParsePacket<ReqDeleteHeroToS>);
+        _handler.Add((ushort)PacketId.ReqDeleteHeroToS, PacketHandler.ReqDeleteHeroToSHandler);
     
     }
 
@@ -75,7 +79,11 @@ class PacketManager
         packet.MergeFrom(segment.Array, segment.Offset + 4, segment.Count - 4);
 
         Action<PacketSession, IMessage> action = null;
-        if (_handler.TryGetValue(id, out action) == true)
+        if (ClientHandler != null)
+        {
+            ClientHandler.Invoke(id, packet);
+        }
+        else if (_handler.TryGetValue(id, out action) == true)
         {
             action.Invoke(session, packet);
         }

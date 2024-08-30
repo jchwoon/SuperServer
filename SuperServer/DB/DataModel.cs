@@ -16,9 +16,25 @@ namespace SuperServer.DB
         public int HeroId { get; set; }
         public int AccountId { get; set; }
         public string HeroName { get; set; }
-        public EHeroGender Gender { get; set; }
         public EHeroClassType Class { get; set; }
         public DateTime CreateAt { get; set; }
         public int Level { get; set; }
+        public Stats HeroStat { get; set; }
+    }
+
+    ///////////////
+
+    [Owned]
+    public class Stats
+    {
+        public float MaxHp { get; set; }
+        public float MaxMp { get; set; }
+        public float HP { get; set; }
+        public float MP { get; set; }
+        public float AttackDamage { get; set; }
+        public float Defense { get; set; }
+        public float MoveSpeed { get; set; }
+        public float AtkSpeed { get; set; }
+        public float Exp { get; set; }
     }
 }
