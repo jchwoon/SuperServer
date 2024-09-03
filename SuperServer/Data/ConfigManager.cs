@@ -13,6 +13,7 @@ namespace SuperServer.Data
         public string ip;
         public int port;
         public string connectionString;
+        public string dataPath;
     }
     public class ConfigManager
     {

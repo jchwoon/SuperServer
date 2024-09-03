@@ -10,8 +10,7 @@ namespace SuperServer.DB
 {
     public class GameDBContext : DbContext
     {
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Player> Players { get; set; }
+        public DbSet<DBHero> Heros { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -21,7 +20,8 @@ namespace SuperServer.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<DBHero>()
+                .OwnsOne(h => h.HeroStat);
         }
     }
 }

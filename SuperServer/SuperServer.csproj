@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Common\protoc-27.3-win64\bin\Protocol.cs" Link="Packet\ProtoBuff\Protocol.cs" />
+    <None Include="..\..\Common\Protocol\bin\Enum.proto" Link="Packet\ProtoBuff\Schema\Enum.proto" />
+    <None Include="..\..\Common\Protocol\bin\Protocol.proto" Link="Packet\ProtoBuff\Schema\Protocol.proto" />
+    <None Include="..\..\Common\Protocol\bin\Struct.proto" Link="Packet\ProtoBuff\Schema\Struct.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Packet\ProtoBuff\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Packet\ProtoBuff\Schema\" />
   </ItemGroup>
 
 </Project>

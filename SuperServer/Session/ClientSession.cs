@@ -7,12 +7,18 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf.Protocol;
+using SuperServer.Commander;
 
-namespace SuperServer
+namespace SuperServer.Session
 {
-    public class ClientSession : PacketSession
+    public partial class ClientSession : PacketSession
     {
-        public ArraySegment<byte> Send(IMessage packet)
+        public int AccountId { get; set; }
+        public void Send(IMessage packet)
+        {
+            Send(MakePacketToBuffer(packet));
+        }
+        private ArraySegment<byte> MakePacketToBuffer(IMessage packet)
         {
             PacketId packetId = (PacketId)Enum.Parse(typeof(PacketId), packet.Descriptor.Name);
             ushort size = (ushort)packet.CalculateSize();
@@ -28,18 +34,21 @@ namespace SuperServer
         }
         public override void OnConnected()
         {
-            S_Test test = new S_Test();
-            test.Name = "Welcome To Super World";
-            Send(Send(test));
+            GameCommander.Instance.Push(() =>
+            {
+                ConnectToC connectPacket = new ConnectToC();
+                Send(connectPacket);
+            });
         }
 
         public override void OnDisconnected()
         {
+            Console.WriteLine("Disconnected");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> segment)
         {
-            PacketManager.Instance.ReceivePacket(segment);
+            PacketManager.Instance.ReceivePacket(this, segment);
         }
 
         public override void OnSend()
