@@ -3,6 +3,8 @@ using System.Net;
 using ServerCore;
 using SuperServer.Commander;
 using SuperServer.Data;
+using SuperServer.Game.Object;
+using SuperServer.Game.Room;
 using SuperServer.Session;
 
 namespace SuperServer
@@ -32,6 +34,8 @@ namespace SuperServer
         {
             ConfigManager.LoadConfigData();
             DataManager.Init();
+            RoomManager.Instance.PreLoadRoom();
+            ObjectManager.Instance.PreGenerateId(1000);
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);
             IPEndPoint endPoint = new IPEndPoint(hostIP, ConfigManager.Config.port);

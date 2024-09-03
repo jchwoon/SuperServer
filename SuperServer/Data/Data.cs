@@ -27,7 +27,34 @@ namespace SuperServer.Data
         {
             Dictionary<int, HeroStatData> dict = new Dictionary<int, HeroStatData>();
             foreach (HeroStatData stat in stats)
+            {
                 dict.Add(stat.Level, stat);
+            }
+
+
+            return dict;
+        }
+    }
+
+    public class RoomData
+    {
+        public int RoomId;
+        public string Name;
+    }
+
+    [Serializable]
+    public class MapDataLoader : ILoader<int, RoomData>
+    {
+        public List<RoomData> rooms = new List<RoomData>();
+
+        public Dictionary<int, RoomData> MakeDict()
+        {
+            Dictionary<int, RoomData> dict = new Dictionary<int, RoomData>();
+            foreach (RoomData room in rooms)
+            {
+                dict.Add(room.RoomId, room);
+            }
+
 
             return dict;
         }

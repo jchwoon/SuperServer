@@ -11,7 +11,7 @@ namespace SuperServer.DB
 {
     [Table("Hero")]
     [Index(nameof(HeroName), IsUnique = true)]
-    public class Hero
+    public class DBHero
     {
         public int HeroId { get; set; }
         public int AccountId { get; set; }
@@ -20,6 +20,7 @@ namespace SuperServer.DB
         public DateTime CreateAt { get; set; }
         public int Level { get; set; }
         public Stats HeroStat { get; set; }
+        public int RoomId { get; set; }
     }
 
     ///////////////
@@ -31,7 +32,7 @@ namespace SuperServer.DB
         public float MaxMp { get; set; }
         public float HP { get; set; }
         public float MP { get; set; }
-        public float AttackDamage { get; set; }
+        public float AtkDamage { get; set; }
         public float Defense { get; set; }
         public float MoveSpeed { get; set; }
         public float AtkSpeed { get; set; }

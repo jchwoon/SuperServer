@@ -3,7 +3,7 @@ using Google.Protobuf.Struct;
 using ServerCore;
 using SuperServer.Commander;
 using SuperServer.DB;
-using SuperServer.Game;
+using SuperServer.Game.Object;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,7 @@ namespace SuperServer.Session
     {
         static readonly ushort MAX_CREATE_HERO_NUM = 5;
         List<LobbyHero> LobbyHeroes { get; set; } = new(MAX_CREATE_HERO_NUM);
+        Hero PlayingHero { get; set; } = new Hero();
         public void HandleReqHeroList(ReqHeroListToS packet)
         {
             //임시 나중에 인증서버
@@ -24,8 +25,8 @@ namespace SuperServer.Session
             //첫 접속이라면
             if (LobbyHeroes.Count == 0)
             {
-                List<Hero> heros = DBCommander.Instance.LoadHero(packet.AccountId);
-                foreach (Hero hero in heros)
+                List<DBHero> heroes = DBCommander.Instance.LoadHero(packet.AccountId);
+                foreach (DBHero hero in heroes)
                 {
                     SetLobbyHero(hero);
                 }
@@ -47,7 +48,7 @@ namespace SuperServer.Session
                 return;
             }
             
-            Hero hero = DBCommander.Instance.CreateHero(AccountId, packet);
+            DBHero hero = DBCommander.Instance.CreateHero(AccountId, packet);
             if (hero == null)
             {
                 resCreateHeroPacket.Result = Google.Protobuf.Enum.ECreateHeroResult.FailOverlap;
@@ -61,7 +62,6 @@ namespace SuperServer.Session
 
         public void HandleReqDeleteHero(ReqDeleteHeroToS packet)
         {
-            ResDeleteHeroToC resDeleteHeroPacket = new ResDeleteHeroToC();
             int heroIdx = packet.HeroIdx;
 
             if (heroIdx < 0 || heroIdx >= LobbyHeroes.Count)
@@ -71,6 +71,8 @@ namespace SuperServer.Session
 
             if (heroInfo == null)
                 return;
+
+            ResDeleteHeroToC resDeleteHeroPacket = new ResDeleteHeroToC();
 
             if (DBCommander.Instance.DeleteHero(heroInfo.HeroId) == false)
             {
@@ -83,11 +85,41 @@ namespace SuperServer.Session
             Send(resDeleteHeroPacket);
         }
 
-        private void SetLobbyHero(Hero hero)
+        public void HandleReqEnterRoom(ReqEnterRoomToS packet)
+        {
+            int heroIdx = packet.HeroIdx;
+
+            if (heroIdx < 0 || heroIdx >= LobbyHeroes.Count)
+                return;
+
+            LobbyHero lobbyHero = LobbyHeroes[heroIdx];
+            int heroId = lobbyHero.HeroId;
+
+            DBHero dbHero = DBCommander.Instance.GetHero(heroId);
+
+            if (dbHero == null)
+                return;
+
+            ResEnterRoomToC resEnterRoomPacket = new ResEnterRoomToC();
+
+            SetPlayingHero(dbHero, lobbyHero);
+            resEnterRoomPacket.MyHero = PlayingHero.MyHeroInfo;
+
+            Send(resEnterRoomPacket);
+        }
+
+        private void SetLobbyHero(DBHero hero)
         {
             LobbyHero heroInfo = new LobbyHero();
             heroInfo.SetInfo(hero);
             LobbyHeroes.Add(heroInfo);
+        }
+
+        private void SetPlayingHero(DBHero dbHero, LobbyHero lobbyHero)
+        {
+            Hero hero = ObjectManager.Instance.Spawn<Hero>();
+            hero.SetInfo(dbHero, lobbyHero, this);
+            PlayingHero = hero;
         }
     }
 }

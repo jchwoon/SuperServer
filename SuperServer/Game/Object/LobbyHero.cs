@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuperServer.Game
+namespace SuperServer.Game.Object
 {
     public class LobbyHero
     {
@@ -17,12 +17,9 @@ namespace SuperServer.Game
         public int Level { get; private set; }
         public LobbyHeroInfo LobbyHeroInfo { get; private set; }
 
-        public void SetInfo(Hero hero)
+        public void SetInfo(DBHero hero)
         {
             HeroId = hero.HeroId;
-            Nickname = hero.HeroName;
-            ClassType = hero.Class;
-            Level = hero.Level;
             LobbyHeroInfo = new LobbyHeroInfo()
             {
                 ClassType = hero.Class,

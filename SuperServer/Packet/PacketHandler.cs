@@ -35,4 +35,12 @@ class PacketHandler
 
         cSession.HandleReqDeleteHero(reqDeleteHeroPacket);
     }
+    public static void ReqEnterRoomToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+
+        ReqEnterRoomToS reqEnterRoomPacket = (ReqEnterRoomToS)packet;
+
+        cSession.HandleReqEnterRoom(reqEnterRoomPacket);
+    }
 }

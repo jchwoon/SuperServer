@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SuperServer.Utils
 {
-    public static class SExtension
+    public static class Extensions
     {
         public static bool SaveChangeEx(this GameDBContext db)
         {

@@ -31,20 +31,20 @@ namespace SuperServer.Commander
             Execute();
         }
 
-        public List<Hero> LoadHero(int accountId)
+        public List<DBHero> LoadHero(int accountId)
         {
             using (GameDBContext db = new GameDBContext())
             {
-                List<Hero> heros = db.Heros.Where(h => h.AccountId == accountId).ToList();
+                List<DBHero> heros = db.Heros.Where(h => h.AccountId == accountId).ToList();
                 return heros;
             }
         }
 
-        public Hero CreateHero(int accountId, ReqCreateHeroToS packet)
+        public DBHero CreateHero(int accountId, ReqCreateHeroToS packet)
         {
             using (GameDBContext db = new GameDBContext())
             {
-                Hero dbHero = db.Heros.Where(h => h.HeroName == packet.Nickname).FirstOrDefault();
+                DBHero dbHero = db.Heros.Where(h => h.HeroName == packet.Nickname).FirstOrDefault();
                 if (dbHero != null)
                     return null;
 
@@ -54,7 +54,7 @@ namespace SuperServer.Commander
                     return null;
                 }
 
-                Hero hero = new Hero()
+                DBHero hero = new DBHero()
                 {
                     HeroName = packet.Nickname,
                     AccountId = accountId,
@@ -68,7 +68,7 @@ namespace SuperServer.Commander
                     HP = heroStat.MaxHp,
                     MaxMp = heroStat.MaxMp,
                     MaxHp = heroStat.MaxHp,
-                    AttackDamage = heroStat.AtkDamage,
+                    AtkDamage = heroStat.AtkDamage,
                     AtkSpeed = heroStat.AtkSpeed,
                     MoveSpeed = heroStat.MoveSpeed,
                     Exp = heroStat.Exp,
@@ -77,7 +77,7 @@ namespace SuperServer.Commander
 
 
                 db.Heros.Add(hero);
-                if (SExtension.SaveChangeEx(db) == true)
+                if (Extensions.SaveChangeEx(db) == true)
                     return hero;
 
                 return null;
@@ -88,16 +88,28 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                Hero dbHero = db.Heros.Where(h => h.HeroId == heroId).FirstOrDefault();
+                DBHero dbHero = db.Heros.Where(h => h.HeroId == heroId).FirstOrDefault();
                 if (dbHero == null)
                     return false;
 
                 db.Heros.Remove(dbHero);
 
-                if (SExtension.SaveChangeEx(db) == true)
+                if (Extensions.SaveChangeEx(db) == true)
                     return true;
 
                 return false;
+            }
+        }
+
+        public DBHero GetHero(int heroId)
+        {
+            using (GameDBContext db = new GameDBContext())
+            {
+                DBHero dbHero = db.Heros.Where(h => h.HeroId == heroId).FirstOrDefault();
+                if (dbHero == null)
+                    return null;
+
+                return dbHero;
             }
         }
     }

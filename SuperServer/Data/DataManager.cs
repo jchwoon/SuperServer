@@ -14,9 +14,11 @@ namespace SuperServer.Data
     public class DataManager
     {
         public static Dictionary<int, HeroStatData> HeroDict { get; private set; } = new Dictionary<int, HeroStatData>();
+        public static Dictionary<int, RoomData> RoomDict { get; private set; } = new Dictionary<int, RoomData>();
         public static void Init()
         {
             HeroDict = LoadJson<HeroStatDataLoader, int, HeroStatData>("HeroStat").MakeDict();
+            RoomDict = LoadJson<MapDataLoader, int, RoomData>("MapData").MakeDict();
         }
 
         private static Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
