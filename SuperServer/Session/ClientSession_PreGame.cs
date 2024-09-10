@@ -35,6 +35,7 @@ namespace SuperServer.Session
             foreach (LobbyHero hero in LobbyHeroes)
                 resHeroListPacket.Lobbyheros.Add(hero.LobbyHeroInfo);
 
+
             Send(resHeroListPacket);
         }
 
@@ -55,6 +56,8 @@ namespace SuperServer.Session
                 Send(resCreateHeroPacket);
                 return;
             }
+
+            Console.WriteLine(this.SessionId);
             SetLobbyHero(hero);
             resCreateHeroPacket.Result = Google.Protobuf.Enum.ECreateHeroResult.Success;
             Send(resCreateHeroPacket);
@@ -82,6 +85,7 @@ namespace SuperServer.Session
             }
             LobbyHeroes.Remove(LobbyHeroes[heroIdx]);
             resDeleteHeroPacket.IsSuccess = true;
+            Console.WriteLine(this.SessionId);
             Send(resDeleteHeroPacket);
         }
 
@@ -100,12 +104,12 @@ namespace SuperServer.Session
             if (dbHero == null)
                 return;
 
-            ResEnterRoomToC resEnterRoomPacket = new ResEnterRoomToC();
-
             SetPlayingHero(dbHero, lobbyHero);
-            resEnterRoomPacket.MyHero = PlayingHero.MyHeroInfo;
+        }
 
-            Send(resEnterRoomPacket);
+        public void HandleReqLeaveGame(ReqLeaveGameToS packet)
+        {
+            //todo
         }
 
         private void SetLobbyHero(DBHero hero)
@@ -115,11 +119,12 @@ namespace SuperServer.Session
             LobbyHeroes.Add(heroInfo);
         }
 
-        private void SetPlayingHero(DBHero dbHero, LobbyHero lobbyHero)
+        private Hero SetPlayingHero(DBHero dbHero, LobbyHero lobbyHero)
         {
             Hero hero = ObjectManager.Instance.Spawn<Hero>();
             hero.SetInfo(dbHero, lobbyHero, this);
             PlayingHero = hero;
+            return hero;
         }
     }
 }

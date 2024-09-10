@@ -14,6 +14,7 @@ namespace SuperServer.Session
     public partial class ClientSession : PacketSession
     {
         public int AccountId { get; set; }
+        public int SessionId { get; set; }
         public void Send(IMessage packet)
         {
             Send(MakePacketToBuffer(packet));
@@ -34,15 +35,13 @@ namespace SuperServer.Session
         }
         public override void OnConnected()
         {
-            GameCommander.Instance.Push(() =>
-            {
-                ConnectToC connectPacket = new ConnectToC();
-                Send(connectPacket);
-            });
+            ConnectToC connectPacket = new ConnectToC();
+            Send(connectPacket);
         }
 
         public override void OnDisconnected()
         {
+            SessionManager.Instance.Remove(this);
             Console.WriteLine("Disconnected");
         }
 

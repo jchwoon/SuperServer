@@ -13,7 +13,7 @@ namespace SuperServer.Migrations
                 name: "Hero",
                 columns: table => new
                 {
-                    HeroId = table.Column<int>(type: "int", nullable: false)
+                    DBHeroId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     HeroName = table.Column<string>(type: "nvarchar(450)", nullable: true),
@@ -24,15 +24,16 @@ namespace SuperServer.Migrations
                     HeroStat_MaxMp = table.Column<float>(type: "real", nullable: true),
                     HeroStat_HP = table.Column<float>(type: "real", nullable: true),
                     HeroStat_MP = table.Column<float>(type: "real", nullable: true),
-                    HeroStat_AttackDamage = table.Column<float>(type: "real", nullable: true),
+                    HeroStat_AtkDamage = table.Column<float>(type: "real", nullable: true),
                     HeroStat_Defense = table.Column<float>(type: "real", nullable: true),
                     HeroStat_MoveSpeed = table.Column<float>(type: "real", nullable: true),
                     HeroStat_AtkSpeed = table.Column<float>(type: "real", nullable: true),
-                    HeroStat_Exp = table.Column<float>(type: "real", nullable: true)
+                    HeroStat_Exp = table.Column<float>(type: "real", nullable: true),
+                    RoomId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Hero", x => x.HeroId);
+                    table.PrimaryKey("PK_Hero", x => x.DBHeroId);
                 });
 
             migrationBuilder.CreateIndex(

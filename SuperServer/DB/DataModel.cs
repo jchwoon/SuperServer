@@ -13,7 +13,7 @@ namespace SuperServer.DB
     [Index(nameof(HeroName), IsUnique = true)]
     public class DBHero
     {
-        public int HeroId { get; set; }
+        public int DBHeroId { get; set; }
         public int AccountId { get; set; }
         public string HeroName { get; set; }
         public EHeroClassType Class { get; set; }

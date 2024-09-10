@@ -22,13 +22,13 @@ namespace SuperServer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("SuperServer.DB.Hero", b =>
+            modelBuilder.Entity("SuperServer.DB.DBHero", b =>
                 {
-                    b.Property<int>("HeroId")
+                    b.Property<int>("DBHeroId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HeroId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DBHeroId"), 1L, 1);
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -45,7 +45,10 @@ namespace SuperServer.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
-                    b.HasKey("HeroId");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DBHeroId");
 
                     b.HasIndex("HeroName")
                         .IsUnique()
@@ -54,17 +57,17 @@ namespace SuperServer.Migrations
                     b.ToTable("Hero");
                 });
 
-            modelBuilder.Entity("SuperServer.DB.Hero", b =>
+            modelBuilder.Entity("SuperServer.DB.DBHero", b =>
                 {
                     b.OwnsOne("SuperServer.DB.Stats", "HeroStat", b1 =>
                         {
-                            b1.Property<int>("HeroId")
+                            b1.Property<int>("DBHeroId")
                                 .HasColumnType("int");
 
-                            b1.Property<float>("AtkSpeed")
+                            b1.Property<float>("AtkDamage")
                                 .HasColumnType("real");
 
-                            b1.Property<float>("AttackDamage")
+                            b1.Property<float>("AtkSpeed")
                                 .HasColumnType("real");
 
                             b1.Property<float>("Defense")
@@ -88,12 +91,12 @@ namespace SuperServer.Migrations
                             b1.Property<float>("MoveSpeed")
                                 .HasColumnType("real");
 
-                            b1.HasKey("HeroId");
+                            b1.HasKey("DBHeroId");
 
                             b1.ToTable("Hero");
 
                             b1.WithOwner()
-                                .HasForeignKey("HeroId");
+                                .HasForeignKey("DBHeroId");
                         });
 
                     b.Navigation("HeroStat");

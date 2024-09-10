@@ -61,6 +61,7 @@ namespace SuperServer.Commander
                     Class = packet.ClassType,
                     CreateAt = DateTime.Now,
                     Level = 1,
+                    RoomId = 1,
                 };
                 hero.HeroStat = new Stats()
                 {
@@ -88,7 +89,7 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heros.Where(h => h.HeroId == heroId).FirstOrDefault();
+                DBHero dbHero = db.Heros.Where(h => h.DBHeroId == heroId).FirstOrDefault();
                 if (dbHero == null)
                     return false;
 
@@ -105,7 +106,7 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heros.Where(h => h.HeroId == heroId).FirstOrDefault();
+                DBHero dbHero = db.Heros.Where(h => h.DBHeroId == heroId).FirstOrDefault();
                 if (dbHero == null)
                     return null;
 

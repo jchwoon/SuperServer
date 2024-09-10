@@ -19,7 +19,7 @@ namespace SuperServer.Game.Object
 
         public void SetInfo(DBHero hero)
         {
-            HeroId = hero.HeroId;
+            HeroId = hero.DBHeroId;
             LobbyHeroInfo = new LobbyHeroInfo()
             {
                 ClassType = hero.Class,

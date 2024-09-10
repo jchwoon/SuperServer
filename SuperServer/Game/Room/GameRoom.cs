@@ -36,7 +36,9 @@ namespace SuperServer.Game.Room
                     SpawnToC spawnPacket = new SpawnToC();
                     foreach (Hero other in _heroes.Values)
                     {
-                        spawnPacket.Hero.Add(other.HeroInfo);
+                        if (other.HeroId == hero.HeroId)
+                            continue;
+                        spawnPacket.Heroes.Add(other.HeroInfo);
                     }
                     hero.Session.Send(spawnPacket);
                 }
@@ -44,17 +46,27 @@ namespace SuperServer.Game.Room
                 {
                     //신입생을 기존 유저들에게 알림
                     SpawnToC spawnPacket = new SpawnToC();
-                    spawnPacket.Hero.Add(hero.HeroInfo);
-                    Broadcast(spawnPacket);
+                    spawnPacket.Heroes.Add(hero.HeroInfo);
+                    Broadcast(spawnPacket, hero);
                 }
 
             }
         }
-
+        //모두 보내기
         private void Broadcast(IMessage packet)
         {
             foreach (Hero hero in _heroes.Values)
             {
+                hero.Session.Send(packet);
+            }
+        }
+        //단일 대상 제외
+        private void Broadcast(IMessage packet, Hero excludeHero)
+        {
+            foreach (Hero hero in _heroes.Values)
+            {
+                if (hero.HeroId == excludeHero.HeroId)
+                    continue;
                 hero.Session.Send(packet);
             }
         }

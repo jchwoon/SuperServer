@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,6 @@ namespace SuperServer.Game.Object
     public class BaseObject
     {
         public int ObjectId { get; set; }
+        public EObjectType ObjectType { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.Enum;
 using Google.Protobuf.Struct;
+using SuperServer.Commander;
 using SuperServer.DB;
 using SuperServer.Game.Room;
 using SuperServer.Session;
@@ -22,11 +23,13 @@ namespace SuperServer.Game.Object
         public void SetInfo(DBHero hero, LobbyHero lobbyHero, ClientSession session)
         {
             Session = session;
-            HeroId = hero.HeroId;
+            HeroId = hero.DBHeroId;
             HeroInfo = new HeroInfo()
             {
                 LobbyHeroInfo = lobbyHero.LobbyHeroInfo,
                 StatInfo = SetStat(hero),
+                ObjectInfo = SetObjectInfo(hero)
+
             };
             MyHeroInfo = new MyHeroInfo()
             {
@@ -54,18 +57,43 @@ namespace SuperServer.Game.Object
             return statInfo;
         }
 
+        private ObjectInfo SetObjectInfo(DBHero dbHero)
+        {
+            ObjectInfo objectInfo = new ObjectInfo()
+            {
+                ObjectId = ObjectId,
+                PosInfo = SetPosInfo(dbHero),
+            };
+
+            return objectInfo;
+        }
+
+        private PosInfo SetPosInfo(DBHero dbHero)
+        {
+            PosInfo posInfo = new PosInfo()
+            {
+                PosX = 0,
+                PosY = 0,
+                PosZ = 0,
+                RoomId = dbHero.RoomId
+            };
+
+            return posInfo;
+        }
+
         private void SetRoom(DBHero dbHero)
         {
             if (dbHero.RoomId <= 0 || dbHero.RoomId > RoomManager.Instance.MaxRoomCount)
-            {
-                Room.RoomId = 1;
                 return;
-            }
 
+            GameRoom room = RoomManager.Instance.GetRoom(dbHero.RoomId);
+            Room = room;
             Room.RoomId = dbHero.RoomId;
 
-            GameRoom room = RoomManager.Instance.GetRoom(Room.RoomId);
-            room.EnterRoom<Hero>(this);
+            GameCommander.Instance.Push(() =>
+            {
+                room.EnterRoom<Hero>(this);
+            });
         }
     }
 }

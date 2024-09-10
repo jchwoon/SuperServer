@@ -13,6 +13,8 @@ namespace SuperServer.Game.Object
         Queue<int> _objIdQueue;
         int _nextId;
 
+        Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
+
         public void PreGenerateId(int capacity)
         {
             lock (_lock)
@@ -30,9 +32,13 @@ namespace SuperServer.Game.Object
         {
             T obj = new T();
 
-            lock (_lock)
+            Type type = typeof(T);
+
+            if (type == typeof(Hero))
             {
-                obj.ObjectId = GenerateId();
+                Hero hero = obj as Hero;
+                hero.ObjectId = GenerateId();
+                _heroes.Add(hero.ObjectId, hero);
             }
 
             return obj;
@@ -53,7 +59,6 @@ namespace SuperServer.Game.Object
             {
                 if (_objIdQueue.Count == 0)
                 {
-                    _objIdQueue.Enqueue(_nextId);
                     return _nextId++;
                 }
 

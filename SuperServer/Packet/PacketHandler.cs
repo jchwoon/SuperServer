@@ -43,4 +43,13 @@ class PacketHandler
 
         cSession.HandleReqEnterRoom(reqEnterRoomPacket);
     }
+
+    public static void ReqLeaveGameToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+
+        ReqLeaveGameToS reqLeaveGamePacket = (ReqLeaveGameToS)packet;
+
+        cSession.HandleReqLeaveGame(reqLeaveGamePacket);
+    }
 }
