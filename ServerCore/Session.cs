@@ -69,6 +69,8 @@ namespace ServerCore
         {
             lock (_lock)
             {
+                if (_disconnected == true)
+                    return;
                 _sendQueue.Enqueue(segment);
                 if (_sendList.Count == 0)
                     ProcessSend();

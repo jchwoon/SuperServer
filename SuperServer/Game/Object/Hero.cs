@@ -63,6 +63,7 @@ namespace SuperServer.Game.Object
             {
                 ObjectId = ObjectId,
                 PosInfo = SetPosInfo(dbHero),
+                RoomId = dbHero.RoomId
             };
 
             return objectInfo;
@@ -75,9 +76,8 @@ namespace SuperServer.Game.Object
                 PosX = 0,
                 PosY = 0,
                 PosZ = 0,
-                RoomId = dbHero.RoomId
+                RotY = 0
             };
-
             return posInfo;
         }
 

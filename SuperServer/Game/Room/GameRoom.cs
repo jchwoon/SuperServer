@@ -53,7 +53,7 @@ namespace SuperServer.Game.Room
             }
         }
         //모두 보내기
-        private void Broadcast(IMessage packet)
+        public void Broadcast(IMessage packet)
         {
             foreach (Hero hero in _heroes.Values)
             {
@@ -61,7 +61,7 @@ namespace SuperServer.Game.Room
             }
         }
         //단일 대상 제외
-        private void Broadcast(IMessage packet, Hero excludeHero)
+        public void Broadcast(IMessage packet, Hero excludeHero)
         {
             foreach (Hero hero in _heroes.Values)
             {

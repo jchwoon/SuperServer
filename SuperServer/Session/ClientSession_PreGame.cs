@@ -57,7 +57,6 @@ namespace SuperServer.Session
                 return;
             }
 
-            Console.WriteLine(this.SessionId);
             SetLobbyHero(hero);
             resCreateHeroPacket.Result = Google.Protobuf.Enum.ECreateHeroResult.Success;
             Send(resCreateHeroPacket);

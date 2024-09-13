@@ -52,4 +52,20 @@ class PacketHandler
 
         cSession.HandleReqLeaveGame(reqLeaveGamePacket);
     }
+
+    public static void MoveToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        MoveToS movePacket = (MoveToS)packet;
+
+        cSession.HandleMove(movePacket);
+    }
+
+    public static void PingCheckToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        PingCheckToS pingPacket = (PingCheckToS)packet;
+
+        cSession.HandlePing();
+    }
 }

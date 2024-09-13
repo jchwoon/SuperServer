@@ -10,9 +10,19 @@ namespace SuperServer.Job
     {
         protected object _lock = new object();
         protected Queue<IJob> _jobQueue = new Queue<IJob>();
-        public virtual void Push(Action action)
+        protected JobTimer _jobTimer = new JobTimer();
+
+        public void Push(Action action) { Push(new Job(action)); }
+        public IJob PushAfter(int tickAfter, Action action) { return PushAfter(tickAfter, new Job(action)); }
+
+
+        public IJob PushAfter(int tickAfter, IJob job)
         {
-            Job job = new Job(action);
+            _jobTimer.Push(job, tickAfter);
+            return job;
+        }
+        public virtual void Push(IJob job)
+        {
             lock (_lock)
             {
                 _jobQueue.Enqueue(job);
@@ -22,6 +32,7 @@ namespace SuperServer.Job
 
         public virtual void Execute()
         {
+            _jobTimer.Flush();
             while (true)
             {
                 IJob job = Pop();

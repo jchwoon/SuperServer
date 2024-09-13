@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf.Protocol;
 using SuperServer.Commander;
+using System.Net.NetworkInformation;
 
 namespace SuperServer.Session
 {
@@ -15,6 +16,24 @@ namespace SuperServer.Session
     {
         public int AccountId { get; set; }
         public int SessionId { get; set; }
+        public long Ping { get; set; }
+        long _sendTime;
+
+        public void PingCheck()
+        {
+            PingCheckToC pingPacket = new PingCheckToC();
+            _sendTime = System.Environment.TickCount64;
+            Send(pingPacket);
+
+            GameCommander.Instance.PushAfter(3000, PingCheck);
+        }
+
+        public void HandlePing()
+        {
+            Ping = System.Environment.TickCount64 - _sendTime;
+            Console.WriteLine(Ping);
+        }
+
         public void Send(IMessage packet)
         {
             Send(MakePacketToBuffer(packet));
@@ -37,6 +56,9 @@ namespace SuperServer.Session
         {
             ConnectToC connectPacket = new ConnectToC();
             Send(connectPacket);
+
+            GameCommander.Instance.PushAfter(3000, PingCheck);
+
         }
 
         public override void OnDisconnected()
@@ -52,7 +74,7 @@ namespace SuperServer.Session
 
         public override void OnSend()
         {
-            Console.WriteLine("Sended");
+            //Console.WriteLine("Sended");
         }
     }
 }
