@@ -1,6 +1,10 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
+using SuperServer.Commander;
+using SuperServer.Game.Object;
+using SuperServer.Game.Room;
+using SuperServer.Logic;
 using SuperServer.Session;
 using System;
 using System.Collections.Generic;
@@ -50,7 +54,7 @@ class PacketHandler
 
         ReqLeaveGameToS reqLeaveGamePacket = (ReqLeaveGameToS)packet;
 
-        cSession.HandleReqLeaveGame(reqLeaveGamePacket);
+        cSession.HandleLeaveGame(reqLeaveGamePacket);
     }
 
     public static void MoveToSHandler(PacketSession session, IMessage packet)
@@ -58,7 +62,12 @@ class PacketHandler
         ClientSession cSession = (ClientSession)session;
         MoveToS movePacket = (MoveToS)packet;
 
-        cSession.HandleMove(movePacket);
+        if (cSession.PlayingHero != null && cSession.PlayingHero.Room != null)
+        {
+            Hero hero = cSession.PlayingHero;
+            GameRoom room = cSession.PlayingHero.Room;
+            GameCommander.Instance.Push(room.HandleMove, hero, movePacket);
+        }
     }
 
     public static void PingCheckToSHandler(PacketSession session, IMessage packet)

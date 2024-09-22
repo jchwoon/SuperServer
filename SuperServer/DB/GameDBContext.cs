@@ -10,7 +10,7 @@ namespace SuperServer.DB
 {
     public class GameDBContext : DbContext
     {
-        public DbSet<DBHero> Heros { get; set; }
+        public DbSet<DBHero> Heroes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {

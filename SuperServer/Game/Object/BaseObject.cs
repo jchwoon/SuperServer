@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Enum;
+using SuperServer.Game.Room;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace SuperServer.Game.Object
     {
         public int ObjectId { get; set; }
         public EObjectType ObjectType { get; set; }
+        public GameRoom Room { get; set; }
     }
 }

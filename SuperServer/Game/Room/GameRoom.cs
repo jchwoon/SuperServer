@@ -1,18 +1,22 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using SuperServer.Game.Object;
+using SuperServer.Game.Map;
+using SuperServer.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using SuperServer.Data;
 
 namespace SuperServer.Game.Room
 {
-    public class GameRoom
+    public partial class GameRoom
     {
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
+        public MapComponent Map { get; set; } = new MapComponent();
         public int RoomId { get; set; }
 
         public GameRoom(int roomId)
@@ -20,11 +24,22 @@ namespace SuperServer.Game.Room
             RoomId = roomId;
         }
 
+        public void Init()
+        {
+            RoomData data;
+            if (DataManager.RoomDict.TryGetValue(RoomId, out data) == true)
+                Map.LoadMap(data.Name);
+        }
+
         public void EnterRoom<T>(BaseObject obj) where T : BaseObject
         {
+            if (obj == null)
+                return;
+
             if (typeof(T) == typeof(Hero))
             {
                 Hero hero = (Hero)obj;
+                hero.Room = this;
                 _heroes.Add(hero.ObjectId, hero);
 
                 ResEnterRoomToC resEnterPacket = new ResEnterRoomToC();
@@ -52,6 +67,24 @@ namespace SuperServer.Game.Room
 
             }
         }
+
+        public void ExitRoom<T>(BaseObject obj) where T : BaseObject 
+        {
+            if (obj == null)
+                return; 
+
+            if (typeof(T) == typeof(Hero))
+            {
+                Hero hero = (Hero)obj;
+                _heroes.Remove(hero.ObjectId);
+            }
+
+            DeSpawnToC deSpawnPacket = new DeSpawnToC();
+            deSpawnPacket.ObjectId = obj.ObjectId;
+            deSpawnPacket.ObjectType = obj.ObjectType;
+            Broadcast(deSpawnPacket);
+        }
+
         //모두 보내기
         public void Broadcast(IMessage packet)
         {

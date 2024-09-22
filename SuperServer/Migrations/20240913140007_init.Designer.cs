@@ -12,7 +12,7 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20240910133346_init")]
+    [Migration("20240913140007_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,8 +47,20 @@ namespace SuperServer.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
+                    b.Property<float>("PosX")
+                        .HasColumnType("real");
+
+                    b.Property<float>("PosY")
+                        .HasColumnType("real");
+
+                    b.Property<float>("PosZ")
+                        .HasColumnType("real");
+
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
+
+                    b.Property<float>("RotY")
+                        .HasColumnType("real");
 
                     b.HasKey("DBHeroId");
 

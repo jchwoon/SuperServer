@@ -21,6 +21,10 @@ namespace SuperServer.DB
         public int Level { get; set; }
         public Stats HeroStat { get; set; }
         public int RoomId { get; set; }
+        public float PosX { get; set; }
+        public float PosY { get; set; }
+        public float PosZ { get; set; }
+        public float RotY { get; set; }
     }
 
     ///////////////

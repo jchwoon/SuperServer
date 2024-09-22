@@ -43,7 +43,7 @@ namespace SuperServer.Data
     }
 
     [Serializable]
-    public class MapDataLoader : ILoader<int, RoomData>
+    public class RoomDataLoader : ILoader<int, RoomData>
     {
         public List<RoomData> rooms = new List<RoomData>();
 

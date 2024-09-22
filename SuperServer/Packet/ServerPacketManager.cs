@@ -22,6 +22,7 @@ public enum PacketId
   MoveToC = 13,
   PingCheckToC = 14,
   PingCheckToS = 15,
+  DeSpawnToC = 16,
 
 }
 

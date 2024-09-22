@@ -17,7 +17,6 @@ namespace SuperServer.Game.Object
         public int HeroId { get; private set; }
         public HeroInfo HeroInfo { get; private set; }
         public MyHeroInfo MyHeroInfo { get; private set; }
-        public GameRoom Room { get; private set; }
         public ClientSession Session { get; private set; }
 
         public void SetInfo(DBHero hero, LobbyHero lobbyHero, ClientSession session)
@@ -36,8 +35,6 @@ namespace SuperServer.Game.Object
                 Exp = hero.HeroStat.Exp,
                 HeroInfo = HeroInfo,
             };
-
-            SetRoom(hero);
         }
 
         private StatInfo SetStat(DBHero dbHero)
@@ -62,6 +59,7 @@ namespace SuperServer.Game.Object
             ObjectInfo objectInfo = new ObjectInfo()
             {
                 ObjectId = ObjectId,
+                ObjectType = EObjectType.Hero,
                 PosInfo = SetPosInfo(dbHero),
                 RoomId = dbHero.RoomId
             };
@@ -73,27 +71,12 @@ namespace SuperServer.Game.Object
         {
             PosInfo posInfo = new PosInfo()
             {
-                PosX = 0,
-                PosY = 0,
-                PosZ = 0,
-                RotY = 0
+                PosX = dbHero.PosX,
+                PosY = dbHero.PosY,
+                PosZ = dbHero.PosZ,
+                RotY = dbHero.RotY,
             };
             return posInfo;
-        }
-
-        private void SetRoom(DBHero dbHero)
-        {
-            if (dbHero.RoomId <= 0 || dbHero.RoomId > RoomManager.Instance.MaxRoomCount)
-                return;
-
-            GameRoom room = RoomManager.Instance.GetRoom(dbHero.RoomId);
-            Room = room;
-            Room.RoomId = dbHero.RoomId;
-
-            GameCommander.Instance.Push(() =>
-            {
-                room.EnterRoom<Hero>(this);
-            });
         }
     }
 }

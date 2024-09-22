@@ -4,6 +4,8 @@ using ServerCore;
 using SuperServer.Commander;
 using SuperServer.DB;
 using SuperServer.Game.Object;
+using SuperServer.Game.Room;
+using SuperServer.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace SuperServer.Session
     {
         static readonly ushort MAX_CREATE_HERO_NUM = 5;
         List<LobbyHero> LobbyHeroes { get; set; } = new(MAX_CREATE_HERO_NUM);
-        Hero PlayingHero { get; set; } = new Hero();
+        public Hero PlayingHero { get; set; } = new Hero();
         public void HandleReqHeroList(ReqHeroListToS packet)
         {
             //임시 나중에 인증서버
@@ -104,11 +106,15 @@ namespace SuperServer.Session
                 return;
 
             SetPlayingHero(dbHero, lobbyHero);
-        }
 
-        public void HandleReqLeaveGame(ReqLeaveGameToS packet)
-        {
-            //todo
+            if (PlayingHero == null)
+                return;
+
+            GameRoom room = RoomManager.Instance.GetRoom(PlayingHero.HeroInfo.ObjectInfo.RoomId);
+            if (room == null)
+                return;
+
+            GameCommander.Instance.Push(room.EnterRoom<Hero>, PlayingHero);
         }
 
         private void SetLobbyHero(DBHero hero)

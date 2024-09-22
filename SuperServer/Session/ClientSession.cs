@@ -31,7 +31,6 @@ namespace SuperServer.Session
         public void HandlePing()
         {
             Ping = System.Environment.TickCount64 - _sendTime;
-            Console.WriteLine(Ping);
         }
 
         public void Send(IMessage packet)

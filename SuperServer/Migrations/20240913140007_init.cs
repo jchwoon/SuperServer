@@ -29,7 +29,11 @@ namespace SuperServer.Migrations
                     HeroStat_MoveSpeed = table.Column<float>(type: "real", nullable: true),
                     HeroStat_AtkSpeed = table.Column<float>(type: "real", nullable: true),
                     HeroStat_Exp = table.Column<float>(type: "real", nullable: true),
-                    RoomId = table.Column<int>(type: "int", nullable: false)
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    PosX = table.Column<float>(type: "real", nullable: false),
+                    PosY = table.Column<float>(type: "real", nullable: false),
+                    PosZ = table.Column<float>(type: "real", nullable: false),
+                    RotY = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {

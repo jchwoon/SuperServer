@@ -45,8 +45,20 @@ namespace SuperServer.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
+                    b.Property<float>("PosX")
+                        .HasColumnType("real");
+
+                    b.Property<float>("PosY")
+                        .HasColumnType("real");
+
+                    b.Property<float>("PosZ")
+                        .HasColumnType("real");
+
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
+
+                    b.Property<float>("RotY")
+                        .HasColumnType("real");
 
                     b.HasKey("DBHeroId");
 

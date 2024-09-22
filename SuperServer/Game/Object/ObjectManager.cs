@@ -38,6 +38,7 @@ namespace SuperServer.Game.Object
             {
                 Hero hero = obj as Hero;
                 hero.ObjectId = GenerateId();
+                hero.ObjectType = Google.Protobuf.Enum.EObjectType.Hero;
                 _heroes.Add(hero.ObjectId, hero);
             }
 
