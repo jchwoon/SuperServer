@@ -13,7 +13,7 @@ namespace SuperServer.DB
     [Index(nameof(HeroName), IsUnique = true)]
     public class DBHero
     {
-        public int HeroId { get; set; }
+        public int DBHeroId { get; set; }
         public int AccountId { get; set; }
         public string HeroName { get; set; }
         public EHeroClassType Class { get; set; }
@@ -21,6 +21,10 @@ namespace SuperServer.DB
         public int Level { get; set; }
         public Stats HeroStat { get; set; }
         public int RoomId { get; set; }
+        public float PosX { get; set; }
+        public float PosY { get; set; }
+        public float PosZ { get; set; }
+        public float RotY { get; set; }
     }
 
     ///////////////

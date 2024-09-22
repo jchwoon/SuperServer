@@ -35,7 +35,7 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                List<DBHero> heros = db.Heros.Where(h => h.AccountId == accountId).ToList();
+                List<DBHero> heros = db.Heroes.Where(h => h.AccountId == accountId).ToList();
                 return heros;
             }
         }
@@ -44,7 +44,7 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heros.Where(h => h.HeroName == packet.Nickname).FirstOrDefault();
+                DBHero dbHero = db.Heroes.Where(h => h.HeroName == packet.Nickname).FirstOrDefault();
                 if (dbHero != null)
                     return null;
 
@@ -61,6 +61,7 @@ namespace SuperServer.Commander
                     Class = packet.ClassType,
                     CreateAt = DateTime.Now,
                     Level = 1,
+                    RoomId = 1,
                 };
                 hero.HeroStat = new Stats()
                 {
@@ -76,7 +77,7 @@ namespace SuperServer.Commander
                 };
 
 
-                db.Heros.Add(hero);
+                db.Heroes.Add(hero);
                 if (Extensions.SaveChangeEx(db) == true)
                     return hero;
 
@@ -88,11 +89,11 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heros.Where(h => h.HeroId == heroId).FirstOrDefault();
+                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == heroId).FirstOrDefault();
                 if (dbHero == null)
                     return false;
 
-                db.Heros.Remove(dbHero);
+                db.Heroes.Remove(dbHero);
 
                 if (Extensions.SaveChangeEx(db) == true)
                     return true;
@@ -105,7 +106,7 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heros.Where(h => h.HeroId == heroId).FirstOrDefault();
+                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == heroId).FirstOrDefault();
                 if (dbHero == null)
                     return null;
 

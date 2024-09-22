@@ -36,18 +36,18 @@ namespace SuperServer
             DataManager.Init();
             RoomManager.Instance.PreLoadRoom();
             ObjectManager.Instance.PreGenerateId(1000);
+            SessionManager.Instance.PreGenerateId(1000);
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);
             IPEndPoint endPoint = new IPEndPoint(hostIP, ConfigManager.Config.port);
 
-            _listener.Open(endPoint, () => { return new ClientSession(); });
+            _listener.Open(endPoint, () => { return SessionManager.Instance.Generate(); });
 
 
             Console.WriteLine("Listen...");
 
-            Thread dbThread = new Thread(DBLoop);
-            dbThread.Name = "dbThread";
-            dbThread.Start();
+            Task dbTask = new Task(DBLoop, TaskCreationOptions.LongRunning);
+            dbTask.Start();
 
             //MainLoop
             GameLoop();

@@ -25,21 +25,24 @@ namespace SuperServer.Game.Room
         {
             foreach (int roomId in DataManager.RoomDict.Keys)
             {
-                CreateRoom(roomId);
+                GameRoom room = CreateRoom(roomId);
+                room.Init();
             }
         }
 
-        public void CreateRoom(int roomId)
+        public GameRoom CreateRoom(int roomId)
         {
             GameRoom room;
             lock (_lock)
             {
                 if (_rooms.TryGetValue(roomId, out room) == true)
-                    return;
+                    return room;
 
                 room = new GameRoom(roomId);
                 _rooms.Add(roomId, room);
             }
+
+            return room;
         }
 
         public GameRoom GetRoom(int roomId)

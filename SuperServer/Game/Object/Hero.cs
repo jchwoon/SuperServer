@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.Enum;
 using Google.Protobuf.Struct;
+using SuperServer.Commander;
 using SuperServer.DB;
 using SuperServer.Game.Room;
 using SuperServer.Session;
@@ -16,25 +17,24 @@ namespace SuperServer.Game.Object
         public int HeroId { get; private set; }
         public HeroInfo HeroInfo { get; private set; }
         public MyHeroInfo MyHeroInfo { get; private set; }
-        public GameRoom Room { get; private set; }
         public ClientSession Session { get; private set; }
 
         public void SetInfo(DBHero hero, LobbyHero lobbyHero, ClientSession session)
         {
             Session = session;
-            HeroId = hero.HeroId;
+            HeroId = hero.DBHeroId;
             HeroInfo = new HeroInfo()
             {
                 LobbyHeroInfo = lobbyHero.LobbyHeroInfo,
                 StatInfo = SetStat(hero),
+                ObjectInfo = SetObjectInfo(hero)
+
             };
             MyHeroInfo = new MyHeroInfo()
             {
                 Exp = hero.HeroStat.Exp,
                 HeroInfo = HeroInfo,
             };
-
-            SetRoom(hero);
         }
 
         private StatInfo SetStat(DBHero dbHero)
@@ -54,18 +54,29 @@ namespace SuperServer.Game.Object
             return statInfo;
         }
 
-        private void SetRoom(DBHero dbHero)
+        private ObjectInfo SetObjectInfo(DBHero dbHero)
         {
-            if (dbHero.RoomId <= 0 || dbHero.RoomId > RoomManager.Instance.MaxRoomCount)
+            ObjectInfo objectInfo = new ObjectInfo()
             {
-                Room.RoomId = 1;
-                return;
-            }
+                ObjectId = ObjectId,
+                ObjectType = EObjectType.Hero,
+                PosInfo = SetPosInfo(dbHero),
+                RoomId = dbHero.RoomId
+            };
 
-            Room.RoomId = dbHero.RoomId;
+            return objectInfo;
+        }
 
-            GameRoom room = RoomManager.Instance.GetRoom(Room.RoomId);
-            room.EnterRoom<Hero>(this);
+        private PosInfo SetPosInfo(DBHero dbHero)
+        {
+            PosInfo posInfo = new PosInfo()
+            {
+                PosX = dbHero.PosX,
+                PosY = dbHero.PosY,
+                PosZ = dbHero.PosZ,
+                RotY = dbHero.RotY,
+            };
+            return posInfo;
         }
     }
 }

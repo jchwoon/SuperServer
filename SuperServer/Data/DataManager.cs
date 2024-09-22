@@ -18,7 +18,7 @@ namespace SuperServer.Data
         public static void Init()
         {
             HeroDict = LoadJson<HeroStatDataLoader, int, HeroStatData>("HeroStat").MakeDict();
-            RoomDict = LoadJson<MapDataLoader, int, RoomData>("MapData").MakeDict();
+            RoomDict = LoadJson<RoomDataLoader, int, RoomData>("RoomData").MakeDict();
         }
 
         private static Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

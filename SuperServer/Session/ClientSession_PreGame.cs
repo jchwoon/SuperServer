@@ -4,6 +4,8 @@ using ServerCore;
 using SuperServer.Commander;
 using SuperServer.DB;
 using SuperServer.Game.Object;
+using SuperServer.Game.Room;
+using SuperServer.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace SuperServer.Session
     {
         static readonly ushort MAX_CREATE_HERO_NUM = 5;
         List<LobbyHero> LobbyHeroes { get; set; } = new(MAX_CREATE_HERO_NUM);
-        Hero PlayingHero { get; set; } = new Hero();
+        public Hero PlayingHero { get; set; } = new Hero();
         public void HandleReqHeroList(ReqHeroListToS packet)
         {
             //임시 나중에 인증서버
@@ -34,6 +36,7 @@ namespace SuperServer.Session
             //이미 접속 상태라 캐싱이 되어 있다면
             foreach (LobbyHero hero in LobbyHeroes)
                 resHeroListPacket.Lobbyheros.Add(hero.LobbyHeroInfo);
+
 
             Send(resHeroListPacket);
         }
@@ -55,6 +58,7 @@ namespace SuperServer.Session
                 Send(resCreateHeroPacket);
                 return;
             }
+
             SetLobbyHero(hero);
             resCreateHeroPacket.Result = Google.Protobuf.Enum.ECreateHeroResult.Success;
             Send(resCreateHeroPacket);
@@ -82,6 +86,7 @@ namespace SuperServer.Session
             }
             LobbyHeroes.Remove(LobbyHeroes[heroIdx]);
             resDeleteHeroPacket.IsSuccess = true;
+            Console.WriteLine(this.SessionId);
             Send(resDeleteHeroPacket);
         }
 
@@ -100,12 +105,16 @@ namespace SuperServer.Session
             if (dbHero == null)
                 return;
 
-            ResEnterRoomToC resEnterRoomPacket = new ResEnterRoomToC();
-
             SetPlayingHero(dbHero, lobbyHero);
-            resEnterRoomPacket.MyHero = PlayingHero.MyHeroInfo;
 
-            Send(resEnterRoomPacket);
+            if (PlayingHero == null)
+                return;
+
+            GameRoom room = RoomManager.Instance.GetRoom(PlayingHero.HeroInfo.ObjectInfo.RoomId);
+            if (room == null)
+                return;
+
+            GameCommander.Instance.Push(room.EnterRoom<Hero>, PlayingHero);
         }
 
         private void SetLobbyHero(DBHero hero)
@@ -115,11 +124,12 @@ namespace SuperServer.Session
             LobbyHeroes.Add(heroInfo);
         }
 
-        private void SetPlayingHero(DBHero dbHero, LobbyHero lobbyHero)
+        private Hero SetPlayingHero(DBHero dbHero, LobbyHero lobbyHero)
         {
             Hero hero = ObjectManager.Instance.Spawn<Hero>();
             hero.SetInfo(dbHero, lobbyHero, this);
             PlayingHero = hero;
+            return hero;
         }
     }
 }

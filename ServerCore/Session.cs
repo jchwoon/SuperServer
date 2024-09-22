@@ -69,10 +69,30 @@ namespace ServerCore
         {
             lock (_lock)
             {
+                if (_disconnected == true)
+                    return;
                 _sendQueue.Enqueue(segment);
                 if (_sendList.Count == 0)
                     ProcessSend();
             }
+        }
+
+        public void CloseClientSocket()
+        {
+            lock (_lock)
+            {
+                if (_disconnected == true) return;
+                _disconnected = true;
+            }
+            try
+            {
+                _socket.Shutdown(SocketShutdown.Both);
+            }
+            catch (Exception e) { Console.WriteLine(e); }
+
+            _socket.Close();
+            Clear();
+            OnDisconnected();
         }
 
         private void Clear()
@@ -184,24 +204,6 @@ namespace ServerCore
             {
                 CloseClientSocket();
             }
-        }
-
-        private void CloseClientSocket()
-        {
-            lock (_lock)
-            {
-                if (_disconnected == true) return;
-                _disconnected = true;
-            }
-            try
-            {
-                _socket.Shutdown(SocketShutdown.Both);
-            }
-            catch (Exception e) { Console.WriteLine(e); }
-
-            _socket.Close();
-            Clear();
-            OnDisconnected();
         }
     }
 }
