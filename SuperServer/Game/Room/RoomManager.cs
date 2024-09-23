@@ -12,14 +12,6 @@ namespace SuperServer.Game.Room
     {
         Dictionary<int, GameRoom> _rooms = new Dictionary<int, GameRoom>();
         static object _lock = new object();
-        
-        public int MaxRoomCount
-        {
-            get
-            {
-                return _rooms.Count;
-            }
-        }
 
         public void PreLoadRoom()
         {

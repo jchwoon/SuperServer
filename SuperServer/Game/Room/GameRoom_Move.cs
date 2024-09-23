@@ -37,8 +37,7 @@ namespace SuperServer.Game.Room
             {
                 return;
             }
- 
-            hero.HeroInfo.ObjectInfo.PosInfo = packet.PosInfo;
+            hero.PosInfo = packet.PosInfo;
             _movePacket.ObjectId = hero.ObjectId;
             //예상한 좌표를 보냈었다면 진짜 위치 정보와 비교 과정을 거치고 그렇지 않으면 예측을한다
             if (_isExpected == false)

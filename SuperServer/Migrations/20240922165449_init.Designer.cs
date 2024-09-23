@@ -12,7 +12,7 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20240913140007_init")]
+    [Migration("20240922165449_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

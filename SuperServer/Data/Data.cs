@@ -6,15 +6,18 @@ using System.Threading.Tasks;
 
 namespace SuperServer.Data
 {
-    public class HeroStatData
+    public class BaseStatData
+    {
+        public int MaxHp;
+        public int MaxMp;
+        public float MoveSpeed;
+        public int AtkDamage;
+        public int Defence;
+        public float AtkSpeed;
+    }
+    public class HeroStatData : BaseStatData
     {
         public int Level;
-        public float AtkDamage;
-        public float MaxHp;
-        public float MaxMp;
-        public float Defence;
-        public float AtkSpeed;
-        public float MoveSpeed;
         public float Exp;
     }
 
@@ -55,6 +58,68 @@ namespace SuperServer.Data
                 dict.Add(room.RoomId, room);
             }
 
+
+            return dict;
+        }
+    }
+
+    public class MonsterData : BaseStatData
+    {
+        public int MonsterId;
+        public int RoomId;
+        public string Name;
+        public string PrefabName;
+        public int Level;
+        public int Exp;
+        public int Gold;
+    }
+
+    [Serializable]
+    public class MonsterDataLoader : ILoader<int, MonsterData>
+    {
+        public List<MonsterData> monsters = new List<MonsterData>();
+
+        public Dictionary<int, MonsterData> MakeDict()
+        {
+            Dictionary<int, MonsterData> dict = new Dictionary<int, MonsterData>();
+            foreach (MonsterData monster in monsters)
+            {
+                dict.Add(monster.MonsterId, monster);
+            }
+
+            return dict;
+        }
+    }
+    [Serializable]
+    public class SpawnData
+    {
+        public int SpawnId;
+        public int MaxEntityCount;
+        public int MonsterId;
+        public float RespawnTime;
+        public float PosX;
+        public float PosY;
+        public float PosZ;
+        public float SpawnRange;
+    }
+    [Serializable]
+    public class SpawningPoolData
+    {
+        public int RoomId;
+        public List<SpawnData> SpawnData;
+    }
+
+    [Serializable]
+    public class SpawningPoolLoader : ILoader<int, SpawningPoolData>
+    {
+        public List<SpawningPoolData> spawningPools = new List<SpawningPoolData>();
+        public Dictionary<int, SpawningPoolData> MakeDict()
+        {
+            Dictionary<int, SpawningPoolData> dict = new Dictionary<int, SpawningPoolData>();
+            foreach(SpawningPoolData pool in spawningPools)
+            {
+                dict.Add(pool.RoomId, pool);
+            }
 
             return dict;
         }

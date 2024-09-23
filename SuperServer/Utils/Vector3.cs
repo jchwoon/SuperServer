@@ -17,6 +17,14 @@ namespace SuperServer.Utils
         {
             return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
+        public static Vector3 operator +(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
+        public static Vector3 operator *(Vector3 a, float value)
+        {
+            return new Vector3(a.X * value, a.Y * value, a.Z * value);
+        }
 
         public Vector3(float x, float y, float z)
         {
