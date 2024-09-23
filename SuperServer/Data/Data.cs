@@ -68,6 +68,7 @@ namespace SuperServer.Data
         public int MonsterId;
         public int RoomId;
         public string Name;
+        public string PrefabName;
         public int Level;
         public int Exp;
         public int Gold;

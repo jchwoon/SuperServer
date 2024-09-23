@@ -22,6 +22,7 @@ namespace SuperServer.Game.Object
                 return;
 
             MonsterId = monsterId;
+            ObjectInfo.TemplateId = monsterId;
             StatComponent.InitSetStat(monsterData);
         }
         //PosInfo는 스폰위치가 결정될 때 또는 움직일 때(AI)

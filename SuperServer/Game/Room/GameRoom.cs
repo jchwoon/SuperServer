@@ -51,7 +51,7 @@ namespace SuperServer.Game.Room
                 resEnterPacket.MyHero = hero.MyHeroInfo;
                 hero.Session.Send(resEnterPacket);
 
-                //신입생에게 기존 유저들을 알림
+                //신입생에게 기존 오브젝트들을 알림
                 {
                     SpawnToC spawnPacket = new SpawnToC();
                     foreach (Hero other in _heroes.Values)
@@ -59,6 +59,10 @@ namespace SuperServer.Game.Room
                         if (other.HeroId == hero.HeroId)
                             continue;
                         spawnPacket.Heroes.Add(other.HeroInfo);
+                    }
+                    foreach (Monster monster in _monsters.Values)
+                    {
+                        spawnPacket.Creatures.Add(monster.CreatureInfo);
                     }
                     hero.Session.Send(spawnPacket);
                 }
