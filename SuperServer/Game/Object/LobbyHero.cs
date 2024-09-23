@@ -12,9 +12,6 @@ namespace SuperServer.Game.Object
     public class LobbyHero
     {
         public int HeroId { get; private set; }
-        public string Nickname { get; private set; }
-        public EHeroClassType ClassType { get; private set; }
-        public int Level { get; private set; }
         public LobbyHeroInfo LobbyHeroInfo { get; private set; }
 
         public void SetInfo(DBHero hero)

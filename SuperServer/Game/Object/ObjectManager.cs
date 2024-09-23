@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Protobuf.Enum;
 
 namespace SuperServer.Game.Object
 {
@@ -14,6 +15,7 @@ namespace SuperServer.Game.Object
         int _nextId;
 
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
+        Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
 
         public void PreGenerateId(int capacity)
         {
@@ -38,8 +40,15 @@ namespace SuperServer.Game.Object
             {
                 Hero hero = obj as Hero;
                 hero.ObjectId = GenerateId();
-                hero.ObjectType = Google.Protobuf.Enum.EObjectType.Hero;
+                hero.ObjectType = EObjectType.Hero;
                 _heroes.Add(hero.ObjectId, hero);
+            }
+            else if (type == typeof(Monster))
+            {
+                Monster monster = obj as Monster;
+                monster.ObjectId = GenerateId();
+                monster.ObjectType = EObjectType.Monster;
+                _monsters.Add(monster.ObjectId,monster);
             }
 
             return obj;

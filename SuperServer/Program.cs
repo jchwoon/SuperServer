@@ -32,11 +32,11 @@ namespace SuperServer
         }
         static void Main(string[] args)
         {
+            ObjectManager.Instance.PreGenerateId(1000);
+            SessionManager.Instance.PreGenerateId(1000);
             ConfigManager.LoadConfigData();
             DataManager.Init();
             RoomManager.Instance.PreLoadRoom();
-            ObjectManager.Instance.PreGenerateId(1000);
-            SessionManager.Instance.PreGenerateId(1000);
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);
             IPEndPoint endPoint = new IPEndPoint(hostIP, ConfigManager.Config.port);

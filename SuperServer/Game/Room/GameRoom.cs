@@ -2,7 +2,6 @@
 using Google.Protobuf.Protocol;
 using SuperServer.Game.Object;
 using SuperServer.Game.Map;
-using SuperServer.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +9,16 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Data;
+using Google.Protobuf.Enum;
 
 namespace SuperServer.Game.Room
 {
     public partial class GameRoom
     {
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
+        Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
         public MapComponent Map { get; set; } = new MapComponent();
+        SpawningPool _spawningPool = new SpawningPool();
         public int RoomId { get; set; }
 
         public GameRoom(int roomId)
@@ -29,17 +31,20 @@ namespace SuperServer.Game.Room
             RoomData data;
             if (DataManager.RoomDict.TryGetValue(RoomId, out data) == true)
                 Map.LoadMap(data.Name);
+
+            _spawningPool.Init(this);
         }
 
         public void EnterRoom<T>(BaseObject obj) where T : BaseObject
         {
             if (obj == null)
                 return;
-
-            if (typeof(T) == typeof(Hero))
+            EObjectType type = obj.ObjectType;
+            obj.Room = this;
+            //히어로
+            if (type == EObjectType.Hero)
             {
                 Hero hero = (Hero)obj;
-                hero.Room = this;
                 _heroes.Add(hero.ObjectId, hero);
 
                 ResEnterRoomToC resEnterPacket = new ResEnterRoomToC();
@@ -64,7 +69,16 @@ namespace SuperServer.Game.Room
                     spawnPacket.Heroes.Add(hero.HeroInfo);
                     Broadcast(spawnPacket, hero);
                 }
+            }
+            // 몬스터
+            else if (type == EObjectType.Monster)
+            {
+                Monster monster = (Monster)obj;
+                _monsters.Add(monster.ObjectId, monster);
 
+                SpawnToC spawnPacket = new SpawnToC();
+                spawnPacket.Creatures.Add(monster.CreatureInfo);
+                Broadcast(spawnPacket);
             }
         }
 

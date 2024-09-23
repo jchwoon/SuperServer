@@ -86,7 +86,6 @@ namespace SuperServer.Session
             }
             LobbyHeroes.Remove(LobbyHeroes[heroIdx]);
             resDeleteHeroPacket.IsSuccess = true;
-            Console.WriteLine(this.SessionId);
             Send(resDeleteHeroPacket);
         }
 
@@ -110,7 +109,7 @@ namespace SuperServer.Session
             if (PlayingHero == null)
                 return;
 
-            GameRoom room = RoomManager.Instance.GetRoom(PlayingHero.HeroInfo.ObjectInfo.RoomId);
+            GameRoom room = RoomManager.Instance.GetRoom(PlayingHero.Room.RoomId);
             if (room == null)
                 return;
 
@@ -127,7 +126,7 @@ namespace SuperServer.Session
         private Hero SetPlayingHero(DBHero dbHero, LobbyHero lobbyHero)
         {
             Hero hero = ObjectManager.Instance.Spawn<Hero>();
-            hero.SetInfo(dbHero, lobbyHero, this);
+            hero.Init(dbHero, lobbyHero, this);
             PlayingHero = hero;
             return hero;
         }

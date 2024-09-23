@@ -22,10 +22,10 @@ namespace SuperServer.Logic
 
                 if (dbHero == null) return;
 
-                dbHero.PosX = hero.HeroInfo.ObjectInfo.PosInfo.PosX;
-                dbHero.PosY = hero.HeroInfo.ObjectInfo.PosInfo.PosY;
-                dbHero.PosZ = hero.HeroInfo.ObjectInfo.PosInfo.PosZ;
-                dbHero.RotY = hero.HeroInfo.ObjectInfo.PosInfo.RotY;
+                dbHero.PosX = hero.HeroInfo.CreatureInfo.ObjectInfo.PosInfo.PosX;
+                dbHero.PosY = hero.HeroInfo.CreatureInfo.ObjectInfo.PosInfo.PosY;
+                dbHero.PosZ = hero.HeroInfo.CreatureInfo.ObjectInfo.PosInfo.PosZ;
+                dbHero.RotY = hero.HeroInfo.CreatureInfo.ObjectInfo.PosInfo.RotY;
 
                 if (db.SaveChangeEx() == false)
                 {

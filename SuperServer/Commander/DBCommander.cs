@@ -49,7 +49,7 @@ namespace SuperServer.Commander
                     return null;
 
                 HeroStatData heroStat;
-                if (DataManager.HeroDict.TryGetValue(1, out heroStat) == false)
+                if (DataManager.HeroStatDict.TryGetValue(1, out heroStat) == false)
                 {
                     return null;
                 }
