@@ -77,4 +77,9 @@ class PacketHandler
 
         cSession.HandlePing();
     }
+
+    public static void ReqUseSkillToSHandler(PacketSession session, IMessage packet)
+    {
+        //
+    }
 }

@@ -1,6 +1,9 @@
 ﻿using Google.Protobuf.Enum;
+using Google.Protobuf.Protocol;
 using Google.Protobuf.Struct;
+using SuperServer.Commander;
 using SuperServer.Game.Room;
+using SuperServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +14,22 @@ namespace SuperServer.Game.Object
 {
     public class BaseObject
     {
+        private MoveToC _movePacket = new MoveToC() { PosInfo = new PosInfo() };
         protected int _objectId;
         protected GameRoom _gameRoom;
         protected EObjectType _objectType;
         public ObjectInfo ObjectInfo { get; set; } = new ObjectInfo();
         public PosInfo PosInfo { get; set; } = new PosInfo();
+        public Vector3 Position { get { return new Vector3(PosInfo.PosX, PosInfo.PosY, PosInfo.PosZ); } }
         public GameRoom Room
         {
             get { return _gameRoom; }
-            set { _gameRoom = value; ObjectInfo.RoomId = value.RoomId; }
+            set
+            {
+                _gameRoom = value;
+                if (value != null)
+                    ObjectInfo.RoomId = value.RoomId;
+            }
         }
         public int ObjectId
         {
@@ -35,6 +45,25 @@ namespace SuperServer.Game.Object
         public BaseObject()
         {
             ObjectInfo.PosInfo = PosInfo;
+        }
+
+        public void BroadcastMove(Vector3? destPos, float moveSpeed = 0)
+        {
+            if (destPos.HasValue)
+            {
+                _movePacket.PosInfo.PosX = destPos.Value.X;
+                _movePacket.PosInfo.PosY = destPos.Value.Y;
+                _movePacket.PosInfo.PosZ = destPos.Value.Z;
+                _movePacket.PosInfo.Speed = moveSpeed;
+            }
+            else
+                _movePacket.PosInfo = PosInfo;
+            _movePacket.ObjectId = ObjectId;
+
+            GameCommander.Instance.Push(() =>
+            {
+                Room?.Broadcast(_movePacket, Position);
+            });
         }
     }
 }

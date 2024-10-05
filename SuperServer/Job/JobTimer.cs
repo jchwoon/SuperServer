@@ -14,6 +14,7 @@ namespace SuperServer.Job
 
         public int CompareTo(JobTimerElem other)
         {
+            //음수일리 없으니
             return (int)(execTime - other.execTime);
         }
     }

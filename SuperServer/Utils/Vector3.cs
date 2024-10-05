@@ -13,6 +13,15 @@ namespace SuperServer.Utils
         public float Y { get; set; }
         public float Z { get; set; }
 
+        public static Vector3 zero => new Vector3(0, 0, 0);
+        public static Vector3 forward = new Vector3(0, 0, 1);
+        public static Vector3 forwardRight = new Vector3(1, 0, 1);
+        public static Vector3 right = new Vector3(1, 0, 0);
+        public static Vector3 backwardRight = new Vector3(1, 0, -1);
+        public static Vector3 backward = new Vector3(0, 0, -1);
+        public static Vector3 backwardLeft = new Vector3(-1, 0, -1);
+        public static Vector3 left = new Vector3(-1, 0, 0);
+        public static Vector3 forwardLeft = new Vector3(-1, 0, 1);
         public static Vector3 operator -(Vector3 a, Vector3 b)
         {
             return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
@@ -24,6 +33,18 @@ namespace SuperServer.Utils
         public static Vector3 operator *(Vector3 a, float value)
         {
             return new Vector3(a.X * value, a.Y * value, a.Z * value);
+        }
+        public static bool operator ==(Vector3 a, Vector3 b)
+        {
+            return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        }
+        public static bool operator !=(Vector3 a, Vector3 b)
+        {
+            return !(a == b);
+        }
+        public static float Dot(Vector3 a, Vector3 b)
+        {
+            return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
         }
 
         public Vector3(float x, float y, float z)

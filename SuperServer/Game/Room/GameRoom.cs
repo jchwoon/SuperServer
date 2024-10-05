@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Data;
 using Google.Protobuf.Enum;
+using SuperServer.Utils;
+using System.Runtime.ConstrainedExecution;
 
 namespace SuperServer.Game.Room
 {
@@ -18,8 +20,9 @@ namespace SuperServer.Game.Room
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
         Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
         public MapComponent Map { get; set; } = new MapComponent();
-        SpawningPool _spawningPool = new SpawningPool();
+        public SpawningPool SpawningPool { get; set; } = new SpawningPool();
         public int RoomId { get; set; }
+        public const float SqrInterestRange = 225;
 
         public GameRoom(int roomId)
         {
@@ -32,7 +35,7 @@ namespace SuperServer.Game.Room
             if (DataManager.RoomDict.TryGetValue(RoomId, out data) == true)
                 Map.LoadMap(data.Name);
 
-            _spawningPool.Init(this);
+            SpawningPool.Init(this);
         }
 
         public void EnterRoom<T>(BaseObject obj) where T : BaseObject
@@ -51,28 +54,14 @@ namespace SuperServer.Game.Room
                 resEnterPacket.MyHero = hero.MyHeroInfo;
                 hero.Session.Send(resEnterPacket);
 
-                //신입생에게 기존 오브젝트들을 알림
-                {
-                    SpawnToC spawnPacket = new SpawnToC();
-                    foreach (Hero other in _heroes.Values)
-                    {
-                        if (other.HeroId == hero.HeroId)
-                            continue;
-                        spawnPacket.Heroes.Add(other.HeroInfo);
-                    }
-                    foreach (Monster monster in _monsters.Values)
-                    {
-                        spawnPacket.Creatures.Add(monster.CreatureInfo);
-                    }
-                    hero.Session.Send(spawnPacket);
-                }
-
                 {
                     //신입생을 기존 유저들에게 알림
                     SpawnToC spawnPacket = new SpawnToC();
                     spawnPacket.Heroes.Add(hero.HeroInfo);
-                    Broadcast(spawnPacket, hero);
+                    Broadcast(spawnPacket, hero, obj.Position);
                 }
+
+                hero.InterestRegion?.Update();
             }
             // 몬스터
             else if (type == EObjectType.Monster)
@@ -82,7 +71,7 @@ namespace SuperServer.Game.Room
 
                 SpawnToC spawnPacket = new SpawnToC();
                 spawnPacket.Creatures.Add(monster.CreatureInfo);
-                Broadcast(spawnPacket);
+                Broadcast(spawnPacket, obj.Position);
             }
         }
 
@@ -95,31 +84,61 @@ namespace SuperServer.Game.Room
             {
                 Hero hero = (Hero)obj;
                 _heroes.Remove(hero.ObjectId);
+                hero.InterestRegion.Clear();
+                hero.Room = null;
             }
 
             DeSpawnToC deSpawnPacket = new DeSpawnToC();
-            deSpawnPacket.ObjectId = obj.ObjectId;
-            deSpawnPacket.ObjectType = obj.ObjectType;
-            Broadcast(deSpawnPacket);
+            deSpawnPacket.ObjectIds.Add(obj.ObjectId);
+            Broadcast(deSpawnPacket, obj.Position);
         }
 
         //모두 보내기
-        public void Broadcast(IMessage packet)
+        public void Broadcast(IMessage packet, Vector3 pos)
         {
             foreach (Hero hero in _heroes.Values)
             {
-                hero.Session.Send(packet);
+                float dist = (pos - hero.Position).MagnitudeSqr();
+                if (dist < SqrInterestRange)
+                    hero.Session.Send(packet);
             }
         }
         //단일 대상 제외
-        public void Broadcast(IMessage packet, Hero excludeHero)
+        public void Broadcast(IMessage packet, Hero excludeHero, Vector3 pos)
         {
             foreach (Hero hero in _heroes.Values)
             {
                 if (hero.HeroId == excludeHero.HeroId)
                     continue;
-                hero.Session.Send(packet);
+                float dist = (pos - hero.Position).MagnitudeSqr();
+                if (dist < SqrInterestRange)
+                    hero.Session.Send(packet);
             }
+        }
+
+        public Hero FindHeroById(int id)
+        {
+            Hero hero;
+            if (_heroes.TryGetValue(id, out hero) == false)
+                return null;
+            return hero;
+        }
+
+        public List<Creature> GetCreatures()
+        {
+            List<Creature> objects = new List<Creature>();
+
+            foreach(Hero hero in _heroes.Values)
+            {
+                objects.Add(hero);
+            }
+
+            foreach(Monster monster in _monsters.Values)
+            {
+                objects.Add(monster);
+            }
+
+            return objects;
         }
     }
 }

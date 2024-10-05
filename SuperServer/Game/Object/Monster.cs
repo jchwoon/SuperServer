@@ -1,7 +1,9 @@
 ﻿using Google.Protobuf.Enum;
 using Google.Protobuf.Struct;
+using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.DB;
+using SuperServer.Game.StateMachine;
 using SuperServer.Session;
 using System;
 using System.Collections.Generic;
@@ -14,17 +16,30 @@ namespace SuperServer.Game.Object
     public class Monster : Creature
     {
         public int MonsterId { get; private set; }
+        public MonsterMachine Machine { get; set; }
+        public MonsterData MonsterData { get; set; }
+        public AggroComponent AggroComponent { get; set; }
 
-        public void Init(int monsterId)
+        public void Init(int monsterId, PoolData poolData)
         {
             MonsterData monsterData;
             if (DataManager.MonsterDict.TryGetValue(monsterId, out monsterData) == false)
                 return;
-
+            AggroComponent = new AggroComponent();
+            MonsterData = monsterData;
+            PoolData = poolData;
             MonsterId = monsterId;
             ObjectInfo.TemplateId = monsterId;
             StatComponent.InitSetStat(monsterData);
+            Machine = new MonsterMachine(this);
+            Machine.ChangeState(Machine.IdleState);
+            Update();
         }
-        //PosInfo는 스폰위치가 결정될 때 또는 움직일 때(AI)
+
+        public void Update()
+        {
+            Machine.Update();
+            GameCommander.Instance.PushAfter(250, Update);
+        }
     }
 }

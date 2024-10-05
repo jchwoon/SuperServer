@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 
 namespace SuperServer.Data
 {
-    public class BaseStatData
+    //Hero가 레벨당 능력치가 어떻게 되는지에 대한 데이터 HeroData아님!!!
+    public class HeroStatData
     {
+        public int Level;
+        public float Exp;
         public int MaxHp;
         public int MaxMp;
         public float MoveSpeed;
         public int AtkDamage;
         public int Defence;
         public float AtkSpeed;
-    }
-    public class HeroStatData : BaseStatData
-    {
-        public int Level;
-        public float Exp;
     }
 
     [Serializable]
@@ -62,16 +60,27 @@ namespace SuperServer.Data
             return dict;
         }
     }
+    public class BaseData
+    {
+        public string PrefabName;
+    }
 
-    public class MonsterData : BaseStatData
+    public class MonsterData : BaseData
     {
         public int MonsterId;
         public int RoomId;
         public string Name;
-        public string PrefabName;
         public int Level;
         public int Exp;
         public int Gold;
+        public int MaxHp;
+        public int MaxMp;
+        public float MoveSpeed;
+        public int AtkDamage;
+        public int Defence;
+        public float AtkSpeed;
+        public float Sight;
+        public float AtkRange;
     }
 
     [Serializable]
@@ -91,7 +100,7 @@ namespace SuperServer.Data
         }
     }
     [Serializable]
-    public class SpawnData
+    public class PoolData
     {
         public int SpawnId;
         public int MaxEntityCount;
@@ -106,7 +115,7 @@ namespace SuperServer.Data
     public class SpawningPoolData
     {
         public int RoomId;
-        public List<SpawnData> SpawnData;
+        public List<PoolData> PoolDatas;
     }
 
     [Serializable]

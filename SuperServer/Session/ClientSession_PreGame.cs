@@ -37,7 +37,7 @@ namespace SuperServer.Session
             foreach (LobbyHero hero in LobbyHeroes)
                 resHeroListPacket.Lobbyheros.Add(hero.LobbyHeroInfo);
 
-
+            Console.WriteLine("SendLobbyInfo");
             Send(resHeroListPacket);
         }
 
@@ -108,10 +108,12 @@ namespace SuperServer.Session
 
             if (PlayingHero == null)
                 return;
-
-            GameRoom room = RoomManager.Instance.GetRoom(PlayingHero.Room.RoomId);
+            
+            GameRoom room = RoomManager.Instance.GetRoom(dbHero.RoomId);
             if (room == null)
-                return;
+            {
+                room = RoomManager.Instance.GetRoom(1);
+            }
 
             GameCommander.Instance.Push(room.EnterRoom<Hero>, PlayingHero);
         }

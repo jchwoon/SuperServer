@@ -19,13 +19,14 @@ namespace SuperServer.Game.Object
         public HeroInfo HeroInfo { get; private set; }
         public MyHeroInfo MyHeroInfo { get; private set; }
         public ClientSession Session { get; private set; }
+        public InterestRegion InterestRegion { get; private set; }
 
         public void Init(DBHero hero, LobbyHero lobbyHero, ClientSession session)
         {
             Session = session;
             HeroId = hero.DBHeroId;
             StatComponent.SetHeroStat(hero.Level);
-            SetRoom(hero);
+            InterestRegion = new InterestRegion(this);
             InitPosInfo(hero);
             HeroInfo = new HeroInfo()
             {
@@ -44,15 +45,6 @@ namespace SuperServer.Game.Object
             PosInfo.PosY = dbHero.PosY;
             PosInfo.PosZ = dbHero.PosZ;
             PosInfo.RotY = dbHero.RotY;
-        }
-
-        private void SetRoom(DBHero dbHero)
-        {
-            GameRoom room = RoomManager.Instance.GetRoom(dbHero.RoomId);
-            if (room == null)
-                Room = RoomManager.Instance.GetRoom(1);
-            else
-                Room = room;
         }
     }
 }

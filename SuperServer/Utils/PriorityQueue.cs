@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SuperServer.Utils
 {
+    //값이 더 작은것이 우선순위가 높은 PQ
     public class PriorityQueue<T> where T : IComparable<T>
     {
         List<T> _datas = new List<T>();
@@ -20,7 +21,7 @@ namespace SuperServer.Utils
             while (currentIdx > 0)
             {
                 int parentIdx = (currentIdx - 1) / 2;
-                //자식이 부모보다 우선순위가 더 높다면
+
                 if (_datas[currentIdx].CompareTo(_datas[parentIdx]) >= 0)
                     break;
 
@@ -50,10 +51,9 @@ namespace SuperServer.Utils
 
                 int nextIdx = currentIdx;
 
-                //왼쪽 자식보다 우선순위가 더 낮다면
-                if (leftIdx <= lastIdx && _datas[nextIdx].CompareTo(_datas[leftIdx]) > 0)
+                if (leftIdx <= lastIdx && _datas[nextIdx].CompareTo(_datas[leftIdx]) >= 0)
                     nextIdx = leftIdx;
-                if (rightIdx <= lastIdx && _datas[nextIdx].CompareTo(_datas[rightIdx]) > 0)
+                if (rightIdx <= lastIdx && _datas[nextIdx].CompareTo(_datas[rightIdx]) >= 0)
                     nextIdx = rightIdx;
 
                 //그대로라면 (현상유지)

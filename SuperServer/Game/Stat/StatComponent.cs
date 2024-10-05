@@ -28,7 +28,7 @@ namespace SuperServer.Game.Stat
             StatInfo.MoveSpeed = heroStatData.MoveSpeed;
             StatInfo.Defence = heroStatData.Defence;
         }
-        public void InitSetStat(BaseStatData statData)
+        public void InitSetStat(MonsterData statData)
         {
             StatInfo.MaxHp = statData.MaxHp;
             StatInfo.MaxMp = statData.MaxMp;
