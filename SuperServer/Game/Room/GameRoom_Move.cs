@@ -14,36 +14,26 @@ namespace SuperServer.Game.Room
 {
     public partial class GameRoom
     {
-        private MoveToC _movePacket = new MoveToC() { PosInfo = new PosInfo() };
         readonly float _threshold = 2.0f;
-        bool _isExpected = false;
         public void HandleMove(Hero hero, MoveToS packet)
         {
             if (hero == null)
                 return;
 
-            bool canGoCurrent = Map.CanGo(packet.PosInfo.PosX, packet.PosInfo.PosZ);
+            bool canGoCurrent = Map.CanGo(packet.PosInfo.PosZ, packet.PosInfo.PosX);
 
             if (canGoCurrent == false)
-            {
                 return;
-            }
 
             //예상위치에 대한 판별
             Vector3 expectPos = GetExpectPos(packet.PosInfo, hero);
-            bool canGoExpected = Map.CanGo(expectPos.X, expectPos.Z);
+            bool canGoExpected = Map.CanGo(expectPos.Z, expectPos.X);
 
             if (canGoExpected == false)
-            {
                 return;
-            }
+
             hero.PosInfo = packet.PosInfo;
-            _movePacket.ObjectId = hero.ObjectId;
-            //예상한 좌표를 보냈었다면 진짜 위치 정보와 비교 과정을 거치고 그렇지 않으면 예측을한다
-            if (_isExpected == false)
-                ExpectSend(expectPos, packet.PosInfo.Speed);
-            else
-                CompareExpectToRealAndSend(expectPos, packet.PosInfo);
+            CompareExpectToRealAndSend(hero, expectPos, packet.PosInfo);
         }
         private Vector3 GetExpectPos(PosInfo info, Hero hero)
         {
@@ -54,7 +44,7 @@ namespace SuperServer.Game.Room
             float expectX = info.PosX + (dir.X * dist);
             float expectZ = info.PosZ + (dir.Z * dist);
 
-            return new Vector3((int)expectX, 0, (int)expectZ);
+            return new Vector3(expectX, 0, expectZ);
         }
 
         //단위 원 생각
@@ -65,48 +55,23 @@ namespace SuperServer.Game.Room
             float directionX = (float)Math.Sin(radians);
             float directionZ = (float)Math.Cos(radians);
 
-            Vector3 direction = new Vector3(directionX, 0, directionZ);
+            Vector3 direction = new Vector3(directionX, 0, directionZ); 
 
             return direction.Normalize();
         }
 
-        private void CompareExpectToRealAndSend(Vector3 expect, PosInfo real)
+        private void CompareExpectToRealAndSend(Hero hero, Vector3 expect, PosInfo real)
         {
             Vector3 realVec = new Vector3(real.PosX, real.PosY, real.PosZ);
             float dist = (realVec - expect).Magnitude();
 
             if (dist > _threshold)
-                RealSend(real);
-            else
-                ExpectSend(expect, real.Speed);
-        }
-
-        private void ExpectSend(Vector3 expect, float speed)
-        {
-            _movePacket.PosInfo.PosX = expect.X;
-            _movePacket.PosInfo.PosY = expect.Y;
-            _movePacket.PosInfo.PosZ = expect.Z;
-            _movePacket.PosInfo.Speed = speed;
-            MoveSend();
-            _isExpected = true;
-        }
-
-        private void RealSend(PosInfo real)
-        {
-            _movePacket.PosInfo.PosX = real.PosX;
-            _movePacket.PosInfo.PosY = real.PosY;
-            _movePacket.PosInfo.PosZ = real.PosZ;
-            _movePacket.PosInfo.Speed = real.Speed;
-            MoveSend();
-            _isExpected = false;
-        }
-
-        private void MoveSend()
-        {
-            GameCommander.Instance.Push(() =>
             {
-                Broadcast(_movePacket);
-            });
+                Vector3 destPos = new Vector3(real.PosX, real.PosY, real.PosZ);
+                hero.BroadcastMove(destPos, real.Speed);
+            }
+            else
+                hero.BroadcastMove(expect, real.Speed);
         }
     }
 }

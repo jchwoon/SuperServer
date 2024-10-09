@@ -1,24 +1,24 @@
-﻿using System;
+﻿using Google.Protobuf.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SuperServer.Data
 {
-    public class BaseStatData
+    //Hero가 레벨당 능력치가 어떻게 되는지에 대한 데이터 HeroData아님!!!
+    public class HeroStatData
     {
+        public int Level;
+        public float Exp;
         public int MaxHp;
         public int MaxMp;
         public float MoveSpeed;
         public int AtkDamage;
         public int Defence;
         public float AtkSpeed;
-    }
-    public class HeroStatData : BaseStatData
-    {
-        public int Level;
-        public float Exp;
     }
 
     [Serializable]
@@ -62,16 +62,27 @@ namespace SuperServer.Data
             return dict;
         }
     }
+    public class BaseData
+    {
+        public string PrefabName;
+    }
 
-    public class MonsterData : BaseStatData
+    public class MonsterData : BaseData
     {
         public int MonsterId;
         public int RoomId;
         public string Name;
-        public string PrefabName;
         public int Level;
         public int Exp;
         public int Gold;
+        public int MaxHp;
+        public int MaxMp;
+        public float MoveSpeed;
+        public int AtkDamage;
+        public int Defence;
+        public float AtkSpeed;
+        public float Sight;
+        public float AtkRange;
     }
 
     [Serializable]
@@ -90,8 +101,8 @@ namespace SuperServer.Data
             return dict;
         }
     }
-    [Serializable]
-    public class SpawnData
+
+    public class PoolData
     {
         public int SpawnId;
         public int MaxEntityCount;
@@ -102,11 +113,11 @@ namespace SuperServer.Data
         public float PosZ;
         public float SpawnRange;
     }
-    [Serializable]
+
     public class SpawningPoolData
     {
         public int RoomId;
-        public List<SpawnData> SpawnData;
+        public List<PoolData> PoolDatas;
     }
 
     [Serializable]
@@ -119,6 +130,59 @@ namespace SuperServer.Data
             foreach(SpawningPoolData pool in spawningPools)
             {
                 dict.Add(pool.RoomId, pool);
+            }
+
+            return dict;
+        }
+    }
+
+    public class HeroData : BaseData
+    {
+        public EHeroClassType HeroClassId;
+        public float ComboExitTime;
+        public List<int> SkillIds;
+    }
+    [Serializable]
+    public class HeroDataLoader : ILoader<EHeroClassType, HeroData>
+    {
+        public List<HeroData> heroes = new List<HeroData>();
+        public Dictionary<EHeroClassType, HeroData> MakeDict()
+        {
+            Dictionary<EHeroClassType, HeroData> dict = new Dictionary<EHeroClassType, HeroData>();
+            foreach (HeroData hero in heroes)
+            {
+                dict.Add(hero.HeroClassId, hero);
+            }
+
+            return dict;
+        }
+    }
+
+    public class SkillData
+    {
+        public int SkillId;
+        public ESkillType SkillType;
+        public string SkillName;
+        public string AnimName;
+        public int SkillRange;
+        public int CostMp;
+        public float CoolTime;
+        public float AnimTime;
+        public string AnimParamName;
+    }
+
+    [Serializable]
+    public class SkillDataLoader : ILoader<int, SkillData>
+    {
+        public List<SkillData> skills = new List<SkillData>();
+
+        public Dictionary<int, SkillData> MakeDict()
+        {
+            Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+
+            foreach(SkillData skill in skills)
+            {
+                dict.Add(skill.SkillId, skill);
             }
 
             return dict;

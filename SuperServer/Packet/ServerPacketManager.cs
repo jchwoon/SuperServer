@@ -23,6 +23,8 @@ public enum PacketId
   PingCheckToC = 14,
   PingCheckToS = 15,
   DeSpawnToC = 16,
+  ReqUseSkillToS = 17,
+  ResUseSkillToC = 18,
 
 }
 
@@ -71,6 +73,8 @@ class PacketManager
         _handler.Add((ushort)PacketId.MoveToS, PacketHandler.MoveToSHandler);
         _parseHandler.Add((ushort)PacketId.PingCheckToS, ParsePacket<PingCheckToS>);
         _handler.Add((ushort)PacketId.PingCheckToS, PacketHandler.PingCheckToSHandler);
+        _parseHandler.Add((ushort)PacketId.ReqUseSkillToS, ParsePacket<ReqUseSkillToS>);
+        _handler.Add((ushort)PacketId.ReqUseSkillToS, PacketHandler.ReqUseSkillToSHandler);
     
     }
 
