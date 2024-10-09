@@ -116,12 +116,33 @@ namespace SuperServer.Game.Room
             }
         }
 
+        public Creature FindCreatureById(int id)
+        {
+            Creature creature;
+            creature = FindHeroById(id);
+            if (creature != null)
+                return creature;
+
+            creature = FindMonsterById(id);
+            if (creature != null) 
+                return creature;
+
+            return null;
+        }
+
         public Hero FindHeroById(int id)
         {
             Hero hero;
             if (_heroes.TryGetValue(id, out hero) == false)
                 return null;
             return hero;
+        }
+        public Monster FindMonsterById(int id)
+        {
+            Monster monster;
+            if (_monsters.TryGetValue(id, out monster) == false)
+                return null;
+            return monster;
         }
 
         public List<Creature> GetCreatures()

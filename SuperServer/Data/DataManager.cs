@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.Enum;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,12 +18,16 @@ namespace SuperServer.Data
         public static Dictionary<int, RoomData> RoomDict { get; private set; } = new Dictionary<int, RoomData>();
         public static Dictionary<int, MonsterData> MonsterDict { get; private set; } = new Dictionary<int, MonsterData>();
         public static Dictionary<int, SpawningPoolData> SpawningPoolDict { get; private set; } = new Dictionary<int, SpawningPoolData>();
+        public static Dictionary<int, SkillData> SkillDict { get; private set; } = new Dictionary<int, SkillData>();
+        public static Dictionary<EHeroClassType, HeroData> HeroDict { get; private set; } = new Dictionary<EHeroClassType, HeroData>();
         public static void Init()
         {
             HeroStatDict = LoadJson<HeroStatDataLoader, int, HeroStatData>("HeroStatData").MakeDict();
             RoomDict = LoadJson<RoomDataLoader, int, RoomData>("RoomData").MakeDict();
             MonsterDict = LoadJson<MonsterDataLoader, int, MonsterData>("MonsterData").MakeDict();
             SpawningPoolDict = LoadJson<SpawningPoolLoader, int, SpawningPoolData>("SpawningPoolData").MakeDict();
+            SkillDict = LoadJson<SkillDataLoader, int, SkillData>("SkillData").MakeDict();
+            HeroDict = LoadJson<HeroDataLoader, EHeroClassType, HeroData>("HeroData").MakeDict();
         }
 
         private static Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

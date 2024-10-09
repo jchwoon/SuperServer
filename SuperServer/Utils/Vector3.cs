@@ -47,6 +47,11 @@ namespace SuperServer.Utils
             return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
         }
 
+        public static float Distance(Vector3 a, Vector3 b)
+        {
+            return (a - b).Magnitude();
+        }
+
         public Vector3(float x, float y, float z)
         {
             X = x;

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Google.Protobuf.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -99,7 +101,7 @@ namespace SuperServer.Data
             return dict;
         }
     }
-    [Serializable]
+
     public class PoolData
     {
         public int SpawnId;
@@ -111,7 +113,7 @@ namespace SuperServer.Data
         public float PosZ;
         public float SpawnRange;
     }
-    [Serializable]
+
     public class SpawningPoolData
     {
         public int RoomId;
@@ -128,6 +130,59 @@ namespace SuperServer.Data
             foreach(SpawningPoolData pool in spawningPools)
             {
                 dict.Add(pool.RoomId, pool);
+            }
+
+            return dict;
+        }
+    }
+
+    public class HeroData : BaseData
+    {
+        public EHeroClassType HeroClassId;
+        public float ComboExitTime;
+        public List<int> SkillIds;
+    }
+    [Serializable]
+    public class HeroDataLoader : ILoader<EHeroClassType, HeroData>
+    {
+        public List<HeroData> heroes = new List<HeroData>();
+        public Dictionary<EHeroClassType, HeroData> MakeDict()
+        {
+            Dictionary<EHeroClassType, HeroData> dict = new Dictionary<EHeroClassType, HeroData>();
+            foreach (HeroData hero in heroes)
+            {
+                dict.Add(hero.HeroClassId, hero);
+            }
+
+            return dict;
+        }
+    }
+
+    public class SkillData
+    {
+        public int SkillId;
+        public ESkillType SkillType;
+        public string SkillName;
+        public string AnimName;
+        public int SkillRange;
+        public int CostMp;
+        public float CoolTime;
+        public float AnimTime;
+        public string AnimParamName;
+    }
+
+    [Serializable]
+    public class SkillDataLoader : ILoader<int, SkillData>
+    {
+        public List<SkillData> skills = new List<SkillData>();
+
+        public Dictionary<int, SkillData> MakeDict()
+        {
+            Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+
+            foreach(SkillData skill in skills)
+            {
+                dict.Add(skill.SkillId, skill);
             }
 
             return dict;

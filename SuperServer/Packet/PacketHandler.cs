@@ -80,6 +80,17 @@ class PacketHandler
 
     public static void ReqUseSkillToSHandler(PacketSession session, IMessage packet)
     {
-        //
+        ClientSession cSession = (ClientSession)session;
+        ReqUseSkillToS skillPacket = (ReqUseSkillToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.UseSkill, hero, skillPacket.SkillId, skillPacket.TargetId);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.Enum;
 using Google.Protobuf.Struct;
 using SuperServer.Commander;
+using SuperServer.Data;
 using SuperServer.DB;
 using SuperServer.Game.Room;
 using SuperServer.Session;
@@ -20,6 +21,7 @@ namespace SuperServer.Game.Object
         public MyHeroInfo MyHeroInfo { get; private set; }
         public ClientSession Session { get; private set; }
         public InterestRegion InterestRegion { get; private set; }
+        public HeroData HeroData { get; private set; }
 
         public void Init(DBHero hero, LobbyHero lobbyHero, ClientSession session)
         {
@@ -27,7 +29,9 @@ namespace SuperServer.Game.Object
             HeroId = hero.DBHeroId;
             StatComponent.SetHeroStat(hero.Level);
             InterestRegion = new InterestRegion(this);
-            InitPosInfo(hero);
+
+            if (DataManager.HeroDict.TryGetValue(lobbyHero.LobbyHeroInfo.ClassType, out HeroData heroData) == true)
+                HeroData = heroData;
             HeroInfo = new HeroInfo()
             {
                 LobbyHeroInfo = lobbyHero.LobbyHeroInfo,
@@ -38,6 +42,8 @@ namespace SuperServer.Game.Object
                 Exp = hero.HeroStat.Exp,
                 HeroInfo = HeroInfo,
             };
+            InitPosInfo(hero);
+            InitSkill();
         }
         private void InitPosInfo(DBHero dbHero)
         {
@@ -45,6 +51,11 @@ namespace SuperServer.Game.Object
             PosInfo.PosY = dbHero.PosY;
             PosInfo.PosZ = dbHero.PosZ;
             PosInfo.RotY = dbHero.RotY;
+        }
+
+        private void InitSkill()
+        {
+            SkillComponent.RegisterSkill(HeroData);
         }
     }
 }
