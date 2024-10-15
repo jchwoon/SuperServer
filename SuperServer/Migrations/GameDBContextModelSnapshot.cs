@@ -39,6 +39,12 @@ namespace SuperServer.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Exp")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Gold")
+                        .HasColumnType("int");
+
                     b.Property<string>("HeroName")
                         .HasColumnType("nvarchar(450)");
 
@@ -76,29 +82,26 @@ namespace SuperServer.Migrations
                             b1.Property<int>("DBHeroId")
                                 .HasColumnType("int");
 
-                            b1.Property<float>("AtkDamage")
-                                .HasColumnType("real");
+                            b1.Property<int>("AtkDamage")
+                                .HasColumnType("int");
 
                             b1.Property<float>("AtkSpeed")
                                 .HasColumnType("real");
 
-                            b1.Property<float>("Defense")
-                                .HasColumnType("real");
+                            b1.Property<int>("Defense")
+                                .HasColumnType("int");
 
-                            b1.Property<float>("Exp")
-                                .HasColumnType("real");
+                            b1.Property<int>("HP")
+                                .HasColumnType("int");
 
-                            b1.Property<float>("HP")
-                                .HasColumnType("real");
+                            b1.Property<int>("MP")
+                                .HasColumnType("int");
 
-                            b1.Property<float>("MP")
-                                .HasColumnType("real");
+                            b1.Property<int>("MaxHp")
+                                .HasColumnType("int");
 
-                            b1.Property<float>("MaxHp")
-                                .HasColumnType("real");
-
-                            b1.Property<float>("MaxMp")
-                                .HasColumnType("real");
+                            b1.Property<int>("MaxMp")
+                                .HasColumnType("int");
 
                             b1.Property<float>("MoveSpeed")
                                 .HasColumnType("real");

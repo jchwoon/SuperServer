@@ -17,7 +17,7 @@ namespace SuperServer.Game.StateMachine.State
 
         public override void Enter()
         {
-
+            _machine.UpdateTick = 1000;
         }
         public override void Exit() { }
         public override void Update()
@@ -30,7 +30,7 @@ namespace SuperServer.Game.StateMachine.State
                 float dist = (_machine.Target.Position - _owner.Position).Magnitude();
                 if (dist <= _owner.MonsterData.AtkRange)
                 {
-                    _machine.ChangeState(_machine.AttackState);
+                    _machine.ChangeState(_machine.SkillState);
                     return;
                 }
                 else
@@ -52,9 +52,9 @@ namespace SuperServer.Game.StateMachine.State
         {
             float range = _owner.PoolData.SpawnRange;
             //스포닝 풀 범위는 넘지 않기
-            //0 ~ 9 20% 
-            int dist = _random.Next(0, 10);
-            if (dist < 8)
+            //0 ~ 9
+            int rand = _random.Next(0, 10);
+            if (rand < 6)
                 return null;
 
             float randX = (_random.NextSingle() * 2) - 1;

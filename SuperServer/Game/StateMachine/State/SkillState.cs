@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.Struct;
+﻿using SuperServer.Game.Object;
+using SuperServer.Game.Skill;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,28 +8,16 @@ using System.Threading.Tasks;
 
 namespace SuperServer.Game.StateMachine.State
 {
-    public class MoveState : BaseState
+    public class SkillState : BaseState
     {
-        public MoveState(MonsterMachine stateMachine) : base(stateMachine)
+        public SkillState(MonsterMachine machine) : base(machine)
         {
-        }
-
-        public override void Enter()
-        {
-            base.Enter();
-            //거 = 속 * 시
-            //시 = 거 / 속
-            CalculateUpdateTick();
-        }
-        public override void Exit()
-        {
-            base.Exit();
         }
 
         public override void Update()
         {
             base.Update();
-            CalculateUpdateTick();
+            Console.WriteLine("Skill");
 
             _machine.Target = _machine.FindTarget();
             if (_machine.Target != null)
@@ -45,20 +34,23 @@ namespace SuperServer.Game.StateMachine.State
                     return;
                 }
             }
+
             if (_machine.PatrolPos.HasValue)
             {
                 _machine.FindPathAndMove(_owner.Position, _machine.PatrolPos.Value);
                 return;
             }
             _machine.ChangeState(_machine.IdleState);
+
+            //Monster owner = _machine.Owner;
+            //BaseSkill skill = owner.SkillComponent.GetCanUseSkillAtReservedSkills(_machine.Target);
+            //if (skill != null)
+            //{
+            //    owner.SendReqUseSkill(skill.SkillId, _machine.Target.ObjectId);
+            //    return;
+            //}
         }
 
-        private void CalculateUpdateTick()
-        {
-            float nextDist = _machine.ToNextPosDist;
-            StatInfo info = _machine.Owner.StatComponent.StatInfo;
-            float speed = _machine.Target == null ? info.MoveSpeed : info.ChaseSpeed;
-            _machine.UpdateTick = (int)((nextDist / speed) * 1000);
-        }
+
     }
 }

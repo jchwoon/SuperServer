@@ -56,7 +56,10 @@ namespace SuperServer.Utils
         {
             return !(a == b);
         }
-
+        public static float Distance(Vector3Int a, Vector3Int b)
+        {
+            return (a - b).Magnitude();
+        }
         public int MagnitudeSqr()
         {
             return X * X + Y * Y + Z * Z;

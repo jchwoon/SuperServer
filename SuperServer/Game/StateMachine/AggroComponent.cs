@@ -14,7 +14,7 @@ namespace SuperServer.Game.StateMachine
         {
             return _attackers.OrderByDescending(x => x.Value).Select(x => x.Key).FirstOrDefault();
         }
-        public void OnDamaged(int objectId, float damage)
+        public void OnDamage(int objectId, float damage)
         {
             if (_attackers.ContainsKey(objectId))
                 _attackers[objectId] += damage;

@@ -78,6 +78,7 @@ namespace SuperServer.Data
         public int MaxHp;
         public int MaxMp;
         public float MoveSpeed;
+        public float ChaseSpeed;
         public int AtkDamage;
         public int Defence;
         public float AtkSpeed;
@@ -169,6 +170,7 @@ namespace SuperServer.Data
         public float CoolTime;
         public float AnimTime;
         public string AnimParamName;
+        public int EffectId;
     }
 
     [Serializable]
@@ -183,6 +185,29 @@ namespace SuperServer.Data
             foreach(SkillData skill in skills)
             {
                 dict.Add(skill.SkillId, skill);
+            }
+
+            return dict;
+        }
+    }
+
+    public class EffectData
+    {
+        public int EffectId;
+        public float DamageRatio;
+    }
+
+    [Serializable]
+    public class EffectDataLoader : ILoader<int, EffectData>
+    {
+        public List<EffectData> effects = new List<EffectData>();
+        public Dictionary<int, EffectData> MakeDict()
+        {
+            Dictionary<int, EffectData> dict = new Dictionary<int, EffectData>();
+
+            foreach(EffectData effect in effects)
+            {
+                dict.Add(effect.EffectId, effect);
             }
 
             return dict;

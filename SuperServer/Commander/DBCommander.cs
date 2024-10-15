@@ -62,6 +62,7 @@ namespace SuperServer.Commander
                     CreateAt = DateTime.Now,
                     Level = 1,
                     RoomId = 1,
+                    Exp = 0
                 };
                 hero.HeroStat = new Stats()
                 {
@@ -72,7 +73,6 @@ namespace SuperServer.Commander
                     AtkDamage = heroStat.AtkDamage,
                     AtkSpeed = heroStat.AtkSpeed,
                     MoveSpeed = heroStat.MoveSpeed,
-                    Exp = heroStat.Exp,
                     Defense = heroStat.Defence
                 };
 

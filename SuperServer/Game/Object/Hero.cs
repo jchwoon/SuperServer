@@ -39,7 +39,8 @@ namespace SuperServer.Game.Object
             };
             MyHeroInfo = new MyHeroInfo()
             {
-                Exp = hero.HeroStat.Exp,
+                Gold = hero.Gold,
+                Exp = hero.Exp,
                 HeroInfo = HeroInfo,
             };
             InitPosInfo(hero);

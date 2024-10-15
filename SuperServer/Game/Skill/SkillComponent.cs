@@ -12,6 +12,7 @@ namespace SuperServer.Game.Skill
     public class SkillComponent
     {
         Dictionary<int, BaseSkill> _skills = new Dictionary<int, BaseSkill>();
+        Dictionary<int, BaseSkill> _reservedSkills = new Dictionary<int, BaseSkill>();
         public Creature Owner { get; private set; }
         public int NormalSkillId { get; private set; }
 
@@ -50,5 +51,25 @@ namespace SuperServer.Game.Skill
 
             skill.UseSkill(targetId);
         }
+
+        //public BaseSkill GetCanUseSkillAtReservedSkills(Creature target)
+        //{
+        //    if (_reservedSkills.Count == 0)
+        //    {
+        //        BaseSkill normalSkill = GetSkillById(NormalSkillId);
+        //        ESkillFailReason reason = normalSkill.CheckCanUseSkill(target);
+        //        if (reason == ESkillFailReason.None)
+        //            return normalSkill;
+        //    }
+
+        //    foreach (BaseSkill skill in _reservedSkills.Values)
+        //    {
+        //        //ESkillFailReason reason = skill.CheckCanUseSkill(target);
+        //        if (reason == ESkillFailReason.None)
+        //            return skill;
+        //    }
+
+        //    return null;
+        //}
     }
 }

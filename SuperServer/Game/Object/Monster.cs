@@ -20,6 +20,7 @@ namespace SuperServer.Game.Object
         public MonsterData MonsterData { get; set; }
         public AggroComponent AggroComponent { get; set; }
 
+
         public void Init(int monsterId, PoolData poolData)
         {
             MonsterData monsterData;
@@ -33,13 +34,18 @@ namespace SuperServer.Game.Object
             StatComponent.InitSetStat(monsterData);
             Machine = new MonsterMachine(this);
             Machine.ChangeState(Machine.IdleState);
-            Update();
         }
 
         public void Update()
         {
             Machine.Update();
-            GameCommander.Instance.PushAfter(250, Update);
+        }
+
+        public override void OnDamage(Creature attacker, float damage)
+        {
+            base.OnDamage(attacker,damage);
+            Machine.OnDamage(attacker);
+            AggroComponent.OnDamage(attacker.ObjectId, damage);
         }
     }
 }

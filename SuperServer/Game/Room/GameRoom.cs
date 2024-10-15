@@ -22,7 +22,8 @@ namespace SuperServer.Game.Room
         public MapComponent Map { get; set; } = new MapComponent();
         public SpawningPool SpawningPool { get; set; } = new SpawningPool();
         public int RoomId { get; set; }
-        public const float SqrInterestRange = 225;
+        //거리 25
+        public const float SqrInterestRange = 625;
 
         public GameRoom(int roomId)
         {
@@ -68,7 +69,7 @@ namespace SuperServer.Game.Room
             {
                 Monster monster = (Monster)obj;
                 _monsters.Add(monster.ObjectId, monster);
-
+                monster.Update();
                 SpawnToC spawnPacket = new SpawnToC();
                 spawnPacket.Creatures.Add(monster.CreatureInfo);
                 Broadcast(spawnPacket, obj.Position);

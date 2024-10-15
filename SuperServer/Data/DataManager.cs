@@ -20,6 +20,7 @@ namespace SuperServer.Data
         public static Dictionary<int, SpawningPoolData> SpawningPoolDict { get; private set; } = new Dictionary<int, SpawningPoolData>();
         public static Dictionary<int, SkillData> SkillDict { get; private set; } = new Dictionary<int, SkillData>();
         public static Dictionary<EHeroClassType, HeroData> HeroDict { get; private set; } = new Dictionary<EHeroClassType, HeroData>();
+        public static Dictionary<int, EffectData> EffectDict { get; private set; } = new Dictionary<int, EffectData>();
         public static void Init()
         {
             HeroStatDict = LoadJson<HeroStatDataLoader, int, HeroStatData>("HeroStatData").MakeDict();
@@ -28,6 +29,7 @@ namespace SuperServer.Data
             SpawningPoolDict = LoadJson<SpawningPoolLoader, int, SpawningPoolData>("SpawningPoolData").MakeDict();
             SkillDict = LoadJson<SkillDataLoader, int, SkillData>("SkillData").MakeDict();
             HeroDict = LoadJson<HeroDataLoader, EHeroClassType, HeroData>("HeroData").MakeDict();
+            EffectDict = LoadJson<EffectDataLoader, int, EffectData>("EffectData").MakeDict();
         }
 
         private static Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

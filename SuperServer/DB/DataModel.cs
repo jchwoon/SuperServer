@@ -19,6 +19,8 @@ namespace SuperServer.DB
         public EHeroClassType Class { get; set; }
         public DateTime CreateAt { get; set; }
         public int Level { get; set; }
+        public int Gold { get; set; }
+        public int Exp { get; set; }
         public Stats HeroStat { get; set; }
         public int RoomId { get; set; }
         public float PosX { get; set; }
@@ -32,14 +34,13 @@ namespace SuperServer.DB
     [Owned]
     public class Stats
     {
-        public float MaxHp { get; set; }
-        public float MaxMp { get; set; }
-        public float HP { get; set; }
-        public float MP { get; set; }
-        public float AtkDamage { get; set; }
-        public float Defense { get; set; }
+        public int MaxHp { get; set; }
+        public int MaxMp { get; set; }
+        public int HP { get; set; }
+        public int MP { get; set; }
+        public int AtkDamage { get; set; }
+        public int Defense { get; set; }
         public float MoveSpeed { get; set; }
         public float AtkSpeed { get; set; }
-        public float Exp { get; set; }
     }
 }

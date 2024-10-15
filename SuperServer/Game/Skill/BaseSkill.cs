@@ -35,7 +35,12 @@ namespace SuperServer.Game.Skill
             bool canUse = CheckCanUseSkill(target);
             if (canUse == false)
                 return;
+
+            EffectData effectData;
+            if (DataManager.EffectDict.TryGetValue(SkillData.EffectId, out effectData) == false)
+                return;
             Console.WriteLine("UseSkill");
+            target.EffectComponent.ApplyEffect(Owner, effectData);
             RefreshCooldown();
             BroadcastSkill(targetId);
         }
@@ -45,7 +50,7 @@ namespace SuperServer.Game.Skill
             Owner.BroadcastSkill(SkillId, targetId);
         }
 
-        private bool CheckCanUseSkill(Creature target)
+        public bool CheckCanUseSkill(Creature target)
         {
             if (CheckCoolTime() == false)
             {

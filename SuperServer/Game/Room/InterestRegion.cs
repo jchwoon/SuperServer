@@ -51,7 +51,7 @@ namespace SuperServer.Game.Room
                 }
                 Owner.Session.Send(spawnPacket);
             }
-            //졸업생? 디스폰
+            //관심 영역 밖 디스폰
             List<Creature> oldCreatures = CurrentInterestCreature.Except(interestCreatures).ToList();
             if (oldCreatures.Count > 0)
             {

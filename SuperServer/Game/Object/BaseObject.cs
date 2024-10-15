@@ -47,7 +47,7 @@ namespace SuperServer.Game.Object
             ObjectInfo.PosInfo = PosInfo;
         }
 
-        public void BroadcastMove(Vector3? destPos, float moveSpeed = 0)
+        public void BroadcastMove(Vector3? destPos, float moveSpeed = 0, EMoveType moveType = EMoveType.None)
         {
             if (destPos.HasValue)
             {
@@ -59,6 +59,7 @@ namespace SuperServer.Game.Object
             else
                 _movePacket.PosInfo = PosInfo;
             _movePacket.ObjectId = ObjectId;
+            _movePacket.MoveType = moveType;
 
             GameCommander.Instance.Push(() =>
             {

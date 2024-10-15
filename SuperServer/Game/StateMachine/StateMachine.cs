@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Enum;
+using SuperServer.Commander;
 using SuperServer.Game.Object;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace SuperServer.Game.StateMachine
         public virtual T Owner { get; protected set; }
         public IState CurrentState { get; private set; }
         protected ECreatureState CreatureState { get; private set; }
+        public int UpdateTick { get; set; } = 1000; 
 
         public virtual void ChangeState(IState changeState)
         {
@@ -41,6 +43,8 @@ namespace SuperServer.Game.StateMachine
                 return;
 
             CurrentState.Update();
+
+            GameCommander.Instance.PushAfter(UpdateTick, Update);
         }
     }
 }

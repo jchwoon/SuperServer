@@ -1,4 +1,5 @@
-﻿using SuperServer.Game.Object;
+﻿using Google.Protobuf.Enum;
+using SuperServer.Game.Object;
 using SuperServer.Game.StateMachine.State;
 using SuperServer.Utils;
 using System;
@@ -14,9 +15,10 @@ namespace SuperServer.Game.StateMachine
     {
         public IdleState IdleState { get; set; }
         public MoveState MoveState { get; set; }
-        public AttackState AttackState { get; set; }
+        public SkillState SkillState { get; set; }
         public Vector3? PatrolPos { get; set; }
         public BaseObject Target { get; set; }
+        public float ToNextPosDist { get; private set; }
         public MonsterMachine(Monster monster)
         {
             Owner = monster;
@@ -27,12 +29,14 @@ namespace SuperServer.Game.StateMachine
         {
             IdleState = new IdleState(this);
             MoveState = new MoveState(this);
-            AttackState = new AttackState(this);
+            SkillState = new SkillState(this);
         }
         public Creature FindTarget()
         {
             int targetId = Owner.AggroComponent.GetTargetIdFromAttackers();
             Hero target = Owner.Room?.FindHeroById(targetId);
+            if (target == null)
+                return null;
 
             return target;
         }
@@ -50,9 +54,19 @@ namespace SuperServer.Game.StateMachine
                 return;
             }
 
-            Owner.Room?.Map.ApplyMove(Owner, path[1]);
+
+            ToNextPosDist = Vector3Int.Distance(Vector3Int.Vector3ToVector3Int(Owner.Position), path[1]);
+
             ChangeState(MoveState);
-            Owner.BroadcastMove(null);
+            Owner.Room?.Map.ApplyMove(Owner, path[1]);
+            Owner.BroadcastMove(null, moveType : Target == null ? EMoveType.None : EMoveType.Chase);
+        }
+
+        public void OnDamage(Creature attacker)
+        {
+            //Hit
+            //어그로가 일단 끌려야함
+            
         }
     }
 }
