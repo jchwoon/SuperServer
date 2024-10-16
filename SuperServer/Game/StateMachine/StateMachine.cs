@@ -24,6 +24,7 @@ namespace SuperServer.Game.StateMachine
 
         public virtual void ChangeState(IState changeState)
         {
+            if (CurrentState == changeState) return;
             if (CurrentState != null)
             {
                 CurrentState.Exit();

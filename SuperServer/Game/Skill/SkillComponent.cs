@@ -12,18 +12,18 @@ namespace SuperServer.Game.Skill
     public class SkillComponent
     {
         Dictionary<int, BaseSkill> _skills = new Dictionary<int, BaseSkill>();
-        Dictionary<int, BaseSkill> _reservedSkills = new Dictionary<int, BaseSkill>();
         public Creature Owner { get; private set; }
         public int NormalSkillId { get; private set; }
+        public BaseSkill LastSkill { get; set; }
 
         public SkillComponent(Creature owner)
         {
             Owner = owner;
         }
 
-        public void RegisterSkill(HeroData heroData)
+        public void RegisterSkill(List<int> skillIds)
         {
-            foreach (int id in heroData.SkillIds)
+            foreach (int id in skillIds)
             {
                 if (DataManager.SkillDict.TryGetValue(id, out SkillData skillData) == true)
                 {
@@ -52,24 +52,45 @@ namespace SuperServer.Game.Skill
             skill.UseSkill(targetId);
         }
 
-        //public BaseSkill GetCanUseSkillAtReservedSkills(Creature target)
-        //{
-        //    if (_reservedSkills.Count == 0)
-        //    {
-        //        BaseSkill normalSkill = GetSkillById(NormalSkillId);
-        //        ESkillFailReason reason = normalSkill.CheckCanUseSkill(target);
-        //        if (reason == ESkillFailReason.None)
-        //            return normalSkill;
-        //    }
+        public void UseNormalSkill(int targetId)
+        {
+            UseSKill(NormalSkillId, targetId);
+        }
 
-        //    foreach (BaseSkill skill in _reservedSkills.Values)
-        //    {
-        //        //ESkillFailReason reason = skill.CheckCanUseSkill(target);
-        //        if (reason == ESkillFailReason.None)
-        //            return skill;
-        //    }
+        //쿨타임 없이 쓸 수 있는 스킬들 일반 공격스킬 제외
+        public BaseSkill GetCanUseSkill(BaseObject target)
+        {
+            foreach(BaseSkill skill in _skills.Values)
+            {
+                if (skill.SkillId == NormalSkillId) continue;
+                if (skill.UseSkill(target.ObjectId) == true)
+                {
+                    return skill;
+                }
+            }
 
-        //    return null;
-        //}
+            return null;
+        }
+
+        public BaseSkill GetSkillById(int skillId)
+        {
+            BaseSkill skill;
+            if (_skills.TryGetValue(skillId, out skill) == false)
+                return null;
+
+            return skill;
+        }
+
+        public bool CheckLastSkillIsUsing()
+        {
+            if (LastSkill == null)
+                return false;
+            return LastSkill.CheckUsingSkill();
+        }
+
+        public float GetSkillRange(BaseSkill skill)
+        {
+            return skill.GetSkillRange();
+        }
     }
 }

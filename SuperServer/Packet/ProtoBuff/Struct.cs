@@ -36,13 +36,13 @@ namespace Google.Protobuf.Struct {
             "ZBgDIAEoBSKdAQoIU3RhdEluZm8SCgoCaHAYASABKAUSDQoFbWF4SHAYAiAB",
             "KAUSEQoJbW92ZVNwZWVkGAMgASgCEhIKCmNoYXNlU3BlZWQYBCABKAISEQoJ",
             "YXRrRGFtYWdlGAUgASgFEhAKCGF0a1NwZWVkGAYgASgCEg8KB2RlZmVuY2UY",
-            "ByABKAUSCgoCbXAYCCABKAUSDQoFbWF4TXAYCSABKAUiUAoHUG9zSW5mbxIM",
+            "ByABKAUSCgoCbXAYCCABKAUSDQoFbWF4TXAYCSABKAUiQQoHUG9zSW5mbxIM",
             "CgRwb3NYGAEgASgCEgwKBHBvc1kYAiABKAISDAoEcG9zWhgDIAEoAhIMCgRy",
-            "b3RZGAQgASgCEg0KBXNwZWVkGAUgASgCIpEBCgpPYmplY3RJbmZvEhAKCG9i",
-            "amVjdElkGAEgASgFEhIKCnRlbXBsYXRlSWQYAiABKAUSKQoKb2JqZWN0VHlw",
-            "ZRgDIAEoDjIVLlByb3RvY29sLkVPYmplY3RUeXBlEg4KBnJvb21JZBgEIAEo",
-            "BRIiCgdwb3NJbmZvGAUgASgLMhEuUHJvdG9jb2wuUG9zSW5mb0IZqgIWR29v",
-            "Z2xlLlByb3RvYnVmLlN0cnVjdGIGcHJvdG8z"));
+            "b3RZGAQgASgCIpEBCgpPYmplY3RJbmZvEhAKCG9iamVjdElkGAEgASgFEhIK",
+            "CnRlbXBsYXRlSWQYAiABKAUSKQoKb2JqZWN0VHlwZRgDIAEoDjIVLlByb3Rv",
+            "Y29sLkVPYmplY3RUeXBlEg4KBnJvb21JZBgEIAEoBRIiCgdwb3NJbmZvGAUg",
+            "ASgLMhEuUHJvdG9jb2wuUG9zSW5mb0IZqgIWR29vZ2xlLlByb3RvYnVmLlN0",
+            "cnVjdGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.Enum.EnumReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -51,7 +51,7 @@ namespace Google.Protobuf.Struct {
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Struct.CreatureInfo), global::Google.Protobuf.Struct.CreatureInfo.Parser, new[]{ "ObjectInfo", "StatInfo" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Struct.MyHeroInfo), global::Google.Protobuf.Struct.MyHeroInfo.Parser, new[]{ "HeroInfo", "Exp", "Gold" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Struct.StatInfo), global::Google.Protobuf.Struct.StatInfo.Parser, new[]{ "Hp", "MaxHp", "MoveSpeed", "ChaseSpeed", "AtkDamage", "AtkSpeed", "Defence", "Mp", "MaxMp" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Struct.PosInfo), global::Google.Protobuf.Struct.PosInfo.Parser, new[]{ "PosX", "PosY", "PosZ", "RotY", "Speed" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Struct.PosInfo), global::Google.Protobuf.Struct.PosInfo.Parser, new[]{ "PosX", "PosY", "PosZ", "RotY" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Struct.ObjectInfo), global::Google.Protobuf.Struct.ObjectInfo.Parser, new[]{ "ObjectId", "TemplateId", "ObjectType", "RoomId", "PosInfo" }, null, null, null, null)
           }));
     }
@@ -1651,7 +1651,6 @@ namespace Google.Protobuf.Struct {
       posY_ = other.posY_;
       posZ_ = other.posZ_;
       rotY_ = other.rotY_;
-      speed_ = other.speed_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1709,18 +1708,6 @@ namespace Google.Protobuf.Struct {
       }
     }
 
-    /// <summary>Field number for the "speed" field.</summary>
-    public const int SpeedFieldNumber = 5;
-    private float speed_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public float Speed {
-      get { return speed_; }
-      set {
-        speed_ = value;
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1740,7 +1727,6 @@ namespace Google.Protobuf.Struct {
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(PosY, other.PosY)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(PosZ, other.PosZ)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(RotY, other.RotY)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Speed, other.Speed)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1752,7 +1738,6 @@ namespace Google.Protobuf.Struct {
       if (PosY != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(PosY);
       if (PosZ != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(PosZ);
       if (RotY != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(RotY);
-      if (Speed != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Speed);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1787,10 +1772,6 @@ namespace Google.Protobuf.Struct {
         output.WriteRawTag(37);
         output.WriteFloat(RotY);
       }
-      if (Speed != 0F) {
-        output.WriteRawTag(45);
-        output.WriteFloat(Speed);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1817,10 +1798,6 @@ namespace Google.Protobuf.Struct {
         output.WriteRawTag(37);
         output.WriteFloat(RotY);
       }
-      if (Speed != 0F) {
-        output.WriteRawTag(45);
-        output.WriteFloat(Speed);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1841,9 +1818,6 @@ namespace Google.Protobuf.Struct {
         size += 1 + 4;
       }
       if (RotY != 0F) {
-        size += 1 + 4;
-      }
-      if (Speed != 0F) {
         size += 1 + 4;
       }
       if (_unknownFields != null) {
@@ -1869,9 +1843,6 @@ namespace Google.Protobuf.Struct {
       }
       if (other.RotY != 0F) {
         RotY = other.RotY;
-      }
-      if (other.Speed != 0F) {
-        Speed = other.Speed;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1908,10 +1879,6 @@ namespace Google.Protobuf.Struct {
             RotY = input.ReadFloat();
             break;
           }
-          case 45: {
-            Speed = input.ReadFloat();
-            break;
-          }
         }
       }
     #endif
@@ -1945,10 +1912,6 @@ namespace Google.Protobuf.Struct {
           }
           case 37: {
             RotY = input.ReadFloat();
-            break;
-          }
-          case 45: {
-            Speed = input.ReadFloat();
             break;
           }
         }

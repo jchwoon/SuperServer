@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.Enum;
 using SuperServer.Game.Object;
+using SuperServer.Game.Skill;
 using SuperServer.Game.StateMachine.State;
 using SuperServer.Utils;
 using System;
@@ -19,6 +20,8 @@ namespace SuperServer.Game.StateMachine
         public Vector3? PatrolPos { get; set; }
         public BaseObject Target { get; set; }
         public float ToNextPosDist { get; private set; }
+        public BaseSkill CurrentSkill { get;  set; }
+        public bool OverPoolRange { get; set; }
         public MonsterMachine(Monster monster)
         {
             Owner = monster;
@@ -35,13 +38,11 @@ namespace SuperServer.Game.StateMachine
         {
             int targetId = Owner.AggroComponent.GetTargetIdFromAttackers();
             Hero target = Owner.Room?.FindHeroById(targetId);
-            if (target == null)
-                return null;
 
             return target;
         }
 
-        public void FindPathAndMove(Vector3 start, Vector3 dest)
+        public void FindPathAndMove(Vector3 start, Vector3 dest, bool chase = false)
         {
             Vector3Int rounStart = Vector3Int.Vector3ToVector3Int(start);
             Vector3Int roundDest = Vector3Int.Vector3ToVector3Int(dest);
@@ -54,19 +55,19 @@ namespace SuperServer.Game.StateMachine
                 return;
             }
 
-
             ToNextPosDist = Vector3Int.Distance(Vector3Int.Vector3ToVector3Int(Owner.Position), path[1]);
 
             ChangeState(MoveState);
             Owner.Room?.Map.ApplyMove(Owner, path[1]);
-            Owner.BroadcastMove(null, moveType : Target == null ? EMoveType.None : EMoveType.Chase);
+            Owner.BroadcastMove(null, moveType : chase == true ? EMoveType.Chase : EMoveType.None);
         }
 
-        public void OnDamage(Creature attacker)
+        public bool IsChaseMode()
         {
-            //Hit
-            //어그로가 일단 끌려야함
-            
+            if (Target != null || OverPoolRange)
+                return true;
+
+            return false;
         }
     }
 }

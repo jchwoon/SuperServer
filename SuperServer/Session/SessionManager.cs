@@ -48,6 +48,7 @@ namespace SuperServer.Session
             {
                 _sessionIdQueue.Enqueue(session.SessionId);
                 _sessions.Remove(session.SessionId);
+                session = null;
             }
         }
 

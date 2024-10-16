@@ -22,7 +22,7 @@ namespace SuperServer.Game.Map
 
         public void LoadMap(string mapName)
         {
-            using (BinaryReader reader = new BinaryReader(File.Open($"{ConfigManager.Config.dataPath}/Map/{mapName}Data.bin", FileMode.Open, FileAccess.Read, FileShare.Read)))
+            using (BinaryReader reader = new BinaryReader(File.Open($"{ConfigManager.Config.dataPath}/Map/{mapName}Data.txt", FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 MinX = reader.ReadInt32();
                 MaxX = reader.ReadInt32();

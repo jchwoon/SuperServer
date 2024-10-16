@@ -56,7 +56,7 @@ namespace SuperServer.Game.Object
 
         private void InitSkill()
         {
-            SkillComponent.RegisterSkill(HeroData);
+            SkillComponent.RegisterSkill(HeroData.SkillIds);
         }
     }
 }

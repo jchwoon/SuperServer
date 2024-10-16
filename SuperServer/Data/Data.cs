@@ -84,6 +84,8 @@ namespace SuperServer.Data
         public float AtkSpeed;
         public float Sight;
         public float AtkRange;
+        public List<int> SkillIds;
+        public EMonsterGrade MonsterGrade;
     }
 
     [Serializable]
