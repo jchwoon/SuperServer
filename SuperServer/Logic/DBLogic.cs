@@ -18,7 +18,7 @@ namespace SuperServer.Logic
 
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == hero.HeroId).FirstOrDefault();
+                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == hero.DbHeroId).FirstOrDefault();
 
                 if (dbHero == null) return;
 

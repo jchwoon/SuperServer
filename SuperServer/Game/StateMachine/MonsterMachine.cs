@@ -17,6 +17,7 @@ namespace SuperServer.Game.StateMachine
         public IdleState IdleState { get; set; }
         public MoveState MoveState { get; set; }
         public SkillState SkillState { get; set; }
+        public DieState DieState { get; set; }
         public Vector3? PatrolPos { get; set; }
         public BaseObject Target { get; set; }
         public float ToNextPosDist { get; private set; }
@@ -33,6 +34,7 @@ namespace SuperServer.Game.StateMachine
             IdleState = new IdleState(this);
             MoveState = new MoveState(this);
             SkillState = new SkillState(this);
+            DieState = new DieState(this);
         }
         public Creature FindTarget()
         {
@@ -68,6 +70,15 @@ namespace SuperServer.Game.StateMachine
                 return true;
 
             return false;
+        }
+
+        public override void OnDie()
+        {
+            base.OnDie();
+
+            if (Target != null)
+                Target = null;
+            ChangeState(DieState);
         }
     }
 }

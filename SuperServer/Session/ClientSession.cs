@@ -10,6 +10,7 @@ using Google.Protobuf.Protocol;
 using SuperServer.Commander;
 using System.Net.NetworkInformation;
 using SuperServer.Game.Object;
+using SuperServer.Game.Room;
 
 namespace SuperServer.Session
 {
@@ -77,16 +78,13 @@ namespace SuperServer.Session
 
         public override void OnDisconnected()
         {
-            GameCommander.Instance.Push(() =>
+            if (PlayingHero != null && PlayingHero.Room != null)
             {
-                if (PlayingHero == null)
-                    return;
+                Hero myHero = PlayingHero;
+                GameRoom room = myHero.Room;
+                GameCommander.Instance.Push(room.ExitRoom<Hero>, myHero);
+            }
 
-                if (PlayingHero.Room == null)
-                    return;
-
-                GameCommander.Instance.Push(PlayingHero.Room.ExitRoom<Hero>, PlayingHero);
-            });
             SessionManager.Instance.Remove(this);
             Console.WriteLine("Disconnected");
         }

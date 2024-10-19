@@ -43,6 +43,9 @@ namespace SuperServer.Data
     {
         public int RoomId;
         public string Name;
+        public float StartPosX;
+        public float StartPosY;
+        public float StartPosZ;
     }
 
     [Serializable]
@@ -83,7 +86,6 @@ namespace SuperServer.Data
         public int Defence;
         public float AtkSpeed;
         public float Sight;
-        public float AtkRange;
         public List<int> SkillIds;
         public EMonsterGrade MonsterGrade;
     }
@@ -173,6 +175,7 @@ namespace SuperServer.Data
         public float AnimTime;
         public string AnimParamName;
         public int EffectId;
+        public float EffectDelayRatio;
     }
 
     [Serializable]

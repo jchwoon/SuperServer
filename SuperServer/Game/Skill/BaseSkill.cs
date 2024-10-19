@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Enum;
+using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.Game.Object;
 using SuperServer.Utils;
@@ -41,16 +42,18 @@ namespace SuperServer.Game.Skill
             if (DataManager.EffectDict.TryGetValue(SkillData.EffectId, out effectData) == false)
                 return false;
 
-
-            Console.WriteLine("UseSkill");
             Owner.SkillComponent.LastSkill = this;
-            target.EffectComponent.ApplyEffect(Owner, effectData);
+            GameCommander.Instance.PushAfter(GetSkillDelayTick(),
+                () =>
+                {
+                    target.EffectComponent.ApplyEffect(Owner, effectData);
+                });
             RefreshCooldown();
             BroadcastSkill(targetId);
             return true;
         }
 
-        private void BroadcastSkill(int targetId)
+        protected void BroadcastSkill(int targetId)
         {
             Owner.BroadcastSkill(SkillId, targetId);
         }
@@ -60,8 +63,16 @@ namespace SuperServer.Game.Skill
             return SkillData.SkillRange;
         }
 
-        private bool CheckCanUseSkill(BaseObject target)
+        public bool CheckCanUseSkill(BaseObject target)
         {
+            if (Owner == null || Owner.Room == null)
+                return false;
+
+            if (CheckTargetDie(target) == false)
+            {
+                Console.WriteLine("Target Die");
+                return false;
+            }
             if (CheckCoolTime() == false)
             {
                 Console.WriteLine("CoolTime Fail");
@@ -76,15 +87,6 @@ namespace SuperServer.Game.Skill
 
             return true;
         }
-
-        protected virtual bool CheckCoolTime()
-        {
-            long elapsedTime = GetElapsedTimeAfterLastUseSkill();
-            if (elapsedTime >= SkillData.CoolTime * 1000)
-                return true;
-
-            return false;
-        }
         public bool CheckUsingSkill()
         {
             long elapsedTime = GetElapsedTimeAfterLastUseSkill();
@@ -94,12 +96,33 @@ namespace SuperServer.Game.Skill
             return true;
         }
 
+        protected bool CheckTargetDie(BaseObject target)
+        {
+            Creature t = target as Creature;
+            if (t.CurrentState == ECreatureState.Die)
+                return false;
+
+            return true;
+        }
+
+        protected virtual int GetSkillDelayTick()
+        {
+            return (int)(SkillData.EffectDelayRatio * 1 * 1000);
+        }
+        protected virtual bool CheckCoolTime()
+        {
+            long elapsedTime = GetElapsedTimeAfterLastUseSkill();
+            if (elapsedTime >= SkillData.CoolTime * 1000)
+                return true;
+
+            return false;
+        }
         //가장최근에 해당 스킬을 쓰고 난 후 지난 시간
         protected long GetElapsedTimeAfterLastUseSkill()
         {
             return Environment.TickCount64 - LastCoolTick;
         }
-        private void RefreshCooldown()
+        protected void RefreshCooldown()
         {
             LastCoolTick = Environment.TickCount64;
         }
@@ -109,7 +132,8 @@ namespace SuperServer.Game.Skill
                 return false;
 
             float dist = Vector3.Distance(Owner.Position, target.Position);
-            if (dist > GetSkillRange() + 2)
+            //검사할때만 스킬 범위 보정
+            if (dist > GetSkillRange() +1)
                 return false;
 
             return true;

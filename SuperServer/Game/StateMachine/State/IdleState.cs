@@ -1,6 +1,7 @@
 ﻿using SuperServer.Data;
 using SuperServer.Game.Object;
 using SuperServer.Utils;
+using Google.Protobuf.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace SuperServer.Game.StateMachine.State
 
         public override void Enter()
         {
-            _machine.UpdateTick = 1000;
+            _machine.UpdateTick = 500;
+            _machine.Owner.CurrentState = ECreatureState.Idle;
         }
         public override void Exit() { }
         public override void Update()

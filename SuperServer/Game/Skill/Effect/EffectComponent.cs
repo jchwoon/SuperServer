@@ -18,7 +18,7 @@ namespace SuperServer.Game.Skill.Effect
 
         public void ApplyEffect(Creature giver, EffectData data)
         {
-            float damage = Owner.StatComponent.StatInfo.AtkDamage * data.DamageRatio;
+            float damage = giver.StatComponent.StatInfo.AtkDamage * data.DamageRatio;
             Owner.OnDamage(giver, damage);
         }
     }

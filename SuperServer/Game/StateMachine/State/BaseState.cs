@@ -44,7 +44,7 @@ namespace SuperServer.Game.StateMachine.State
                 float dist = Vector3.Distance(_machine.Owner.Position, _machine.Target.Position);
                 BaseSkill skill = _machine.Owner.SkillComponent.GetCanUseSkill(_machine.Target);
 
-                if (dist > (skill == null ? 1.0f : _machine.Owner.SkillComponent.GetSkillRange(skill)))
+                if (skill == null || dist > _machine.Owner.SkillComponent.GetSkillRange(skill))
                 {
                     _machine.FindPathAndMove(_machine.Owner.Position, _machine.Target.Position, chase:true);
                     return;

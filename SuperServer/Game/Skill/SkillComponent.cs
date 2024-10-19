@@ -57,19 +57,19 @@ namespace SuperServer.Game.Skill
             UseSKill(NormalSkillId, targetId);
         }
 
-        //쿨타임 없이 쓸 수 있는 스킬들 일반 공격스킬 제외
+        
         public BaseSkill GetCanUseSkill(BaseObject target)
         {
-            foreach(BaseSkill skill in _skills.Values)
+            foreach (BaseSkill skill in _skills.Values)
             {
                 if (skill.SkillId == NormalSkillId) continue;
-                if (skill.UseSkill(target.ObjectId) == true)
+                if (skill.CheckCanUseSkill(target) == true)
                 {
                     return skill;
                 }
             }
 
-            return null;
+            return _skills[NormalSkillId];
         }
 
         public BaseSkill GetSkillById(int skillId)

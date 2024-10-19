@@ -41,7 +41,6 @@ namespace SuperServer.Game.Room
                         Hero hero = (Hero)creature;
                         HeroInfo info = new HeroInfo();
                         info.MergeFrom(hero.HeroInfo);
-                        Console.WriteLine($"x : {info.CreatureInfo.ObjectInfo.PosInfo.PosX}, y :{info.CreatureInfo.ObjectInfo.PosInfo.PosY}, z : {info.CreatureInfo.ObjectInfo.PosInfo.PosZ}");
                         spawnPacket.Heroes.Add(info);
                     }
                     else if (creature.ObjectType == EObjectType.Monster)
@@ -81,6 +80,7 @@ namespace SuperServer.Game.Room
 
             List<Creature> creatures = Owner.Room.GetCreatures();
 
+            //개선점
             foreach (Creature creature in creatures)
             {
                 if (creature.ObjectId == Owner.ObjectId) continue;

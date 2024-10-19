@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SuperServer.Game.StateMachine;
+using System.Reflection.PortableExecutable;
 
 namespace SuperServer.Game.Object
 {
@@ -21,8 +23,13 @@ namespace SuperServer.Game.Object
         public StatComponent StatComponent { get; private set; }
         public SkillComponent SkillComponent { get; private set; }
         public EffectComponent EffectComponent { get; private set; }
+        public ECreatureState CurrentState { get; set; }
+        
         public PoolData PoolData { get; protected set; }
-        private ResUseSkillToC _skillPacket = new ResUseSkillToC();
+        ResUseSkillToC _skillPacket = new ResUseSkillToC();
+        ModifyStatToC _modifyStatPacket = new ModifyStatToC();
+        ModifyOneStatToC _modifyOneStatPacket = new ModifyOneStatToC();
+        DieToC _deadPacket = new DieToC();
         public Creature()
         {
             StatComponent = new StatComponent();
@@ -38,8 +45,44 @@ namespace SuperServer.Game.Object
             if (Room == null)
                 return;
 
-            int retDamage = Math.Min(1, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
-            StatComponent.AddStat(EStatType.Hp, -retDamage);
+            if (CurrentState == ECreatureState.Die)
+                return;
+
+            int retDamage = Math.Max(1, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
+            AddStat(EStatType.Hp, -retDamage);
+
+            if (StatComponent.StatInfo.Hp <= 0)
+            {
+                OnDie(attacker);
+            }
+        }
+
+        public virtual void OnDie(Creature killer)
+        {
+            if (Room == null)
+                return;
+
+            if (CurrentState == ECreatureState.Die)
+                return;
+
+            _deadPacket.ObjectId = ObjectId;
+            _deadPacket.KillerId = killer.ObjectId;
+
+            Room.Broadcast(_deadPacket, Position);
+        }
+
+        public virtual void ReSpawn()
+        {
+            StatComponent.SetStat(EStatType.Hp, StatComponent.GetStat(EStatType.MaxHp));
+        }
+
+
+        private void AddStat(EStatType statType, float gapValue)
+        {
+            //값의 변경이 일어나고
+            StatComponent.AddStat(statType, gapValue);
+            //변경된 값을 Broad
+            BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue);
         }
 
         public void BroadcastSkill(int skillId, int targetId)
@@ -51,10 +94,30 @@ namespace SuperServer.Game.Object
             _skillPacket.ObjectId = this.ObjectId;
             _skillPacket.TargetId = targetId;
 
-            GameCommander.Instance.Push(() =>
-            {
-                Room?.Broadcast(_skillPacket, Position);
-            });
+            Room.Broadcast(_skillPacket, Position);
+        }
+
+        public void BroadcastStat()
+        {
+            if (Room == null)
+                return;
+
+            _modifyStatPacket.ObjectId = ObjectId;
+            _modifyStatPacket.StatInfo = StatComponent.StatInfo;
+
+            Room.Broadcast(_modifyStatPacket, Position);
+        }
+        public void BroadcastOneStat(EStatType statType, float changedValue, float gapValue)
+        {
+            if (Room == null)
+                return;
+
+            _modifyOneStatPacket.ObjectId = ObjectId;
+            _modifyOneStatPacket.StatType = statType;
+            _modifyOneStatPacket.ChangedValue = changedValue;
+            _modifyOneStatPacket.GapValue = gapValue;
+
+            Room.Broadcast(_modifyOneStatPacket, Position);
         }
     }
 }

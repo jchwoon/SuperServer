@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.Struct;
+﻿using Google.Protobuf.Enum;
+using Google.Protobuf.Struct;
 using SuperServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace SuperServer.Game.StateMachine.State
         public override void Enter()
         {
             base.Enter();
+            _machine.Owner.CurrentState = ECreatureState.Move;
             //거 = 속 * 시
             //시 = 거 / 속
             _machine.PatrolPos = null;

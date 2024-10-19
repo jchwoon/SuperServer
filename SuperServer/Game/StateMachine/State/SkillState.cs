@@ -1,4 +1,5 @@
-﻿using SuperServer.Game.Object;
+﻿using Google.Protobuf.Enum;
+using SuperServer.Game.Object;
 using SuperServer.Game.Skill;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace SuperServer.Game.StateMachine.State
         public override void Enter()
         {
             base.Enter();
-            _machine.UpdateTick = (int)(_machine.Owner.MonsterData.AtkSpeed * 1000);
+            _machine.Owner.CurrentState = ECreatureState.Skill;
+            _machine.UpdateTick = (int)((1.0f / _machine.Owner.MonsterData.AtkSpeed) * 1000);
         }
         public override void Exit()
         {

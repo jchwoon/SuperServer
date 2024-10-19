@@ -15,7 +15,6 @@ namespace SuperServer.Game.Object
     public class BaseObject
     {
         private MoveToC _movePacket = new MoveToC() { PosInfo = new PosInfo() };
-        private GetHitToC _getHitPacket = new GetHitToC();
         protected int _objectId;
         protected GameRoom _gameRoom;
         protected EObjectType _objectType;
@@ -50,6 +49,9 @@ namespace SuperServer.Game.Object
 
         public void BroadcastMove(Vector3? destPos, EMoveType moveType = EMoveType.None)
         {
+            if (Room == null)
+                return;
+
             if (destPos.HasValue)
             {
                 _movePacket.PosInfo.PosX = destPos.Value.X;
@@ -61,19 +63,7 @@ namespace SuperServer.Game.Object
             _movePacket.ObjectId = ObjectId;
             _movePacket.MoveType = moveType;
 
-            GameCommander.Instance.Push(() =>
-            {
-                Room?.Broadcast(_movePacket, Position);
-            });
-        }
-
-        public void BroadcastGetHit(int objectId)
-        {
-            _getHitPacket.ObjectId = objectId;
-            GameCommander.Instance.Push(() =>
-            {
-                Room?.Broadcast(_getHitPacket, Position);
-            });
+            GameCommander.Instance.Push(Room.Broadcast, _movePacket, Position);
         }
     }
 }

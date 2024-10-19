@@ -27,7 +27,9 @@ public enum PacketId
   DeSpawnToC = 18,
   ReqUseSkillToS = 19,
   ResUseSkillToC = 20,
-  GetHitToC = 21,
+  ModifyStatToC = 21,
+  ModifyOneStatToC = 22,
+  DieToC = 23,
 
 }
 
