@@ -24,6 +24,11 @@ namespace SuperServer.Game.StateMachine.State
         }
         public virtual void Enter()
         {
+            if (_owner.Room != null)
+            {
+                Update();
+            }
+
         }
 
         public virtual void Exit()
@@ -53,11 +58,14 @@ namespace SuperServer.Game.StateMachine.State
                 return;
             }
 
-            //자신의 스포닝풀 범위를 넘었으면 복귀
-            if (_machine.OverPoolRange && _owner.AggroComponent.FirstAggroPos.HasValue)
+            //자신의 스포닝풀 범위를 넘었으면 복귀 or 어그로가 끌렸는데 갑자기 타겟이 없어졌으면 복귀
+            if (_owner.AggroComponent.FirstAggroPos.HasValue)
             {
-                _machine.FindPathAndMove(_machine.Owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase:true);
-                return;
+                if (_machine.OverPoolRange || _machine.Target == null)
+                {
+                    _machine.FindPathAndMove(_machine.Owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase: true);
+                    return;
+                }
             }
 
             //패트롤포스가 있으면 정찰

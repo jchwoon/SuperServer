@@ -146,6 +146,7 @@ namespace SuperServer.Data
         public EHeroClassType HeroClassId;
         public float ComboExitTime;
         public List<int> SkillIds;
+        public float RespawnTime;
     }
     [Serializable]
     public class HeroDataLoader : ILoader<EHeroClassType, HeroData>
@@ -169,7 +170,7 @@ namespace SuperServer.Data
         public ESkillType SkillType;
         public string SkillName;
         public string AnimName;
-        public int SkillRange;
+        public float SkillRange;
         public int CostMp;
         public float CoolTime;
         public float AnimTime;

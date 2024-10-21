@@ -46,6 +46,7 @@ namespace SuperServer.Game.Object
         {
             base.OnDamage(attacker,damage);
             AggroComponent.OnDamage(attacker.ObjectId, damage);
+            Machine.OnDamage();
         }
 
         public override void OnDie(Creature killer)
@@ -64,6 +65,12 @@ namespace SuperServer.Game.Object
             base.ReSpawn();
             Machine.ChangeState(Machine.IdleState);
             AggroComponent.Clear();
+        }
+
+        public void Reset()
+        {
+            StatComponent.SetStat(EStatType.Hp, StatComponent.GetStat(EStatType.MaxHp));
+            BroadcastStat();
         }
 
         private void InitSkill()

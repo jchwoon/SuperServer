@@ -51,21 +51,17 @@ namespace SuperServer.Game.Stat
             SetStatDict[statType].Invoke(StatInfo, value);
         }
 
-        //히어로 레벨별 스텟 적용
-        public void SetHeroStat(int level)
+        //DB에 있는 스텟 적용
+        public void SetHeroStat(DBHero dbHero)
         {
-            HeroStatData heroStatData;
-            if (DataManager.HeroStatDict.TryGetValue(level, out heroStatData) == false)
-                return;
-
-            StatInfo.MaxHp = heroStatData.MaxHp;
-            StatInfo.MaxMp = heroStatData.MaxMp;
-            StatInfo.Hp = heroStatData.MaxHp;
-            StatInfo.Mp = heroStatData.MaxMp;
-            StatInfo.AtkDamage = heroStatData.AtkDamage;
-            StatInfo.AtkSpeed = heroStatData.AtkSpeed;
-            StatInfo.MoveSpeed = heroStatData.MoveSpeed;
-            StatInfo.Defence = heroStatData.Defence;
+            StatInfo.MaxHp = dbHero.HeroStat.MaxHp;
+            StatInfo.MaxMp = dbHero.HeroStat.MaxMp;
+            StatInfo.Hp = dbHero.HeroStat.HP;
+            StatInfo.Mp = dbHero.HeroStat.MP;
+            StatInfo.AtkDamage = dbHero.HeroStat.AtkDamage;
+            StatInfo.AtkSpeed = dbHero.HeroStat.AtkSpeed;
+            StatInfo.MoveSpeed = dbHero.HeroStat.MoveSpeed;
+            StatInfo.Defence = dbHero.HeroStat.Defence;
         }
         public void InitSetStat(MonsterData statData)
         {

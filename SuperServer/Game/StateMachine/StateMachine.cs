@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SuperServer.Game.StateMachine
 {
@@ -20,7 +21,8 @@ namespace SuperServer.Game.StateMachine
     {
         public virtual T Owner { get; protected set; }
         public IState CurrentState { get; private set; }
-        public int UpdateTick { get; set; } = 500; 
+        public int UpdateTick { get; set; } = 1000;
+        IJob _machineJob;
 
         public virtual void ChangeState(IState changeState)
         {
@@ -31,8 +33,8 @@ namespace SuperServer.Game.StateMachine
             }
 
             CurrentState = changeState;
-
             CurrentState.Enter();
+
         }
 
         public void Update()
@@ -45,9 +47,17 @@ namespace SuperServer.Game.StateMachine
 
             CurrentState.Update();
 
-            GameCommander.Instance.PushAfter(UpdateTick, Update);
+            _machineJob = GameCommander.Instance.PushAfter(UpdateTick, Update);
         }
 
+        public void CancelJob()
+        {
+            if (_machineJob != null)
+            {
+                Console.WriteLine("Cancel");
+                _machineJob.IsCancel = true;
+            }
+        }
         public virtual void OnDie()
         {
             

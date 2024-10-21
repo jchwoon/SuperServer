@@ -30,6 +30,7 @@ public enum PacketId
   ModifyStatToC = 21,
   ModifyOneStatToC = 22,
   DieToC = 23,
+  TeleportToC = 24,
 
 }
 

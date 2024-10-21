@@ -73,7 +73,7 @@ namespace SuperServer.Commander
                     AtkDamage = heroStat.AtkDamage,
                     AtkSpeed = heroStat.AtkSpeed,
                     MoveSpeed = heroStat.MoveSpeed,
-                    Defense = heroStat.Defence
+                    Defence = heroStat.Defence
                 };
 
 

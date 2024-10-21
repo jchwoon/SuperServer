@@ -27,7 +27,7 @@ namespace SuperServer.Migrations
                     HeroStat_HP = table.Column<int>(type: "int", nullable: true),
                     HeroStat_MP = table.Column<int>(type: "int", nullable: true),
                     HeroStat_AtkDamage = table.Column<int>(type: "int", nullable: true),
-                    HeroStat_Defense = table.Column<int>(type: "int", nullable: true),
+                    HeroStat_Defence = table.Column<int>(type: "int", nullable: true),
                     HeroStat_MoveSpeed = table.Column<float>(type: "real", nullable: true),
                     HeroStat_AtkSpeed = table.Column<float>(type: "real", nullable: true),
                     RoomId = table.Column<int>(type: "int", nullable: false),

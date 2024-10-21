@@ -57,7 +57,7 @@ namespace SuperServer.Game.Skill
             UseSKill(NormalSkillId, targetId);
         }
 
-        
+        //일반 스킬을 맨 마지막에
         public BaseSkill GetCanUseSkill(BaseObject target)
         {
             foreach (BaseSkill skill in _skills.Values)
@@ -69,7 +69,11 @@ namespace SuperServer.Game.Skill
                 }
             }
 
-            return _skills[NormalSkillId];
+            BaseSkill normalSkill = _skills[NormalSkillId];
+            if (normalSkill.CheckCanUseSkill(target) == true)
+                return normalSkill;
+
+            return null;
         }
 
         public BaseSkill GetSkillById(int skillId)

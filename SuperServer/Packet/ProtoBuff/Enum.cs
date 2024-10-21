@@ -57,11 +57,12 @@ namespace Google.Protobuf.Enum {
             "X0FUS19TUEVFRBAIKjYKCUVNb3ZlVHlwZRITCg9FTU9WRV9UWVBFX05PTkUQ",
             "ABIUChBFTU9WRV9UWVBFX0NIQVNFEAEqXAoNRU1vbnN0ZXJHcmFkZRIXChNF",
             "TU9OU1RFUl9HUkFERV9OT05FEAASGQoVRU1PTlNURVJfR1JBREVfTk9STUFM",
-            "EAESFwoTRU1PTlNURVJfR1JBREVfUkFSRRACQheqAhRHb29nbGUuUHJvdG9i",
-            "dWYuRW51bWIGcHJvdG8z"));
+            "EAESFwoTRU1PTlNURVJfR1JBREVfUkFSRRACKkQKDUVUZWxlcG9ydFR5cGUS",
+            "FwoTRVRFTEVQT1JUX1RZUEVfTk9ORRAAEhoKFkVURUxFUE9SVF9UWVBFX1JF",
+            "U1BBV04QAUIXqgIUR29vZ2xlLlByb3RvYnVmLkVudW1iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Enum.EHeroClassType), typeof(global::Google.Protobuf.Enum.ECreateHeroResult), typeof(global::Google.Protobuf.Enum.EObjectType), typeof(global::Google.Protobuf.Enum.ECreatureState), typeof(global::Google.Protobuf.Enum.EMoveDir), typeof(global::Google.Protobuf.Enum.EMoveForce), typeof(global::Google.Protobuf.Enum.ESkillType), typeof(global::Google.Protobuf.Enum.ESkillFailReason), typeof(global::Google.Protobuf.Enum.EStatType), typeof(global::Google.Protobuf.Enum.EMoveType), typeof(global::Google.Protobuf.Enum.EMonsterGrade), }, null, null));
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Enum.EHeroClassType), typeof(global::Google.Protobuf.Enum.ECreateHeroResult), typeof(global::Google.Protobuf.Enum.EObjectType), typeof(global::Google.Protobuf.Enum.ECreatureState), typeof(global::Google.Protobuf.Enum.EMoveDir), typeof(global::Google.Protobuf.Enum.EMoveForce), typeof(global::Google.Protobuf.Enum.ESkillType), typeof(global::Google.Protobuf.Enum.ESkillFailReason), typeof(global::Google.Protobuf.Enum.EStatType), typeof(global::Google.Protobuf.Enum.EMoveType), typeof(global::Google.Protobuf.Enum.EMonsterGrade), typeof(global::Google.Protobuf.Enum.ETeleportType), }, null, null));
     }
     #endregion
 
@@ -150,6 +151,11 @@ namespace Google.Protobuf.Enum {
     [pbr::OriginalName("EMONSTER_GRADE_NONE")] None = 0,
     [pbr::OriginalName("EMONSTER_GRADE_NORMAL")] Normal = 1,
     [pbr::OriginalName("EMONSTER_GRADE_RARE")] Rare = 2,
+  }
+
+  public enum ETeleportType {
+    [pbr::OriginalName("ETELEPORT_TYPE_NONE")] None = 0,
+    [pbr::OriginalName("ETELEPORT_TYPE_RESPAWN")] Respawn = 1,
   }
 
   #endregion

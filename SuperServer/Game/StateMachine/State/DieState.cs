@@ -15,7 +15,8 @@ namespace SuperServer.Game.StateMachine.State
 
         public override void Enter()
         {
-            _machine.UpdateTick = 500;
+            base.Enter();
+            _machine.UpdateTick = 1000;
             _machine.Owner.CurrentState = ECreatureState.Die;
         }
         public override void Exit() { }

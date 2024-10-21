@@ -37,7 +37,7 @@ namespace SuperServer.Game.StateMachine.State
                 return;
 
             CheckIsOverOfPoolRange();
-            CheckArrivalFirstAggroPos();
+            _machine.CheckArrivalFirstAggroPos();
             CalculateUpdateTick();
         }
 
@@ -59,27 +59,13 @@ namespace SuperServer.Game.StateMachine.State
             float range = _owner.PoolData.SpawnRange;
             float dist = Vector3.Distance(_owner.Position, _poolCenter);
 
-            //복귀 후 스텟 정상화
             if (dist > range)
             {
-                _owner.AggroComponent.Clear();
-                _machine.Target = null;
+                _owner.AggroComponent.ClearTarget(_machine?.Target);
                 _machine.OverPoolRange = true;
             }
         }
 
-        private void CheckArrivalFirstAggroPos()
-        {
-            if (_owner.AggroComponent.FirstAggroPos.HasValue == false)
-                return;
 
-            float distSqr = (_owner.Position - _owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
-            if (distSqr <= 0.1f)
-            {
-                //Todo 원래 상태로 회복
-                _owner.AggroComponent.FirstAggroPos = null;
-                _machine.OverPoolRange = false;
-            }
-        }
     }
 }

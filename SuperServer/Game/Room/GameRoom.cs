@@ -102,12 +102,12 @@ namespace SuperServer.Game.Room
                 obj.PosInfo.PosY = RoomData.StartPosY;
                 obj.PosInfo.PosZ = RoomData.StartPosZ;
 
-                MoveToC movePacket = new MoveToC();
-                movePacket.PosInfo = obj.PosInfo;
-                movePacket.MoveType = EMoveType.None;
-                movePacket.ObjectId = obj.ObjectId;
+                TeleportToC telpoPacket = new TeleportToC();
+                telpoPacket.PosInfo = obj.PosInfo;
+                telpoPacket.ObjectId = obj.ObjectId;
+                telpoPacket.TelpoType = ETeleportType.Respawn;
 
-                Broadcast(movePacket, obj.Position);
+                Broadcast(telpoPacket, obj.Position);
             }
             else if (type == EObjectType.Monster)
             {

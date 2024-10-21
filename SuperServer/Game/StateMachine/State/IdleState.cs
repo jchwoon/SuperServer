@@ -19,7 +19,8 @@ namespace SuperServer.Game.StateMachine.State
 
         public override void Enter()
         {
-            _machine.UpdateTick = 500;
+            base.Enter();
+            _machine.UpdateTick = 1000;
             _machine.Owner.CurrentState = ECreatureState.Idle;
         }
         public override void Exit() { }
@@ -30,6 +31,7 @@ namespace SuperServer.Game.StateMachine.State
             if (_machine.Owner.SkillComponent.CheckLastSkillIsUsing() == true)
                 return;
 
+            _machine.CheckArrivalFirstAggroPos();
             _machine.PatrolPos = GetPatrolRandomPos();
         }
 

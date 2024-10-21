@@ -21,13 +21,12 @@ namespace SuperServer.Game.Object
         public ClientSession Session { get; private set; }
         public InterestRegion InterestRegion { get; private set; }
         public HeroData HeroData { get; private set; }
-        private static readonly int _respawnTick = 5000;
 
         public void Init(DBHero hero, LobbyHero lobbyHero, ClientSession session)
         {
             Session = session;
             DbHeroId = hero.DBHeroId;
-            StatComponent.SetHeroStat(hero.Level);
+            StatComponent.SetHeroStat(hero);
             InterestRegion = new InterestRegion(this);
 
             if (DataManager.HeroDict.TryGetValue(lobbyHero.LobbyHeroInfo.ClassType, out HeroData heroData) == true)
@@ -61,18 +60,23 @@ namespace SuperServer.Game.Object
 
         public override void OnDie(Creature killer)
         {
+            if (Room == null)
+                return;
+
+            if (CurrentState == ECreatureState.Die)
+                return;
+
             base.OnDie(killer);
 
-            //리스폰 지역으로 이동
-            //예약되어 있는 작업들 Cancel
+            StatComponent.SetStat(EStatType.Mp, StatComponent.GetStat(EStatType.MaxMp));
             ReserveRespawn();
         }
 
         public override void ReSpawn()
         {
             base.ReSpawn();
-            StatComponent.SetStat(EStatType.Mp, StatComponent.GetStat(EStatType.MaxMp));
-            Console.WriteLine("Respawn");
+            CurrentState = ECreatureState.Idle;
+            BroadcastStat();
         }
 
         private void ReserveRespawn()
@@ -84,7 +88,7 @@ namespace SuperServer.Game.Object
                 room = Room;
 
 
-            GameCommander.Instance.PushAfter(_respawnTick, room.ReSpawn, this);
+            GameCommander.Instance.PushAfter((int)HeroData.RespawnTime * 1000, room.ReSpawn, this);
         }
     }
 }

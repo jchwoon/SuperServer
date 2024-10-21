@@ -41,10 +41,16 @@ namespace SuperServer.Game.StateMachine
             int targetId = Owner.AggroComponent.GetTargetIdFromAttackers();
             Hero target = Owner.Room?.FindHeroById(targetId);
 
+            if (target != null && target.CurrentState == ECreatureState.Die)
+            {
+                Owner.AggroComponent.ClearTarget(target);
+                return null;
+            }
+
             return target;
         }
 
-        public void FindPathAndMove(Vector3 start, Vector3 dest, bool chase = false)
+        public bool FindPathAndMove(Vector3 start, Vector3 dest, bool chase = false)
         {
             Vector3Int rounStart = Vector3Int.Vector3ToVector3Int(start);
             Vector3Int roundDest = Vector3Int.Vector3ToVector3Int(dest);
@@ -54,7 +60,7 @@ namespace SuperServer.Game.StateMachine
             if (path == null || path.Count <= 1)
             {
                 ChangeState(IdleState);
-                return;
+                return false;
             }
 
             ToNextPosDist = Vector3Int.Distance(Vector3Int.Vector3ToVector3Int(Owner.Position), path[1]);
@@ -62,6 +68,22 @@ namespace SuperServer.Game.StateMachine
             ChangeState(MoveState);
             Owner.Room?.Map.ApplyMove(Owner, path[1]);
             Owner.BroadcastMove(null, moveType : chase == true ? EMoveType.Chase : EMoveType.None);
+            return true;
+        }
+
+        public void CheckArrivalFirstAggroPos()
+        {
+            if (Owner.AggroComponent.FirstAggroPos.HasValue == false)
+                return;
+
+            float distSqr = (Owner.Position - Owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
+            if (distSqr <= 0.1f)
+            {
+                //Todo 원래 상태로 회복
+                Owner.Reset();
+                Owner.AggroComponent.FirstAggroPos = null;
+                OverPoolRange = false;
+            }
         }
 
         public bool IsChaseMode()
@@ -70,6 +92,12 @@ namespace SuperServer.Game.StateMachine
                 return true;
 
             return false;
+        }
+
+        public void OnDamage()
+        {
+            if (Target == null)
+                CurrentState.Update();
         }
 
         public override void OnDie()

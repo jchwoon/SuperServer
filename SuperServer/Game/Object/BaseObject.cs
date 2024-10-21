@@ -18,6 +18,7 @@ namespace SuperServer.Game.Object
         protected int _objectId;
         protected GameRoom _gameRoom;
         protected EObjectType _objectType;
+        public ECreatureState CurrentState { get; set; }
         public ObjectInfo ObjectInfo { get; set; } = new ObjectInfo();
         public PosInfo PosInfo { get; set; } = new PosInfo();
         public Vector3 Position { get { return new Vector3(PosInfo.PosX, PosInfo.PosY, PosInfo.PosZ); } }

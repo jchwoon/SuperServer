@@ -35,6 +35,14 @@ namespace SuperServer.Game.StateMachine
         public void Clear()
         {
             _attackers.Clear();
+            FirstAggroPos = null;
+        }
+        public void ClearTarget(BaseObject creature)
+        {
+            if (creature != null && _attackers.ContainsKey(creature.ObjectId))
+            {
+                _attackers.Remove(creature.ObjectId);
+            }
         }
     }
 }

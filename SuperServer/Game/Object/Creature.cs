@@ -23,7 +23,6 @@ namespace SuperServer.Game.Object
         public StatComponent StatComponent { get; private set; }
         public SkillComponent SkillComponent { get; private set; }
         public EffectComponent EffectComponent { get; private set; }
-        public ECreatureState CurrentState { get; set; }
         
         public PoolData PoolData { get; protected set; }
         ResUseSkillToC _skillPacket = new ResUseSkillToC();
@@ -65,6 +64,7 @@ namespace SuperServer.Game.Object
             if (CurrentState == ECreatureState.Die)
                 return;
 
+            CurrentState = ECreatureState.Die;
             _deadPacket.ObjectId = ObjectId;
             _deadPacket.KillerId = killer.ObjectId;
 
