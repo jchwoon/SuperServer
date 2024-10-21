@@ -40,6 +40,15 @@ namespace SuperServer.Game.Room
             }
         }
 
+        public void ReSpawn(Monster monster, PoolData poolData)
+        {
+            SetRandomPosInPool(monster, poolData);
+            GameCommander.Instance.Push(() =>
+            {
+                _room.EnterRoom<Monster>(monster);
+            });
+        }
+
         private void SetRandomPosInPool(Creature creature, PoolData spawnData)
         {
             if (spawnData == null)

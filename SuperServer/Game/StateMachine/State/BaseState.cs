@@ -1,5 +1,6 @@
 ﻿using SuperServer.Game.Object;
 using SuperServer.Game.Room;
+using SuperServer.Game.Skill;
 using SuperServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,11 @@ namespace SuperServer.Game.StateMachine.State
         }
         public virtual void Enter()
         {
+            if (_owner.Room != null)
+            {
+                Update();
+            }
+
         }
 
         public virtual void Exit()
@@ -31,6 +37,47 @@ namespace SuperServer.Game.StateMachine.State
 
         public virtual void Update()
         {
+            //스킬을 사용중인지
+            if (_machine.Owner.SkillComponent.CheckLastSkillIsUsing() == true)
+                return;
+
+            _machine.Target = _machine.FindTarget();
+
+            //타겟이 있고 거리가 되면 Skill 거리가 안되면 Move
+            if (_machine.Target != null)
+            {
+                float dist = Vector3.Distance(_machine.Owner.Position, _machine.Target.Position);
+                BaseSkill skill = _machine.Owner.SkillComponent.GetCanUseSkill(_machine.Target);
+
+                if (skill == null || dist > _machine.Owner.SkillComponent.GetSkillRange(skill))
+                {
+                    _machine.FindPathAndMove(_machine.Owner.Position, _machine.Target.Position, chase:true);
+                    return;
+                }
+                _machine.ChangeState(_machine.SkillState);
+                return;
+            }
+
+            //자신의 스포닝풀 범위를 넘었으면 복귀 or 어그로가 끌렸는데 갑자기 타겟이 없어졌으면 복귀
+            if (_owner.AggroComponent.FirstAggroPos.HasValue)
+            {
+                if (_machine.OverPoolRange || _machine.Target == null)
+                {
+                    _machine.FindPathAndMove(_machine.Owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase: true);
+                    return;
+                }
+            }
+
+            //패트롤포스가 있으면 정찰
+            if (_machine.PatrolPos.HasValue == true)
+            {
+                _machine.FindPathAndMove(_machine.Owner.Position, _machine.PatrolPos.Value);
+                return;
+            }
+
+            //위의 모든 사항에 해당하지 않으면 Idle
+            _machine.ChangeState(_machine.IdleState);
+            return;
         }
     }
 }

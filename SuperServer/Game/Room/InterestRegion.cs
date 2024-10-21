@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf.Struct;
+using System.Threading;
 
 namespace SuperServer.Game.Room
 {
@@ -16,7 +17,6 @@ namespace SuperServer.Game.Room
     {
         public Hero Owner { get; private set; }
         public HashSet<Creature> CurrentInterestCreature { get; private set; } = new HashSet<Creature>();
-        //public Creature ClosestCreature { get; private set; }
         public InterestRegion(Hero owner)
         {
             Owner = owner;
@@ -39,7 +39,9 @@ namespace SuperServer.Game.Room
                     if (creature.ObjectType == EObjectType.Hero)
                     {
                         Hero hero = (Hero)creature;
-                        spawnPacket.Heroes.Add(hero.HeroInfo);
+                        HeroInfo info = new HeroInfo();
+                        info.MergeFrom(hero.HeroInfo);
+                        spawnPacket.Heroes.Add(info);
                     }
                     else if (creature.ObjectType == EObjectType.Monster)
                     {
@@ -49,7 +51,7 @@ namespace SuperServer.Game.Room
                         spawnPacket.Creatures.Add(info);
                     }
                 }
-                Owner.Session.Send(spawnPacket);
+                Owner.Session?.Send(spawnPacket);
             }
             //관심 영역 밖 디스폰
             List<Creature> oldCreatures = CurrentInterestCreature.Except(interestCreatures).ToList();
@@ -59,12 +61,8 @@ namespace SuperServer.Game.Room
                 foreach (Creature creature in oldCreatures)
                 {
                     deSpawnPacket.ObjectIds.Add(creature.ObjectId);
-                    if (creature.ObjectType == EObjectType.Hero)
-                    {
-                        Hero hero = (Hero)creature;
-                    }
                 }
-                Owner.Session.Send(deSpawnPacket);
+                Owner.Session?.Send(deSpawnPacket);
             }
 
             CurrentInterestCreature = interestCreatures;
@@ -82,6 +80,7 @@ namespace SuperServer.Game.Room
 
             List<Creature> creatures = Owner.Room.GetCreatures();
 
+            //개선점
             foreach (Creature creature in creatures)
             {
                 if (creature.ObjectId == Owner.ObjectId) continue;

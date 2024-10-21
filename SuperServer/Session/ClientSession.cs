@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Google.Protobuf.Protocol;
 using SuperServer.Commander;
 using System.Net.NetworkInformation;
+using SuperServer.Game.Object;
+using SuperServer.Game.Room;
 
 namespace SuperServer.Session
 {
@@ -21,6 +23,20 @@ namespace SuperServer.Session
 
         public void PingCheck()
         {
+            //한번이라도 주고받았다면
+            if (Ping > 0)
+            {
+                long elapsed = (System.Environment.TickCount64 - (Ping + _sendTime));
+                Console.WriteLine(elapsed);
+                if (elapsed > 10 * 1000)
+                {
+                    Console.WriteLine("Ping Disconnect");
+                    CloseClientSocket();
+                    return;
+                }
+            }
+
+
             PingCheckToC pingPacket = new PingCheckToC();
             _sendTime = System.Environment.TickCount64;
             Send(pingPacket);
@@ -62,6 +78,13 @@ namespace SuperServer.Session
 
         public override void OnDisconnected()
         {
+            if (PlayingHero != null && PlayingHero.Room != null)
+            {
+                Hero myHero = PlayingHero;
+                GameRoom room = myHero.Room;
+                GameCommander.Instance.Push(room.ExitRoom<Hero>, myHero);
+            }
+
             SessionManager.Instance.Remove(this);
             Console.WriteLine("Disconnected");
         }

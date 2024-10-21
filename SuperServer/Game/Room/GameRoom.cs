@@ -20,7 +20,8 @@ namespace SuperServer.Game.Room
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
         Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
         public MapComponent Map { get; set; } = new MapComponent();
-        public SpawningPool SpawningPool { get; set; } = new SpawningPool();
+        public SpawningPool SpawningPool { get; private set; } = new SpawningPool();
+        public RoomData RoomData { get; private set; }
         public int RoomId { get; set; }
         //거리 25
         public const float SqrInterestRange = 625;
@@ -34,7 +35,10 @@ namespace SuperServer.Game.Room
         {
             RoomData data;
             if (DataManager.RoomDict.TryGetValue(RoomId, out data) == true)
+            {
                 Map.LoadMap(data.Name);
+                RoomData = data;
+            }
 
             SpawningPool.Init(this);
         }
@@ -54,14 +58,6 @@ namespace SuperServer.Game.Room
                 ResEnterRoomToC resEnterPacket = new ResEnterRoomToC();
                 resEnterPacket.MyHero = hero.MyHeroInfo;
                 hero.Session.Send(resEnterPacket);
-
-                {
-                    //신입생을 기존 유저들에게 알림
-                    SpawnToC spawnPacket = new SpawnToC();
-                    spawnPacket.Heroes.Add(hero.HeroInfo);
-                    Broadcast(spawnPacket, hero, obj.Position);
-                }
-
                 hero.InterestRegion?.Update();
             }
             // 몬스터
@@ -70,9 +66,6 @@ namespace SuperServer.Game.Room
                 Monster monster = (Monster)obj;
                 _monsters.Add(monster.ObjectId, monster);
                 monster.Update();
-                SpawnToC spawnPacket = new SpawnToC();
-                spawnPacket.Creatures.Add(monster.CreatureInfo);
-                Broadcast(spawnPacket, obj.Position);
             }
         }
 
@@ -88,10 +81,41 @@ namespace SuperServer.Game.Room
                 hero.InterestRegion.Clear();
                 hero.Room = null;
             }
+            else if (typeof(T) == typeof(Monster))
+            {
+                Monster monster = (Monster)obj;
+                _monsters.Remove(monster.ObjectId);
+                monster.Room = null;
+            }
 
             DeSpawnToC deSpawnPacket = new DeSpawnToC();
             deSpawnPacket.ObjectIds.Add(obj.ObjectId);
             Broadcast(deSpawnPacket, obj.Position);
+        }
+
+        public void ReSpawn(Creature obj)
+        {
+            EObjectType type = obj.ObjectType;
+            if (type == EObjectType.Hero)
+            {
+                obj.PosInfo.PosX = RoomData.StartPosX;
+                obj.PosInfo.PosY = RoomData.StartPosY;
+                obj.PosInfo.PosZ = RoomData.StartPosZ;
+
+                TeleportToC telpoPacket = new TeleportToC();
+                telpoPacket.PosInfo = obj.PosInfo;
+                telpoPacket.ObjectId = obj.ObjectId;
+                telpoPacket.TelpoType = ETeleportType.Respawn;
+
+                Broadcast(telpoPacket, obj.Position);
+            }
+            else if (type == EObjectType.Monster)
+            {
+                Monster monster = obj as Monster;
+                SpawningPool.ReSpawn(monster, monster.PoolData);
+            }
+
+            obj.ReSpawn();
         }
 
         //모두 보내기
@@ -109,7 +133,7 @@ namespace SuperServer.Game.Room
         {
             foreach (Hero hero in _heroes.Values)
             {
-                if (hero.HeroId == excludeHero.HeroId)
+                if (hero.DbHeroId == excludeHero.DbHeroId)
                     continue;
                 float dist = (pos - hero.Position).MagnitudeSqr();
                 if (dist < SqrInterestRange)

@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.Enum;
 using SuperServer.Game.Object;
+using SuperServer.Game.Skill;
 using SuperServer.Game.StateMachine.State;
 using SuperServer.Utils;
 using System;
@@ -16,9 +17,12 @@ namespace SuperServer.Game.StateMachine
         public IdleState IdleState { get; set; }
         public MoveState MoveState { get; set; }
         public SkillState SkillState { get; set; }
+        public DieState DieState { get; set; }
         public Vector3? PatrolPos { get; set; }
         public BaseObject Target { get; set; }
         public float ToNextPosDist { get; private set; }
+        public BaseSkill CurrentSkill { get;  set; }
+        public bool OverPoolRange { get; set; }
         public MonsterMachine(Monster monster)
         {
             Owner = monster;
@@ -30,18 +34,23 @@ namespace SuperServer.Game.StateMachine
             IdleState = new IdleState(this);
             MoveState = new MoveState(this);
             SkillState = new SkillState(this);
+            DieState = new DieState(this);
         }
         public Creature FindTarget()
         {
             int targetId = Owner.AggroComponent.GetTargetIdFromAttackers();
             Hero target = Owner.Room?.FindHeroById(targetId);
-            if (target == null)
+
+            if (target != null && target.CurrentState == ECreatureState.Die)
+            {
+                Owner.AggroComponent.ClearTarget(target);
                 return null;
+            }
 
             return target;
         }
 
-        public void FindPathAndMove(Vector3 start, Vector3 dest)
+        public bool FindPathAndMove(Vector3 start, Vector3 dest, bool chase = false)
         {
             Vector3Int rounStart = Vector3Int.Vector3ToVector3Int(start);
             Vector3Int roundDest = Vector3Int.Vector3ToVector3Int(dest);
@@ -51,22 +60,53 @@ namespace SuperServer.Game.StateMachine
             if (path == null || path.Count <= 1)
             {
                 ChangeState(IdleState);
-                return;
+                return false;
             }
-
 
             ToNextPosDist = Vector3Int.Distance(Vector3Int.Vector3ToVector3Int(Owner.Position), path[1]);
 
             ChangeState(MoveState);
             Owner.Room?.Map.ApplyMove(Owner, path[1]);
-            Owner.BroadcastMove(null, moveType : Target == null ? EMoveType.None : EMoveType.Chase);
+            Owner.BroadcastMove(null, moveType : chase == true ? EMoveType.Chase : EMoveType.None);
+            return true;
         }
 
-        public void OnDamage(Creature attacker)
+        public void CheckArrivalFirstAggroPos()
         {
-            //Hit
-            //어그로가 일단 끌려야함
-            
+            if (Owner.AggroComponent.FirstAggroPos.HasValue == false)
+                return;
+
+            float distSqr = (Owner.Position - Owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
+            if (distSqr <= 0.1f)
+            {
+                //Todo 원래 상태로 회복
+                Owner.Reset();
+                Owner.AggroComponent.FirstAggroPos = null;
+                OverPoolRange = false;
+            }
+        }
+
+        public bool IsChaseMode()
+        {
+            if (Target != null || OverPoolRange)
+                return true;
+
+            return false;
+        }
+
+        public void OnDamage()
+        {
+            if (Target == null)
+                CurrentState.Update();
+        }
+
+        public override void OnDie()
+        {
+            base.OnDie();
+
+            if (Target != null)
+                Target = null;
+            ChangeState(DieState);
         }
     }
 }

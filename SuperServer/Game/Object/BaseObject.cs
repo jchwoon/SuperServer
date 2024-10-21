@@ -18,6 +18,7 @@ namespace SuperServer.Game.Object
         protected int _objectId;
         protected GameRoom _gameRoom;
         protected EObjectType _objectType;
+        public ECreatureState CurrentState { get; set; }
         public ObjectInfo ObjectInfo { get; set; } = new ObjectInfo();
         public PosInfo PosInfo { get; set; } = new PosInfo();
         public Vector3 Position { get { return new Vector3(PosInfo.PosX, PosInfo.PosY, PosInfo.PosZ); } }
@@ -47,24 +48,23 @@ namespace SuperServer.Game.Object
             ObjectInfo.PosInfo = PosInfo;
         }
 
-        public void BroadcastMove(Vector3? destPos, float moveSpeed = 0, EMoveType moveType = EMoveType.None)
+        public void BroadcastMove(Vector3? destPos, EMoveType moveType = EMoveType.None)
         {
+            if (Room == null)
+                return;
+
             if (destPos.HasValue)
             {
                 _movePacket.PosInfo.PosX = destPos.Value.X;
                 _movePacket.PosInfo.PosY = destPos.Value.Y;
                 _movePacket.PosInfo.PosZ = destPos.Value.Z;
-                _movePacket.PosInfo.Speed = moveSpeed;
             }
             else
                 _movePacket.PosInfo = PosInfo;
             _movePacket.ObjectId = ObjectId;
             _movePacket.MoveType = moveType;
 
-            GameCommander.Instance.Push(() =>
-            {
-                Room?.Broadcast(_movePacket, Position);
-            });
+            GameCommander.Instance.Push(Room.Broadcast, _movePacket, Position);
         }
     }
 }

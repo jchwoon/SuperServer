@@ -30,7 +30,7 @@ class PacketHandler
 
         cSession.HandleReqCreateHero(reqHeroListPacket);
     }
-    
+
     public static void ReqDeleteHeroToSHandler(PacketSession session, IMessage packet)
     {
         ClientSession cSession = (ClientSession)session;
@@ -39,6 +39,15 @@ class PacketHandler
 
         cSession.HandleReqDeleteHero(reqDeleteHeroPacket);
     }
+    public static void PreEnterRoomToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+
+        PreEnterRoomToS preEnterPacket = (PreEnterRoomToS)packet;
+
+        cSession.HandlePreEnterRoom(preEnterPacket);
+    }
+
     public static void ReqEnterRoomToSHandler(PacketSession session, IMessage packet)
     {
         ClientSession cSession = (ClientSession)session;

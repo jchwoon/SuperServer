@@ -32,12 +32,13 @@ namespace SuperServer.Game.Room
             if (canGoExpected == false)
                 return;
 
-            hero.PosInfo = packet.PosInfo;
+            hero.PosInfo.MergeFrom(packet.PosInfo);
             CompareExpectToRealAndSend(hero, expectPos, packet.PosInfo);
         }
         private Vector3 GetExpectPos(PosInfo info, Hero hero)
         {
-            float dist = info.Speed * ((hero.Session.Ping / 1000) + 0.5f);
+            
+            float dist = hero.StatComponent.StatInfo.MoveSpeed * ((hero.Session.Ping / 1000) + 0.2f);
 
             Vector3 dir = GetLookDir(info.RotY);
 
@@ -68,10 +69,10 @@ namespace SuperServer.Game.Room
             if (dist > _threshold)
             {
                 Vector3 destPos = new Vector3(real.PosX, real.PosY, real.PosZ);
-                hero.BroadcastMove(destPos, real.Speed);
+                hero.BroadcastMove(destPos);
             }
             else
-                hero.BroadcastMove(expect, real.Speed);
+                hero.BroadcastMove(expect);
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Google.Protobuf.Enum;
 using SuperServer.Commander;
 using SuperServer.Game.Object;
+using SuperServer.Job;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SuperServer.Game.StateMachine
 {
@@ -19,19 +21,20 @@ namespace SuperServer.Game.StateMachine
     {
         public virtual T Owner { get; protected set; }
         public IState CurrentState { get; private set; }
-        protected ECreatureState CreatureState { get; private set; }
-        public int UpdateTick { get; set; } = 1000; 
+        public int UpdateTick { get; set; } = 1000;
+        IJob _machineJob;
 
         public virtual void ChangeState(IState changeState)
         {
+            if (CurrentState == changeState) return;
             if (CurrentState != null)
             {
                 CurrentState.Exit();
             }
 
             CurrentState = changeState;
-
             CurrentState.Enter();
+
         }
 
         public void Update()
@@ -44,7 +47,20 @@ namespace SuperServer.Game.StateMachine
 
             CurrentState.Update();
 
-            GameCommander.Instance.PushAfter(UpdateTick, Update);
+            _machineJob = GameCommander.Instance.PushAfter(UpdateTick, Update);
+        }
+
+        public void CancelJob()
+        {
+            if (_machineJob != null)
+            {
+                Console.WriteLine("Cancel");
+                _machineJob.IsCancel = true;
+            }
+        }
+        public virtual void OnDie()
+        {
+            
         }
     }
 }

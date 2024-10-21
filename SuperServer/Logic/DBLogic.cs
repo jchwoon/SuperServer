@@ -1,5 +1,7 @@
-﻿using SuperServer.DB;
+﻿using SuperServer.Data;
+using SuperServer.DB;
 using SuperServer.Game.Object;
+using SuperServer.Game.Room;
 using SuperServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -11,21 +13,42 @@ namespace SuperServer.Logic
 {
     public class DBLogic : Singleton<DBLogic>
     {
-        public void SaveHero(Hero hero)
+        public void SaveHero(Hero hero, GameRoom room)
         {
             if (hero == null)
                 return;
 
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == hero.HeroId).FirstOrDefault();
+                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == hero.DbHeroId).FirstOrDefault();
 
                 if (dbHero == null) return;
 
+                //위치
+                dbHero.RoomId = room.RoomId;
                 dbHero.PosX = hero.PosInfo.PosX;
                 dbHero.PosY = hero.PosInfo.PosY;
                 dbHero.PosZ = hero.PosInfo.PosZ;
                 dbHero.RotY = hero.PosInfo.RotY;
+
+                //스텟
+                dbHero.HeroStat.MaxHp = hero.StatComponent.StatInfo.MaxHp;
+                dbHero.HeroStat.HP = hero.StatComponent.StatInfo.Hp;
+                dbHero.HeroStat.MaxMp = hero.StatComponent.StatInfo.MaxMp;
+                dbHero.HeroStat.MP = hero.StatComponent.StatInfo.Mp;
+                dbHero.HeroStat.AtkSpeed = hero.StatComponent.StatInfo.AtkSpeed;
+                dbHero.HeroStat.AtkDamage = hero.StatComponent.StatInfo.AtkDamage;
+                dbHero.HeroStat.Defence = hero.StatComponent.StatInfo.Defence;
+                dbHero.HeroStat.MoveSpeed = hero.StatComponent.StatInfo.MoveSpeed;
+
+                if (hero.StatComponent.StatInfo.Hp == 0)
+                {
+                    dbHero.PosX = room.RoomData.StartPosX;
+                    dbHero.PosY = room.RoomData.StartPosY;
+                    dbHero.PosZ = room.RoomData.StartPosZ;
+
+                    dbHero.HeroStat.HP = hero.StatComponent.StatInfo.MaxHp;
+                }
 
                 if (db.SaveChangeEx() == false)
                 {

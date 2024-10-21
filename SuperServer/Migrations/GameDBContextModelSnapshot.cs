@@ -88,7 +88,7 @@ namespace SuperServer.Migrations
                             b1.Property<float>("AtkSpeed")
                                 .HasColumnType("real");
 
-                            b1.Property<int>("Defense")
+                            b1.Property<int>("Defence")
                                 .HasColumnType("int");
 
                             b1.Property<int>("HP")

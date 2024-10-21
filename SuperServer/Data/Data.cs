@@ -43,6 +43,9 @@ namespace SuperServer.Data
     {
         public int RoomId;
         public string Name;
+        public float StartPosX;
+        public float StartPosY;
+        public float StartPosZ;
     }
 
     [Serializable]
@@ -83,7 +86,8 @@ namespace SuperServer.Data
         public int Defence;
         public float AtkSpeed;
         public float Sight;
-        public float AtkRange;
+        public List<int> SkillIds;
+        public EMonsterGrade MonsterGrade;
     }
 
     [Serializable]
@@ -142,6 +146,7 @@ namespace SuperServer.Data
         public EHeroClassType HeroClassId;
         public float ComboExitTime;
         public List<int> SkillIds;
+        public float RespawnTime;
     }
     [Serializable]
     public class HeroDataLoader : ILoader<EHeroClassType, HeroData>
@@ -165,12 +170,13 @@ namespace SuperServer.Data
         public ESkillType SkillType;
         public string SkillName;
         public string AnimName;
-        public int SkillRange;
+        public float SkillRange;
         public int CostMp;
         public float CoolTime;
         public float AnimTime;
         public string AnimParamName;
         public int EffectId;
+        public float EffectDelayRatio;
     }
 
     [Serializable]

@@ -9,24 +9,35 @@ namespace SuperServer.Job
 {
     public interface IJob
     {
+        public bool IsCancel { get; set; }
         public abstract void Execute();
     }
     public class Job : IJob
     {
         Action _action;
+        public bool IsCancel { get; set; }
         public Job(Action action)
         {
             _action = action;
         }
         public void Execute()
         {
-            _action.Invoke();
+            if (IsCancel == false)
+            {
+
+                _action.Invoke();
+            }
+            else
+            {
+                Console.WriteLine("cancle");
+            }
         }
     }
     public class Job<T1> : IJob
     {
         Action<T1> _action;
         T1 _t1;
+        public bool IsCancel { get; set; }
 
         public Job(Action<T1> action, T1 t1)
         {
@@ -36,7 +47,8 @@ namespace SuperServer.Job
 
         public void Execute()
         {
-            _action.Invoke(_t1);
+            if (IsCancel == false)
+                _action.Invoke(_t1);
         }
     }
 
@@ -45,6 +57,7 @@ namespace SuperServer.Job
         Action<T1, T2> _action;
         T1 _t1;
         T2 _t2;
+        public bool IsCancel { get; set; }
 
         public Job(Action<T1, T2> action, T1 t1, T2 t2)
         {
@@ -55,7 +68,8 @@ namespace SuperServer.Job
 
         public void Execute()
         {
-            _action.Invoke(_t1, _t2);
+            if (IsCancel == false)
+                _action.Invoke(_t1, _t2);
         }
     }
 
@@ -65,6 +79,7 @@ namespace SuperServer.Job
         T1 _t1;
         T2 _t2;
         T3 _t3;
+        public bool IsCancel { get; set; }
 
         public Job(Action<T1, T2, T3> action, T1 t1, T2 t2, T3 t3)
         {
@@ -76,7 +91,8 @@ namespace SuperServer.Job
 
         public void Execute()
         {
-            _action.Invoke(_t1, _t2, _t3);
+            if (IsCancel == false)
+                _action.Invoke(_t1, _t2, _t3);
         }
     }
 }

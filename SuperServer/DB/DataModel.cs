@@ -39,7 +39,7 @@ namespace SuperServer.DB
         public int HP { get; set; }
         public int MP { get; set; }
         public int AtkDamage { get; set; }
-        public int Defense { get; set; }
+        public int Defence { get; set; }
         public float MoveSpeed { get; set; }
         public float AtkSpeed { get; set; }
     }

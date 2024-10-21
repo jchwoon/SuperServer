@@ -12,7 +12,7 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20241012142105_init")]
+    [Migration("20241019190358_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,7 +90,7 @@ namespace SuperServer.Migrations
                             b1.Property<float>("AtkSpeed")
                                 .HasColumnType("real");
 
-                            b1.Property<int>("Defense")
+                            b1.Property<int>("Defence")
                                 .HasColumnType("int");
 
                             b1.Property<int>("HP")

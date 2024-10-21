@@ -28,7 +28,7 @@ namespace SuperServer.Session
             Hero myHero = PlayingHero;
             GameRoom room = myHero.Room;
             GameCommander.Instance.Push(room.ExitRoom<Hero>, myHero);
-            DBCommander.Instance.Push(DBLogic.Instance.SaveHero, myHero);
+            DBCommander.Instance.Push(DBLogic.Instance.SaveHero, myHero, room);
         }
     }
 }

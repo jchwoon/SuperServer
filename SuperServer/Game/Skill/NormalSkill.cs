@@ -1,4 +1,5 @@
-﻿using SuperServer.Data;
+﻿using SuperServer.Commander;
+using SuperServer.Data;
 using SuperServer.Game.Object;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,15 @@ namespace SuperServer.Game.Skill
         protected override bool CheckCoolTime()
         {
             long elapsedTime = GetElapsedTimeAfterLastUseSkill();
-            if (elapsedTime >= SkillData.AnimTime * Owner.StatComponent.StatInfo.AtkSpeed *  1000)
+            if (elapsedTime >= SkillData.AnimTime * (1.0f / Owner.StatComponent.StatInfo.AtkSpeed) *  1000)
                 return true;
 
             return false;
+        }
+
+        protected override int GetSkillDelayTick()
+        {
+            return (int)((1.0f / Owner.StatComponent.StatInfo.AtkSpeed) * SkillData.EffectDelayRatio * 1000);
         }
     }
 }

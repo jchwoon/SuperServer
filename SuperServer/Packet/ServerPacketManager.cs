@@ -14,17 +14,23 @@ public enum PacketId
   ResCreateHeroToC = 5,
   ReqDeleteHeroToS = 6,
   ResDeleteHeroToC = 7,
-  ReqEnterRoomToS = 8,
-  ResEnterRoomToC = 9,
-  SpawnToC = 10,
-  ReqLeaveGameToS = 11,
-  MoveToS = 12,
-  MoveToC = 13,
-  PingCheckToC = 14,
-  PingCheckToS = 15,
-  DeSpawnToC = 16,
-  ReqUseSkillToS = 17,
-  ResUseSkillToC = 18,
+  PreEnterRoomToS = 8,
+  PreEnterRoomToC = 9,
+  ReqEnterRoomToS = 10,
+  ResEnterRoomToC = 11,
+  SpawnToC = 12,
+  ReqLeaveGameToS = 13,
+  MoveToS = 14,
+  MoveToC = 15,
+  PingCheckToC = 16,
+  PingCheckToS = 17,
+  DeSpawnToC = 18,
+  ReqUseSkillToS = 19,
+  ResUseSkillToC = 20,
+  ModifyStatToC = 21,
+  ModifyOneStatToC = 22,
+  DieToC = 23,
+  TeleportToC = 24,
 
 }
 
@@ -65,6 +71,8 @@ class PacketManager
         _handler.Add((ushort)PacketId.ReqCreateHeroToS, PacketHandler.ReqCreateHeroToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqDeleteHeroToS, ParsePacket<ReqDeleteHeroToS>);
         _handler.Add((ushort)PacketId.ReqDeleteHeroToS, PacketHandler.ReqDeleteHeroToSHandler);
+        _parseHandler.Add((ushort)PacketId.PreEnterRoomToS, ParsePacket<PreEnterRoomToS>);
+        _handler.Add((ushort)PacketId.PreEnterRoomToS, PacketHandler.PreEnterRoomToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqEnterRoomToS, ParsePacket<ReqEnterRoomToS>);
         _handler.Add((ushort)PacketId.ReqEnterRoomToS, PacketHandler.ReqEnterRoomToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqLeaveGameToS, ParsePacket<ReqLeaveGameToS>);

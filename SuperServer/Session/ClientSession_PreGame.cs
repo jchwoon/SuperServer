@@ -50,7 +50,7 @@ namespace SuperServer.Session
                 Send(resCreateHeroPacket);
                 return;
             }
-            
+
             DBHero hero = DBCommander.Instance.CreateHero(AccountId, packet);
             if (hero == null)
             {
@@ -89,6 +89,25 @@ namespace SuperServer.Session
             Send(resDeleteHeroPacket);
         }
 
+        public void HandlePreEnterRoom(PreEnterRoomToS packet)
+        {
+            int heroIdx = packet.HeroIdx;
+
+            if (heroIdx < 0 || heroIdx >= LobbyHeroes.Count)
+                return;
+
+            LobbyHero lobbyHero = LobbyHeroes[heroIdx];
+            int heroId = lobbyHero.HeroId;
+
+            DBHero dbHero = DBCommander.Instance.GetHero(heroId);
+
+            if (dbHero == null)
+                return;
+
+            PreEnterRoomToC preEnterPacket = new PreEnterRoomToC();
+            preEnterPacket.RoomId = dbHero.RoomId;
+            Send(preEnterPacket);
+        }
         public void HandleReqEnterRoom(ReqEnterRoomToS packet)
         {
             int heroIdx = packet.HeroIdx;
@@ -108,7 +127,7 @@ namespace SuperServer.Session
 
             if (PlayingHero == null)
                 return;
-            
+
             GameRoom room = RoomManager.Instance.GetRoom(dbHero.RoomId);
             if (room == null)
             {

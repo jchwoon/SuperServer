@@ -26,12 +26,13 @@ namespace SuperServer.Game.Object
             MonsterData monsterData;
             if (DataManager.MonsterDict.TryGetValue(monsterId, out monsterData) == false)
                 return;
-            AggroComponent = new AggroComponent();
+            AggroComponent = new AggroComponent(this);
             MonsterData = monsterData;
             PoolData = poolData;
             MonsterId = monsterId;
             ObjectInfo.TemplateId = monsterId;
             StatComponent.InitSetStat(monsterData);
+            InitSkill();
             Machine = new MonsterMachine(this);
             Machine.ChangeState(Machine.IdleState);
         }
@@ -44,8 +45,37 @@ namespace SuperServer.Game.Object
         public override void OnDamage(Creature attacker, float damage)
         {
             base.OnDamage(attacker,damage);
-            Machine.OnDamage(attacker);
             AggroComponent.OnDamage(attacker.ObjectId, damage);
+            Machine.OnDamage();
+        }
+
+        public override void OnDie(Creature killer)
+        {
+            if (CurrentState == ECreatureState.Die)
+                return;
+
+            base.OnDie(killer);
+            Machine.OnDie();
+            GameCommander.Instance.PushAfter(1000, Room.ExitRoom<Monster>, this);
+            GameCommander.Instance.PushAfter(3000, Room.ReSpawn, this);
+        }
+
+        public override void ReSpawn()
+        {
+            base.ReSpawn();
+            Machine.ChangeState(Machine.IdleState);
+            AggroComponent.Clear();
+        }
+
+        public void Reset()
+        {
+            StatComponent.SetStat(EStatType.Hp, StatComponent.GetStat(EStatType.MaxHp));
+            BroadcastStat();
+        }
+
+        private void InitSkill()
+        {
+            SkillComponent.RegisterSkill(MonsterData.SkillIds);
         }
     }
 }
