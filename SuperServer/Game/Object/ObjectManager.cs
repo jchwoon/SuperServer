@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf.Enum;
+using System.Threading;
 
 namespace SuperServer.Game.Object
 {
@@ -16,6 +17,7 @@ namespace SuperServer.Game.Object
 
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
         Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
+        Dictionary<int, DropItem> _dropItems = new Dictionary<int, DropItem>();
 
         public void PreGenerateId(int capacity)
         {
@@ -49,6 +51,13 @@ namespace SuperServer.Game.Object
                 monster.ObjectId = GenerateId();
                 monster.ObjectType = EObjectType.Monster;
                 _monsters.Add(monster.ObjectId,monster);
+            }
+            else if (type == typeof(DropItem))
+            {
+                DropItem dropItem = obj as DropItem;
+                dropItem.ObjectId = GenerateId();
+                dropItem.ObjectType = EObjectType.DropItem;
+                _dropItems.Add(dropItem.ObjectId, dropItem);
             }
 
             return obj;

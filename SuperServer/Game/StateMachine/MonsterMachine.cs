@@ -38,7 +38,7 @@ namespace SuperServer.Game.StateMachine
         }
         public Creature FindTarget()
         {
-            int targetId = Owner.AggroComponent.GetTargetIdFromAttackers();
+            int targetId = Owner.AggroComponent.GetTopDamageAttackerId();
             Hero target = Owner.Room?.FindHeroById(targetId);
 
             if (target != null && target.CurrentState == ECreatureState.Die)

@@ -1,6 +1,5 @@
 ﻿using SuperServer.Data;
 using SuperServer.DB;
-using SuperServer.Game.Object;
 using SuperServer.Game.Room;
 using SuperServer.Utils;
 using System;
@@ -40,6 +39,10 @@ namespace SuperServer.Logic
                 dbHero.HeroStat.AtkDamage = hero.StatComponent.StatInfo.AtkDamage;
                 dbHero.HeroStat.Defence = hero.StatComponent.StatInfo.Defence;
                 dbHero.HeroStat.MoveSpeed = hero.StatComponent.StatInfo.MoveSpeed;
+
+                dbHero.Exp = hero.MyHeroInfo.Exp;
+                dbHero.Gold = hero.MyHeroInfo.Gold;
+                dbHero.Level = hero.MyHeroInfo.HeroInfo.LobbyHeroInfo.Level;
 
                 if (hero.StatComponent.StatInfo.Hp == 0)
                 {

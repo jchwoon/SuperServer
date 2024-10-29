@@ -31,6 +31,7 @@ public enum PacketId
   ModifyOneStatToC = 22,
   DieToC = 23,
   TeleportToC = 24,
+  RewardToC = 25,
 
 }
 

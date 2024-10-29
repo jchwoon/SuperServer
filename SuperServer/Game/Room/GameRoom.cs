@@ -19,6 +19,7 @@ namespace SuperServer.Game.Room
     {
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
         Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
+        Dictionary<int, DropItem> _dropItems = new Dictionary<int, DropItem>();
         public MapComponent Map { get; set; } = new MapComponent();
         public SpawningPool SpawningPool { get; private set; } = new SpawningPool();
         public RoomData RoomData { get; private set; }
@@ -67,6 +68,13 @@ namespace SuperServer.Game.Room
                 _monsters.Add(monster.ObjectId, monster);
                 monster.Update();
             }
+            // DropItem
+            else if (type == EObjectType.DropItem)
+            {
+                DropItem dropItem = (DropItem)obj;
+                _dropItems.Add(dropItem.ObjectId, dropItem);
+                dropItem.Update();
+            }
         }
 
         public void ExitRoom<T>(BaseObject obj) where T : BaseObject 
@@ -86,6 +94,13 @@ namespace SuperServer.Game.Room
                 Monster monster = (Monster)obj;
                 _monsters.Remove(monster.ObjectId);
                 monster.Room = null;
+            }
+            else if (typeof(T) == typeof(DropItem))
+            {
+                Console.WriteLine("Exit Potion");
+                DropItem dropItem = (DropItem)obj;
+                _dropItems.Remove(dropItem.ObjectId);
+                dropItem.Room = null;
             }
 
             DeSpawnToC deSpawnPacket = new DeSpawnToC();
@@ -170,9 +185,9 @@ namespace SuperServer.Game.Room
             return monster;
         }
 
-        public List<Creature> GetCreatures()
+        public List<BaseObject> GetAllObjects()
         {
-            List<Creature> objects = new List<Creature>();
+            List<BaseObject> objects = new List<BaseObject>();
 
             foreach(Hero hero in _heroes.Values)
             {
@@ -182,6 +197,11 @@ namespace SuperServer.Game.Room
             foreach(Monster monster in _monsters.Values)
             {
                 objects.Add(monster);
+            }
+
+            foreach(DropItem dropItem in _dropItems.Values)
+            {
+                objects.Add(dropItem);
             }
 
             return objects;

@@ -2,7 +2,6 @@
 using Google.Protobuf.Protocol;
 using ServerCore;
 using SuperServer.Commander;
-using SuperServer.Game.Object;
 using SuperServer.Game.Room;
 using SuperServer.Logic;
 using SuperServer.Session;

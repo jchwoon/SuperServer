@@ -50,9 +50,11 @@ namespace SuperServer.Commander
 
                 HeroStatData heroStat;
                 if (DataManager.HeroStatDict.TryGetValue(1, out heroStat) == false)
-                {
                     return null;
-                }
+
+                RoomData roomData;
+                if (DataManager.RoomDict.TryGetValue(1, out roomData) == false)
+                    return null;
 
                 DBHero hero = new DBHero()
                 {
@@ -62,7 +64,10 @@ namespace SuperServer.Commander
                     CreateAt = DateTime.Now,
                     Level = 1,
                     RoomId = 1,
-                    Exp = 0
+                    Exp = 0,
+                    PosX = roomData.StartPosX,
+                    PosY = roomData.StartPosY,
+                    PosZ = roomData.StartPosZ,
                 };
                 hero.HeroStat = new Stats()
                 {
