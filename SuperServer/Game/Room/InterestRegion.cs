@@ -53,9 +53,12 @@ namespace SuperServer.Game.Room
                     else if (obj.ObjectType == EObjectType.DropItem)
                     {
                         DropItem dropItem = (DropItem)obj;
-                        ObjectInfo info = new ObjectInfo();
-                        info.MergeFrom(dropItem.ObjectInfo);
-                        spawnPacket.Objects.Add(info);
+                        if (dropItem.Owner == null || dropItem.Owner.ObjectId == Owner.ObjectId)
+                        {
+                            ObjectInfo info = new ObjectInfo();
+                            info.MergeFrom(dropItem.ObjectInfo);
+                            spawnPacket.Objects.Add(info);
+                        }
                     }
                 }
                 Owner.Session?.Send(spawnPacket);

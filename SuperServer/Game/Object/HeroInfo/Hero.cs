@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Game.Stat;
 using Google.Protobuf.Protocol;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 public class Hero : Creature
@@ -45,16 +46,20 @@ public class Hero : Creature
         {
             Gold = hero.Gold,
             Exp = hero.Exp,
+            ConsumeInvenSlotCount = hero.ConsumableSlotCount,
+            EquipInvenSlotCount = hero.EquipmentSlotCount,
+            EtcInvenSlotCount = hero.ETCSlotCount,
             HeroInfo = HeroInfo,
         };
         InitStat(hero);
         InitPosInfo(hero);
         InitSkill();
+        InitInventory(hero);
     }
 
     private void InitStat(DBHero dbHero)
     {
-        StatComponent.SetHeroStat(dbHero.Level);
+        StatComponent.InitHeroStat(dbHero.Level);
         if (dbHero.HeroStat.HP >= 0)
             StatComponent.StatInfo.Hp = dbHero.HeroStat.HP;
         if (dbHero.HeroStat.MP >= 0)
@@ -73,6 +78,10 @@ public class Hero : Creature
         SkillComponent.RegisterSkill(HeroData.SkillIds);
     }
 
+    private void InitInventory(DBHero dbHero)
+    {
+        Inventory.Init(dbHero);
+    }
     public override void OnDie(Creature killer)
     {
         if (Room == null)
@@ -97,10 +106,27 @@ public class Hero : Creature
 
         Session?.Send(rewardPacket);
     }
-
-    public void SendDropItem(List<int> itemIds)
+    public void LevelUp(int prevLevel, int currentLevel)
     {
+        HeroStatData prevStatData;
+        if (DataManager.HeroStatDict.TryGetValue(prevLevel, out prevStatData) == false)
+            return;
 
+        HeroStatData currentStatData;
+        if (DataManager.HeroStatDict.TryGetValue(currentLevel, out currentStatData) == false)
+            return;
+
+        int addMaxHp = currentStatData.MaxHp - prevStatData.MaxHp;
+        int addMaxMp = currentStatData.MaxMp - prevStatData.MaxMp;
+        int addAtkDamage = currentStatData.AtkDamage - prevStatData.AtkDamage;
+        int addDefence = currentStatData.Defence - prevStatData.Defence;
+        int addAtkSpeedMultiplier = currentStatData.AddAtkSpeedMultiplier - prevStatData.AddAtkSpeedMultiplier;
+
+        AddStat(EStatType.MaxHp, addMaxHp, sendPacket:false);
+        AddStat(EStatType.MaxMp, addMaxMp, sendPacket: false);
+        AddStat(EStatType.Atk, addAtkDamage, sendPacket: false);
+        AddStat(EStatType.Defence, addDefence, sendPacket: false);
+        AddStat(EStatType.AddAtkSpeedMultiplier, addAtkSpeedMultiplier, sendPacket: false);
     }
 
     public override void ReSpawn()

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Game.Room;
+using SuperServer.Utils;
 
 namespace SuperServer.Game.Object
 {
@@ -111,14 +112,26 @@ namespace SuperServer.Game.Object
                     RewardData rewardData;
                     if (DataManager.RewardDict.TryGetValue(info.RewardId, out rewardData) == false)
                         return;
-
+                    
                     DropItem dropItem = ObjectManager.Instance.Spawn<DropItem>();
-                    dropItem.Init(recipient, rewardData.ItemId);
+                    dropItem.Init(recipient, rewardData);
+                    Vector3 offset = GetRandomOffset(1);
                     dropItem.PosInfo.MergeFrom(PosInfo);
+                    dropItem.PosInfo.PosX += offset.X;
+                    dropItem.PosInfo.PosY += offset.Y;
+                    dropItem.PosInfo.PosZ += offset.Z;
                     GameRoom room = Room;
                     GameCommander.Instance.Push(room.EnterRoom<DropItem>, dropItem);
                 }
             }
+        }
+
+        private Vector3 GetRandomOffset(float radius)
+        {
+            float angle = (float)(_rand.NextDouble() * Math.PI * 2);
+            float dist = (float)(_rand.NextDouble() * radius);
+
+            return new Vector3(dist * (float)Math.Cos(angle), 0, dist * (float)Math.Sin(angle));
         }
     }
 }

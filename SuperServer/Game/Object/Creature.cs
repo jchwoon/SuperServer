@@ -32,7 +32,7 @@ namespace SuperServer.Game.Object
         protected Random _rand = new Random();
         public Creature()
         {
-            StatComponent = new StatComponent();
+            StatComponent = new StatComponent(this);
             SkillComponent = new SkillComponent(this);
             CreatureInfo = new CreatureInfo();
             EffectComponent = new EffectComponent(this);
@@ -78,18 +78,13 @@ namespace SuperServer.Game.Object
         }
 
 
-        private void AddStat(EStatType statType, float gapValue)
+        public void AddStat(EStatType statType, float gapValue, bool sendPacket = true)
         {
-            if (Room == null)
-                return;
-
-            if (CurrentState == ECreatureState.Die)
-                return;
-
             //값의 변경이 일어나고
-            StatComponent.AddStat(statType, gapValue);
-            //변경된 값을 Broad
-            BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue);
+            float changeValue = StatComponent.GetStat(statType) + gapValue;
+            StatComponent.SetStat(statType, changeValue);
+            if (sendPacket == true)
+                BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue);
         }
 
         public void BroadcastSkill(int skillId, int targetId, string animName)

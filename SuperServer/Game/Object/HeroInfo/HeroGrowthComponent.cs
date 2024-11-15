@@ -32,13 +32,12 @@ public class HeroGrowthComponent
             return;
 
         Exp += exp;
-
+        int preveLevel = Level;
         bool isUp = CheckLevelUp();
         if (isUp == true)
         {
-            Owner.StatComponent.SetHeroStat(Level);
+            Owner.LevelUp(preveLevel, Level);
             Owner.BroadcastStat();
-            //Owner.Session.Send();
         }
     }
 

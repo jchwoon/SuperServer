@@ -25,7 +25,7 @@ namespace SuperServer.Game.Room
 
             foreach(PoolData poolData in _spawningPoolData.PoolDatas)
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < poolData.MaxEntityCount; i++)
                 {
                     Monster monster = ObjectManager.Instance.Spawn<Monster>();
                     SetRandomPosInPool(monster, poolData);

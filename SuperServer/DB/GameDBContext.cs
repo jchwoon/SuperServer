@@ -11,6 +11,7 @@ namespace SuperServer.DB
     public class GameDBContext : DbContext
     {
         public DbSet<DBHero> Heroes { get; set; }
+        public DbSet<DBItem> Items { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -22,6 +23,12 @@ namespace SuperServer.DB
         {
             modelBuilder.Entity<DBHero>()
                 .OwnsOne(h => h.HeroStat);
+
+            modelBuilder.Entity<DBItem>()
+                .HasOne(i => i.OwnerDb)
+                .WithMany(h => h.Items)
+                .HasForeignKey(i => i.OwnerDbId)
+                .IsRequired();
         }
     }
 }

@@ -25,6 +25,8 @@ namespace SuperServer.Data
         public static Dictionary<int, RewardTableData> RewardTableDict { get; private set; } = new Dictionary<int, RewardTableData>();
         public static Dictionary<int, ItemData> ItemDict { get; private set; } = new Dictionary<int, ItemData>();
         public static Dictionary<int, ConsumableData> ConsumableDict { get; private set; } = new Dictionary<int, ConsumableData>();
+        public static Dictionary<int, EquipmentData> EquipmentDict { get; private set; } = new Dictionary<int, EquipmentData>();
+        public static Dictionary<int, EtcData> EtcDict { get; private set; } = new Dictionary<int, EtcData>();
         public static void Init()
         {
             HeroStatDict = LoadJson<HeroStatDataLoader, int, HeroStatData>("HeroStatData").MakeDict();
@@ -38,6 +40,8 @@ namespace SuperServer.Data
             RewardTableDict = LoadJson<RewardTableDataLoadaer, int, RewardTableData>("RewardTableData").MakeDict();
             //Item
             ConsumableDict = LoadJson<ConsumableDataLoader, int, ConsumableData>("ConsumableData").MakeDict();
+            EquipmentDict = LoadJson<EquipmentDataLoader, int, EquipmentData>("EquipmentData").MakeDict();
+            EtcDict = LoadJson<EtcDataLoader, int, EtcData>("EtcData").MakeDict();
             MakeItemDict();
         }
 
@@ -49,9 +53,20 @@ namespace SuperServer.Data
 
         private static void MakeItemDict()
         {
+            //Consumable
             foreach (ConsumableData consumable in ConsumableDict.Values)
             {
                 ItemDict.Add(consumable.ItemId, consumable);
+            }
+            //Equipment
+            foreach (EquipmentData equipment in EquipmentDict.Values)
+            {
+                ItemDict.Add(equipment.ItemId, equipment);
+            }
+            //Etc
+            foreach (EtcData etcData in EtcDict.Values)
+            {
+                ItemDict.Add(etcData.ItemId, etcData);
             }
         }
     }

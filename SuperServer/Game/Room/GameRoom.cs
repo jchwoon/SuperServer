@@ -12,6 +12,7 @@ using SuperServer.Data;
 using Google.Protobuf.Enum;
 using SuperServer.Utils;
 using System.Runtime.ConstrainedExecution;
+using Google.Protobuf.Struct;
 
 namespace SuperServer.Game.Room
 {
@@ -58,6 +59,12 @@ namespace SuperServer.Game.Room
 
                 ResEnterRoomToC resEnterPacket = new ResEnterRoomToC();
                 resEnterPacket.MyHero = hero.MyHeroInfo;
+
+                foreach (ItemInfo info in hero.Inventory.GetAllItemInfos())
+                {
+                    resEnterPacket.Items.Add(info);
+                }
+
                 hero.Session.Send(resEnterPacket);
                 hero.InterestRegion?.Update();
             }
@@ -97,7 +104,6 @@ namespace SuperServer.Game.Room
             }
             else if (typeof(T) == typeof(DropItem))
             {
-                Console.WriteLine("Exit Potion");
                 DropItem dropItem = (DropItem)obj;
                 _dropItems.Remove(dropItem.ObjectId);
                 dropItem.Room = null;

@@ -27,6 +27,21 @@ namespace SuperServer.DB
         public float PosY { get; set; }
         public float PosZ { get; set; }
         public float RotY { get; set; }
+        public ICollection<DBItem> Items { get; set; } = new List<DBItem>();
+        public int EquipmentSlotCount { get; set; }
+        public int ConsumableSlotCount { get; set; }
+        public int ETCSlotCount { get; set; }
+    }
+
+    [Table("Item")]
+    public class DBItem
+    {
+        public int DBItemId { get; set; }
+        public int ItemTemplateId { get; set; }
+        public int Count { get; set; }
+        public ESlotType SlotType { get; set; }
+        public int OwnerDbId { get; set; }
+        public DBHero OwnerDb { get; set; }
     }
 
     ///////////////
@@ -42,5 +57,6 @@ namespace SuperServer.DB
         public int Defence { get; set; }
         public float MoveSpeed { get; set; }
         public float AtkSpeed { get; set; }
+        public int AddAtkSpeedMultiplier { get; set; }
     }
 }
