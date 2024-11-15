@@ -2,7 +2,6 @@
 using Google.Protobuf.Protocol;
 using ServerCore;
 using SuperServer.Commander;
-using SuperServer.Game.Object;
 using SuperServer.Game.Room;
 using SuperServer.Logic;
 using SuperServer.Session;
@@ -101,5 +100,69 @@ class PacketHandler
             return;
 
         GameCommander.Instance.Push(room.UseSkill, hero, skillPacket.SkillId, skillPacket.TargetId);
+    }
+
+    public static void PickupDropItemToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        PickupDropItemToS pickupItemPacket = (PickupDropItemToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.PickupDropItem, hero, pickupItemPacket.ObjectId);
+    }
+
+    public static void UseItemToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        UseItemToS useItemPacket = (UseItemToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.HandleUseItem, hero, useItemPacket.ItemdDbId);
+    }
+
+    public static void EquipItemToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        EquipItemToS equipItemPacket = (EquipItemToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.HandleEquipItem, hero, equipItemPacket.ItemDbId);
+    }
+
+    public static void UnEquipItemToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        UnEquipItemToS unEquipItemPacket = (UnEquipItemToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.HandleUnEquipItem, hero, unEquipItemPacket.ItemDbId);
     }
 }

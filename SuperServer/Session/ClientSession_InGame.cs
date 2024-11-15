@@ -11,7 +11,6 @@ using SuperServer.Utils;
 using System.Net.Sockets;
 using System.Diagnostics;
 using SuperServer.Logic;
-using SuperServer.Game.Object;
 using SuperServer.Game.Room;
 
 namespace SuperServer.Session

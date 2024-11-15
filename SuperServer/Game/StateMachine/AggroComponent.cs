@@ -18,7 +18,7 @@ namespace SuperServer.Game.StateMachine
             Owner = owner;
         }
 
-        public int GetTargetIdFromAttackers()
+        public int GetTopDamageAttackerId()
         {
             return _attackers.OrderByDescending(x => x.Value).Select(x => x.Key).FirstOrDefault();
         }

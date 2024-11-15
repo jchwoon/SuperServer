@@ -32,10 +32,10 @@ namespace SuperServer
         }
         static void Main(string[] args)
         {
-            ObjectManager.Instance.PreGenerateId(1000);
-            SessionManager.Instance.PreGenerateId(1000);
             ConfigManager.LoadConfigData();
             DataManager.Init();
+            ObjectManager.Instance.PreGenerateId(1000);
+            SessionManager.Instance.PreGenerateId(1000);
             RoomManager.Instance.PreLoadRoom();
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);

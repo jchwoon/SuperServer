@@ -2,20 +2,21 @@
 using Google.Protobuf.Struct;
 using SuperServer.Commander;
 using SuperServer.Data;
-using SuperServer.DB;
 using SuperServer.Game.StateMachine;
+using SuperServer.DB;
 using SuperServer.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SuperServer.Game.Room;
+using SuperServer.Utils;
 
 namespace SuperServer.Game.Object
 {
     public class Monster : Creature
     {
-        public int MonsterId { get; private set; }
         public MonsterMachine Machine { get; set; }
         public MonsterData MonsterData { get; set; }
         public AggroComponent AggroComponent { get; set; }
@@ -29,7 +30,6 @@ namespace SuperServer.Game.Object
             AggroComponent = new AggroComponent(this);
             MonsterData = monsterData;
             PoolData = poolData;
-            MonsterId = monsterId;
             ObjectInfo.TemplateId = monsterId;
             StatComponent.InitSetStat(monsterData);
             InitSkill();
@@ -53,8 +53,9 @@ namespace SuperServer.Game.Object
         {
             if (CurrentState == ECreatureState.Die)
                 return;
-
+            SelectRecipientAndGiveReward();
             base.OnDie(killer);
+
             Machine.OnDie();
             GameCommander.Instance.PushAfter(1000, Room.ExitRoom<Monster>, this);
             GameCommander.Instance.PushAfter(3000, Room.ReSpawn, this);
@@ -76,6 +77,61 @@ namespace SuperServer.Game.Object
         private void InitSkill()
         {
             SkillComponent.RegisterSkill(MonsterData.SkillIds);
+        }
+
+        private void SelectRecipientAndGiveReward()
+        {
+            Hero hero = SelectRecipient();
+
+            if (hero == null) 
+                return;
+
+            RewardTableData tableData;
+            if (DataManager.RewardTableDict.TryGetValue(ObjectInfo.TemplateId, out tableData) == false)
+                return;
+
+            hero.GiveExpAndGold(tableData);
+            DropItem(hero, tableData);
+        }
+
+        private Hero SelectRecipient()
+        {
+            int topId = AggroComponent.GetTopDamageAttackerId();
+            Hero hero = Room.FindHeroById(topId);
+
+            return hero;
+        }
+
+        private void DropItem(Hero recipient, RewardTableData tableData)
+        {
+            foreach (RewardInfo info in tableData.RewardInfos)
+            {
+                double randValue = _rand.NextDouble();
+                if (randValue < info.Probability)
+                {
+                    RewardData rewardData;
+                    if (DataManager.RewardDict.TryGetValue(info.RewardId, out rewardData) == false)
+                        return;
+                    
+                    DropItem dropItem = ObjectManager.Instance.Spawn<DropItem>();
+                    dropItem.Init(recipient, rewardData);
+                    Vector3 offset = GetRandomOffset(1);
+                    dropItem.PosInfo.MergeFrom(PosInfo);
+                    dropItem.PosInfo.PosX += offset.X;
+                    dropItem.PosInfo.PosY += offset.Y;
+                    dropItem.PosInfo.PosZ += offset.Z;
+                    GameRoom room = Room;
+                    GameCommander.Instance.Push(room.EnterRoom<DropItem>, dropItem);
+                }
+            }
+        }
+
+        private Vector3 GetRandomOffset(float radius)
+        {
+            float angle = (float)(_rand.NextDouble() * Math.PI * 2);
+            float dist = (float)(_rand.NextDouble() * radius);
+
+            return new Vector3(dist * (float)Math.Cos(angle), 0, dist * (float)Math.Sin(angle));
         }
     }
 }

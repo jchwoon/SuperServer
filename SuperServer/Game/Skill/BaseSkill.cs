@@ -18,6 +18,7 @@ namespace SuperServer.Game.Skill
         public int SkillId { get; protected set; }
         public SkillData SkillData { get; protected set; }
         public long LastCoolTick { get; protected set; }
+        public string PlayAnimName { get; protected set; }
         public BaseSkill(Creature owner, SkillData skillData, int skillId)
         {
             Owner = owner;
@@ -48,14 +49,14 @@ namespace SuperServer.Game.Skill
                 {
                     target.EffectComponent.ApplyEffect(Owner, effectData);
                 });
-            RefreshCooldown();
             BroadcastSkill(targetId);
+            Refresh();
             return true;
         }
 
         protected void BroadcastSkill(int targetId)
         {
-            Owner.BroadcastSkill(SkillId, targetId);
+            Owner.BroadcastSkill(SkillId, targetId, GetPlayAnimName());
         }
 
         public float GetSkillRange()
@@ -122,6 +123,11 @@ namespace SuperServer.Game.Skill
         {
             return Environment.TickCount64 - LastCoolTick;
         }
+        
+        protected virtual void Refresh()
+        {
+            RefreshCooldown();
+        }
         protected void RefreshCooldown()
         {
             LastCoolTick = Environment.TickCount64;
@@ -137,6 +143,11 @@ namespace SuperServer.Game.Skill
                 return false;
 
             return true;
+        }
+
+        protected virtual string GetPlayAnimName()
+        {
+            return SkillData.AnimName;
         }
     }
 }

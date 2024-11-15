@@ -31,6 +31,15 @@ public enum PacketId
   ModifyOneStatToC = 22,
   DieToC = 23,
   TeleportToC = 24,
+  RewardToC = 25,
+  PickupDropItemToS = 26,
+  PickupDropItemToC = 27,
+  AddItemToC = 28,
+  UseItemToS = 29,
+  UseItemToC = 30,
+  EquipItemToS = 31,
+  UnEquipItemToS = 32,
+  ChangeSlotTypeToC = 33,
 
 }
 
@@ -83,6 +92,14 @@ class PacketManager
         _handler.Add((ushort)PacketId.PingCheckToS, PacketHandler.PingCheckToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqUseSkillToS, ParsePacket<ReqUseSkillToS>);
         _handler.Add((ushort)PacketId.ReqUseSkillToS, PacketHandler.ReqUseSkillToSHandler);
+        _parseHandler.Add((ushort)PacketId.PickupDropItemToS, ParsePacket<PickupDropItemToS>);
+        _handler.Add((ushort)PacketId.PickupDropItemToS, PacketHandler.PickupDropItemToSHandler);
+        _parseHandler.Add((ushort)PacketId.UseItemToS, ParsePacket<UseItemToS>);
+        _handler.Add((ushort)PacketId.UseItemToS, PacketHandler.UseItemToSHandler);
+        _parseHandler.Add((ushort)PacketId.EquipItemToS, ParsePacket<EquipItemToS>);
+        _handler.Add((ushort)PacketId.EquipItemToS, PacketHandler.EquipItemToSHandler);
+        _parseHandler.Add((ushort)PacketId.UnEquipItemToS, ParsePacket<UnEquipItemToS>);
+        _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);
     
     }
 

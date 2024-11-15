@@ -12,13 +12,14 @@ namespace SuperServer.Data
     public class HeroStatData
     {
         public int Level;
-        public float Exp;
+        public int Exp;
         public int MaxHp;
         public int MaxMp;
         public float MoveSpeed;
         public int AtkDamage;
         public int Defence;
-        public float AtkSpeed;
+        public float BaseAtkSpeed;
+        public int AddAtkSpeedMultiplier;
     }
 
     [Serializable]
@@ -177,6 +178,9 @@ namespace SuperServer.Data
         public string AnimParamName;
         public int EffectId;
         public float EffectDelayRatio;
+        public float ComboTime;
+        public int MaxComboIdx;
+        public List<string> ComboNames;
     }
 
     [Serializable]
@@ -197,10 +201,20 @@ namespace SuperServer.Data
         }
     }
 
+    public struct AddStatInfo
+    {
+        public EStatType StatType;
+        public float Value;
+        public bool Multiplier;
+    }
+
     public class EffectData
     {
         public int EffectId;
         public float DamageRatio;
+        public List<AddStatInfo> AddStatValues;
+        public EEffectType EffectType;
+        public EEffectDurationType EffectDurationType;
     }
 
     [Serializable]
@@ -214,6 +228,143 @@ namespace SuperServer.Data
             foreach(EffectData effect in effects)
             {
                 dict.Add(effect.EffectId, effect);
+            }
+
+            return dict;
+        }
+    }
+
+    public class RewardData
+    {
+        public int RewardId;
+        public int ItemId;
+        public int Count;
+    }
+
+    [Serializable]
+    public class RewardDataLoader : ILoader<int, RewardData>
+    {
+        public List<RewardData> rewards = new List<RewardData>();
+        public Dictionary<int, RewardData> MakeDict()
+        {
+            Dictionary<int, RewardData> dict = new Dictionary<int, RewardData>();
+
+            foreach(RewardData reward in rewards)
+            {
+                dict.Add(reward.RewardId, reward);
+            }
+
+            return dict;
+        }
+    }
+
+    public struct RewardInfo
+    {
+        public int RewardId;
+        public float Probability;
+    }
+    public class RewardTableData
+    {
+        public int RewardTableId;
+        public int MonsterId;
+        public int RewardGold;
+        public int RewardExp;
+        public List<RewardInfo> RewardInfos;
+    }
+
+    [Serializable]
+    public class RewardTableDataLoadaer : ILoader<int, RewardTableData>
+    {
+        public List<RewardTableData> rewardTables = new List<RewardTableData>();
+        public Dictionary<int, RewardTableData> MakeDict()
+        {
+            Dictionary<int, RewardTableData> dict = new Dictionary<int, RewardTableData>();
+
+            foreach (RewardTableData rewardTableData in rewardTables)
+            {
+                dict.Add(rewardTableData.RewardTableId, rewardTableData);
+            }
+
+            return dict;
+        }
+    }
+
+    public class ItemData : BaseData
+    {
+        public int ItemId;
+        public int EffectId;
+        public string DescId;
+        public bool Stackable;
+        public int MaxStack;
+        public string Name;
+        public string ImageName;
+        public EItemType ItemType;
+    }
+    
+    public class ConsumableData : ItemData
+    {
+        public float CoolTime;
+        public EConsumableType ConsumableType;
+    }
+
+    [Serializable]
+    public class ConsumableDataLoader : ILoader<int, ConsumableData>
+    {
+        public List<ConsumableData> items = new List<ConsumableData>();
+
+        public Dictionary<int, ConsumableData> MakeDict()
+        {
+            Dictionary<int, ConsumableData> dict = new Dictionary<int, ConsumableData>();
+
+            foreach (ConsumableData consumableData in items)
+            {
+                dict.Add(consumableData.ItemId, consumableData);
+            }
+
+            return dict;
+        }
+    }
+
+    public class EquipmentData : ItemData
+    {
+        public EHeroClassType ClassType;
+        public EEquipItemType EquipItemType;
+        public int RequiredLevel;
+    }
+
+    [Serializable]
+    public class EquipmentDataLoader : ILoader<int, EquipmentData>
+    {
+        public List<EquipmentData> items = new List<EquipmentData>();
+
+        public Dictionary<int, EquipmentData> MakeDict()
+        {
+            Dictionary<int, EquipmentData> dict = new Dictionary<int, EquipmentData>();
+
+            foreach (EquipmentData equipmentData in items)
+            {
+                dict.Add(equipmentData.ItemId, equipmentData);
+            }
+
+            return dict;
+        }
+    }
+    public class EtcData : ItemData
+    {
+    }
+
+    [Serializable]
+    public class EtcDataLoader : ILoader<int, EtcData>
+    {
+        public List<EtcData> items = new List<EtcData>();
+
+        public Dictionary<int, EtcData> MakeDict()
+        {
+            Dictionary<int, EtcData> dict = new Dictionary<int, EtcData>();
+
+            foreach (EtcData etcData in items)
+            {
+                dict.Add(etcData.ItemId, etcData);
             }
 
             return dict;

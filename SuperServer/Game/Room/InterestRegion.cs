@@ -16,7 +16,7 @@ namespace SuperServer.Game.Room
     public class InterestRegion
     {
         public Hero Owner { get; private set; }
-        public HashSet<Creature> CurrentInterestCreature { get; private set; } = new HashSet<Creature>();
+        public HashSet<BaseObject> CurrentInterestObj { get; private set; } = new HashSet<BaseObject>();
         public InterestRegion(Hero owner)
         {
             Owner = owner;
@@ -27,75 +27,85 @@ namespace SuperServer.Game.Room
             if (Owner == null || Owner.Room == null)
                 return;
 
-            HashSet<Creature> interestCreatures = GetCreatureInInterestRegion();
+            HashSet<BaseObject> interestObjects = GetCreatureInInterestRegion();
 
             //신입생 스폰
-            List<Creature> newCreatures = interestCreatures.Except(CurrentInterestCreature).ToList();
-            if (newCreatures.Count > 0)
+            List<BaseObject> newObjects = interestObjects.Except(CurrentInterestObj).ToList();
+            if (newObjects.Count > 0)
             {
                 SpawnToC spawnPacket = new SpawnToC();
-                foreach (Creature creature in newCreatures)
+                foreach (BaseObject obj in newObjects)
                 {
-                    if (creature.ObjectType == EObjectType.Hero)
+                    if (obj.ObjectType == EObjectType.Hero)
                     {
-                        Hero hero = (Hero)creature;
+                        Hero hero = (Hero)obj;
                         HeroInfo info = new HeroInfo();
                         info.MergeFrom(hero.HeroInfo);
                         spawnPacket.Heroes.Add(info);
                     }
-                    else if (creature.ObjectType == EObjectType.Monster)
+                    else if (obj.ObjectType == EObjectType.Monster)
                     {
-                        Monster monster = (Monster)creature;
+                        Monster monster = (Monster)obj;
                         CreatureInfo info = new CreatureInfo();
                         info.MergeFrom(monster.CreatureInfo);
                         spawnPacket.Creatures.Add(info);
+                    }
+                    else if (obj.ObjectType == EObjectType.DropItem)
+                    {
+                        DropItem dropItem = (DropItem)obj;
+                        if (dropItem.Owner == null || dropItem.Owner.ObjectId == Owner.ObjectId)
+                        {
+                            ObjectInfo info = new ObjectInfo();
+                            info.MergeFrom(dropItem.ObjectInfo);
+                            spawnPacket.Objects.Add(info);
+                        }
                     }
                 }
                 Owner.Session?.Send(spawnPacket);
             }
             //관심 영역 밖 디스폰
-            List<Creature> oldCreatures = CurrentInterestCreature.Except(interestCreatures).ToList();
-            if (oldCreatures.Count > 0)
+            List<BaseObject> oldObjects = CurrentInterestObj.Except(interestObjects).ToList();
+            if (oldObjects.Count > 0)
             {
                 DeSpawnToC deSpawnPacket = new DeSpawnToC();
-                foreach (Creature creature in oldCreatures)
+                foreach (BaseObject obj in oldObjects)
                 {
-                    deSpawnPacket.ObjectIds.Add(creature.ObjectId);
+                    deSpawnPacket.ObjectIds.Add(obj.ObjectId);
                 }
                 Owner.Session?.Send(deSpawnPacket);
             }
 
-            CurrentInterestCreature = interestCreatures;
+            CurrentInterestObj = interestObjects;
 
             GameCommander.Instance.PushAfter(100, Update);
         }
 
-        private HashSet<Creature> GetCreatureInInterestRegion()
+        private HashSet<BaseObject> GetCreatureInInterestRegion()
         {
             if (Owner == null || Owner.Room == null)
                 return null;
 
-            HashSet<Creature> interestCreatures = new HashSet<Creature>();
+            HashSet<BaseObject> interestObj = new HashSet<BaseObject>();
 
 
-            List<Creature> creatures = Owner.Room.GetCreatures();
+            List<BaseObject> objects = Owner.Room.GetAllObjects();
 
             //개선점
-            foreach (Creature creature in creatures)
+            foreach (BaseObject obj in objects)
             {
-                if (creature.ObjectId == Owner.ObjectId) continue;
-                float dist = (creature.Position - Owner.Position).MagnitudeSqr();
+                if (obj.ObjectId == Owner.ObjectId) continue;
+                float dist = (obj.Position - Owner.Position).MagnitudeSqr();
 
                 if (dist  < GameRoom.SqrInterestRange)
-                    interestCreatures.Add(creature);
+                    interestObj.Add(obj);
             }
 
-            return interestCreatures;
+            return interestObj;
         }
 
         public void Clear()
         {
-            CurrentInterestCreature.Clear();
+            CurrentInterestObj.Clear();
         }
     }
 }

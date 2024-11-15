@@ -12,7 +12,7 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20241019190358_init")]
+    [Migration("20241114013929_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,8 +38,17 @@ namespace SuperServer.Migrations
                     b.Property<int>("Class")
                         .HasColumnType("int");
 
+                    b.Property<int>("ConsumableSlotCount")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ETCSlotCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EquipmentSlotCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("Exp")
                         .HasColumnType("int");
@@ -77,11 +86,41 @@ namespace SuperServer.Migrations
                     b.ToTable("Hero");
                 });
 
+            modelBuilder.Entity("SuperServer.DB.DBItem", b =>
+                {
+                    b.Property<int>("DBItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DBItemId"), 1L, 1);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemTemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OwnerDbId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SlotType")
+                        .HasColumnType("int");
+
+                    b.HasKey("DBItemId");
+
+                    b.HasIndex("OwnerDbId");
+
+                    b.ToTable("Item");
+                });
+
             modelBuilder.Entity("SuperServer.DB.DBHero", b =>
                 {
                     b.OwnsOne("SuperServer.DB.Stats", "HeroStat", b1 =>
                         {
                             b1.Property<int>("DBHeroId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("AddAtkSpeedMultiplier")
                                 .HasColumnType("int");
 
                             b1.Property<int>("AtkDamage")
@@ -117,6 +156,22 @@ namespace SuperServer.Migrations
                         });
 
                     b.Navigation("HeroStat");
+                });
+
+            modelBuilder.Entity("SuperServer.DB.DBItem", b =>
+                {
+                    b.HasOne("SuperServer.DB.DBHero", "OwnerDb")
+                        .WithMany("Items")
+                        .HasForeignKey("OwnerDbId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OwnerDb");
+                });
+
+            modelBuilder.Entity("SuperServer.DB.DBHero", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

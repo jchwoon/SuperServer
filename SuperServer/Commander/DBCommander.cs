@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Protocol;
+using Microsoft.EntityFrameworkCore;
 using SuperServer.Data;
 using SuperServer.DB;
 using SuperServer.Job;
@@ -50,9 +51,11 @@ namespace SuperServer.Commander
 
                 HeroStatData heroStat;
                 if (DataManager.HeroStatDict.TryGetValue(1, out heroStat) == false)
-                {
                     return null;
-                }
+
+                RoomData roomData;
+                if (DataManager.RoomDict.TryGetValue(1, out roomData) == false)
+                    return null;
 
                 DBHero hero = new DBHero()
                 {
@@ -62,7 +65,13 @@ namespace SuperServer.Commander
                     CreateAt = DateTime.Now,
                     Level = 1,
                     RoomId = 1,
-                    Exp = 0
+                    Exp = 0,
+                    PosX = roomData.StartPosX,
+                    PosY = roomData.StartPosY,
+                    PosZ = roomData.StartPosZ,
+                    EquipmentSlotCount = InventoryComponent.DefaultSlotCount,
+                    ConsumableSlotCount = InventoryComponent.DefaultSlotCount,
+                    ETCSlotCount = InventoryComponent.DefaultSlotCount,
                 };
                 hero.HeroStat = new Stats()
                 {
@@ -71,9 +80,10 @@ namespace SuperServer.Commander
                     MaxMp = heroStat.MaxMp,
                     MaxHp = heroStat.MaxHp,
                     AtkDamage = heroStat.AtkDamage,
-                    AtkSpeed = heroStat.AtkSpeed,
+                    AtkSpeed = heroStat.BaseAtkSpeed,
                     MoveSpeed = heroStat.MoveSpeed,
-                    Defence = heroStat.Defence
+                    Defence = heroStat.Defence,
+                    AddAtkSpeedMultiplier = heroStat.AddAtkSpeedMultiplier
                 };
 
 
@@ -106,7 +116,10 @@ namespace SuperServer.Commander
         {
             using (GameDBContext db = new GameDBContext())
             {
-                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == heroId).FirstOrDefault();
+                DBHero dbHero = db.Heroes.
+                    Where(h => h.DBHeroId == heroId).
+                    Include(h => h.Items).
+                    FirstOrDefault();
                 if (dbHero == null)
                     return null;
 

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Google.Protobuf.Protocol;
 using SuperServer.Commander;
 using System.Net.NetworkInformation;
-using SuperServer.Game.Object;
 using SuperServer.Game.Room;
 
 namespace SuperServer.Session
