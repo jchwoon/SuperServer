@@ -14,6 +14,7 @@ namespace SuperServer.Game.Room
     public partial class GameRoom
     {
         readonly float _threshold = 2.0f;
+        readonly float _sendMovePacketCycle = 0.3f;
         public void HandleMove(Hero hero, MoveToS packet)
         {
             if (hero == null)
@@ -37,7 +38,7 @@ namespace SuperServer.Game.Room
         private Vector3 GetExpectPos(PosInfo info, Hero hero)
         {
             
-            float dist = hero.StatComponent.StatInfo.MoveSpeed * ((hero.Session.Ping / 1000) + 0.2f);
+            float dist = hero.StatComponent.StatInfo.MoveSpeed * ((hero.Session.Ping / 1000) + _sendMovePacketCycle);
 
             Vector3 dir = GetLookDir(info.RotY);
 

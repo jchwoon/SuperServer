@@ -37,7 +37,6 @@ namespace SuperServer.Session
             foreach (LobbyHero hero in LobbyHeroes)
                 resHeroListPacket.Lobbyheros.Add(hero.LobbyHeroInfo);
 
-            Console.WriteLine("SendLobbyInfo");
             Send(resHeroListPacket);
         }
 
@@ -86,6 +85,7 @@ namespace SuperServer.Session
             }
             LobbyHeroes.Remove(LobbyHeroes[heroIdx]);
             resDeleteHeroPacket.IsSuccess = true;
+            resDeleteHeroPacket.HeroIdx = heroIdx;
             Send(resDeleteHeroPacket);
         }
 

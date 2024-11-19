@@ -72,6 +72,7 @@ namespace ServerCore
                 if (_disconnected == true)
                     return;
                 _sendQueue.Enqueue(segment);
+                //Todo : 나중에 규모가 커질 때 쓰레드 배분 고려
                 if (_sendList.Count == 0)
                     ProcessSend();
             }

@@ -177,12 +177,12 @@ namespace SuperServer.Game.Map
                 }
             }
             if (chasePath.ContainsKey(destPos) == false)
-                return CalcCellPathFromParent(chasePath, closestPos);
-            return CalcCellPathFromParent(chasePath, destPos);
+                return CalcPathFromChasePath(chasePath, closestPos);
+            return CalcPathFromChasePath(chasePath, destPos);
         }
 
 
-        List<Vector3Int> CalcCellPathFromParent(Dictionary<Vector3Int, PQNode> chasePath, Vector3Int dest)
+        List<Vector3Int> CalcPathFromChasePath(Dictionary<Vector3Int, PQNode> chasePath, Vector3Int dest)
         {
             List<Vector3Int> path = new List<Vector3Int>();
 
