@@ -18,6 +18,7 @@ namespace SuperServer.Game.Object
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
         Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
         Dictionary<int, DropItem> _dropItems = new Dictionary<int, DropItem>();
+        Dictionary<int, NPC> _npcs = new Dictionary<int, NPC>();
 
         public void PreGenerateId(int capacity)
         {
@@ -58,6 +59,13 @@ namespace SuperServer.Game.Object
                 dropItem.ObjectId = GenerateId();
                 dropItem.ObjectType = EObjectType.DropItem;
                 _dropItems.Add(dropItem.ObjectId, dropItem);
+            }
+            else if(type == typeof(NPC))
+            {
+                NPC npc = obj as NPC;
+                npc.ObjectId = GenerateId();
+                npc.ObjectType = EObjectType.Npc;
+                _npcs.Add(npc.ObjectId, npc);
             }
 
             return obj;

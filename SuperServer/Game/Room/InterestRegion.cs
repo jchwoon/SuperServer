@@ -43,11 +43,11 @@ namespace SuperServer.Game.Room
                         info.MergeFrom(hero.HeroInfo);
                         spawnPacket.Heroes.Add(info);
                     }
-                    else if (obj.ObjectType == EObjectType.Monster)
+                    else if (obj.ObjectType == EObjectType.Monster || obj.ObjectType == EObjectType.Npc)
                     {
-                        Monster monster = (Monster)obj;
+                        Creature creature = (Creature)obj;
                         CreatureInfo info = new CreatureInfo();
-                        info.MergeFrom(monster.CreatureInfo);
+                        info.MergeFrom(creature.CreatureInfo);
                         spawnPacket.Creatures.Add(info);
                     }
                     else if (obj.ObjectType == EObjectType.DropItem)
@@ -96,7 +96,7 @@ namespace SuperServer.Game.Room
                 if (obj.ObjectId == Owner.ObjectId) continue;
                 float dist = (obj.Position - Owner.Position).MagnitudeSqr();
 
-                if (dist  < GameRoom.SqrInterestRange)
+                if (dist < GameRoom.SqrInterestRange)
                     interestObj.Add(obj);
             }
 

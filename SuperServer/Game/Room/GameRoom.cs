@@ -21,8 +21,11 @@ namespace SuperServer.Game.Room
         Dictionary<int, Hero> _heroes = new Dictionary<int, Hero>();
         Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
         Dictionary<int, DropItem> _dropItems = new Dictionary<int, DropItem>();
+        Dictionary<int, NPC> _npcs = new Dictionary<int, NPC>();
+
         public MapComponent Map { get; set; } = new MapComponent();
         public SpawningPool SpawningPool { get; private set; } = new SpawningPool();
+        public NPCCreater NpcCreater { get; private set; } = new NPCCreater();
         public RoomData RoomData { get; private set; }
         public int RoomId { get; set; }
         //거리 25
@@ -33,7 +36,7 @@ namespace SuperServer.Game.Room
             RoomId = roomId;
         }
 
-        public void Init()
+        public virtual void Init()
         {
             RoomData data;
             if (DataManager.RoomDict.TryGetValue(RoomId, out data) == true)
@@ -42,7 +45,9 @@ namespace SuperServer.Game.Room
                 RoomData = data;
             }
 
+            // TODO: 사냥터 room
             SpawningPool.Init(this);
+            NpcCreater.Init(this);
         }
 
         public void EnterRoom<T>(BaseObject obj) where T : BaseObject
@@ -81,6 +86,12 @@ namespace SuperServer.Game.Room
                 DropItem dropItem = (DropItem)obj;
                 _dropItems.Add(dropItem.ObjectId, dropItem);
                 dropItem.Update();
+            }
+            // NPC
+            else if (type == EObjectType.Npc)
+            {
+                NPC npc = (NPC)obj;
+                _npcs.Add(npc.ObjectId, npc);
             }
         }
 
@@ -208,6 +219,11 @@ namespace SuperServer.Game.Room
             foreach(DropItem dropItem in _dropItems.Values)
             {
                 objects.Add(dropItem);
+            }
+
+            foreach(NPC npc in _npcs.Values)
+            {
+                objects.Add(npc);
             }
 
             return objects;

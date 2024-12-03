@@ -47,6 +47,7 @@ namespace SuperServer.Data
         public float StartPosX;
         public float StartPosY;
         public float StartPosZ;
+        public List<int> Npcs;
     }
 
     [Serializable]
@@ -61,7 +62,6 @@ namespace SuperServer.Data
             {
                 dict.Add(room.RoomId, room);
             }
-
 
             return dict;
         }
@@ -365,6 +365,31 @@ namespace SuperServer.Data
             foreach (EtcData etcData in items)
             {
                 dict.Add(etcData.ItemId, etcData);
+            }
+
+            return dict;
+        }
+    }
+    public class NPCData
+    {
+        public int npcId;
+        public int roomId;
+        public float xPos;
+        public float yPos;
+        public float zPos;
+    }
+
+    [Serializable]
+    public class NPCDataLoader : ILoader<int, NPCData>
+    {
+        public List<NPCData> npcs = new List<NPCData>();
+        public Dictionary<int, NPCData> MakeDict()
+        {
+            Dictionary<int, NPCData> dict = new Dictionary<int, NPCData>();
+
+            foreach (NPCData npcDatas in npcs)
+            {
+                dict.Add(npcDatas.npcId, npcDatas);
             }
 
             return dict;
