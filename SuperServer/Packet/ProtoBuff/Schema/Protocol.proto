@@ -1,0 +1,194 @@
+syntax = "proto3";
+
+package Protocol;
+option csharp_namespace = "Google.Protobuf.Protocol";
+
+import "Enum.proto";
+import "Struct.proto";
+
+message ConnectToC
+{
+    
+}
+
+message ReqHeroListToS
+{
+    int32 accountId =1;
+}
+
+message ResHeroListToC
+{
+    repeated LobbyHeroInfo lobbyheros = 1;
+}
+
+message ReqCreateHeroToS
+{
+    string nickname = 1;
+    EHeroClassType classType = 2;
+}
+
+message ResCreateHeroToC
+{
+    ECreateHeroResult result = 1;
+}
+
+message ReqDeleteHeroToS
+{
+    int32 heroIdx = 1;
+}
+
+message ResDeleteHeroToC
+{
+    bool isSuccess = 1;
+	int32 heroIdx = 2;
+}
+
+message PreEnterRoomToS
+{
+    int32 heroIdx = 1;
+}
+message PreEnterRoomToC
+{
+    int32 roomId = 1;
+}
+
+message ReqEnterRoomToS
+{
+    int32 heroIdx = 1;
+}
+
+message ResEnterRoomToC
+{
+    MyHeroInfo myHero = 1;
+    repeated ItemInfo items = 2;
+}
+
+message SpawnToC
+{
+    repeated HeroInfo heroes = 1;
+    repeated CreatureInfo creatures= 2;
+    repeated ObjectInfo objects = 3;
+}
+
+message ReqLeaveGameToS
+{
+
+}
+
+message MoveToS
+{
+    PosInfo posInfo = 1;
+}
+
+message MoveToC
+{
+    int32 objectId = 1;
+    PosInfo posInfo = 2;
+    EMoveType moveType = 3;
+}
+
+message PingCheckToC
+{
+
+}
+
+message PingCheckToS
+{
+
+}
+
+message DeSpawnToC
+{
+    repeated int32 objectIds = 1;
+}
+
+message ReqUseSkillToS 
+{
+	int32 skillId = 1;
+	int32 targetId = 2;
+    string playAnimName = 3;
+}
+
+message ResUseSkillToC 
+{
+	int32 objectId = 1;
+	int32 skillId = 2;
+	int32 targetId = 3;
+    string playAnimName = 4;
+}
+
+message ModifyStatToC
+{
+    int32 objectId = 1;
+	StatInfo statInfo = 2;
+}
+
+message ModifyOneStatToC
+{
+    int32 objectId = 1;
+    float changedValue = 2;
+    float gapValue = 3;
+    EStatType statType = 4;
+}
+
+message DieToC
+{
+    int32 objectId = 1;
+    int32 killerId = 2;
+}
+
+message TeleportToC
+{
+    int32 objectId = 1;
+    PosInfo posInfo = 2;
+    ETeleportType telpoType = 3;
+}
+
+message RewardToC
+{
+    int32 exp = 1;
+    int32 gold = 2;
+}
+
+message PickupDropItemToS
+{
+    int32 objectId = 1;
+    int32 templateId = 2;
+}
+
+message PickupDropItemToC
+{
+    EPickupFailReason result = 1;
+}
+
+message AddItemToC
+{
+    ItemInfo itemInfo = 1;
+    EAddItemType addType = 2;
+}
+
+message UseItemToS
+{
+    int32 itemdDbId = 1;
+}
+
+message UseItemToC
+{
+    int32 itemDbId = 1;
+}
+
+message EquipItemToS
+{
+    int32 itemDbId = 1;
+}
+
+message UnEquipItemToS
+{
+    int32 itemDbId = 1;
+}
+
+message ChangeSlotTypeToC
+{
+    int32 itemDbId = 1;
+    ESlotType slotType = 2;
+}
