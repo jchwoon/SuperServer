@@ -16,8 +16,8 @@ namespace PacketGenerator
         static void Main(string[] args)
         {
             // 먼저 enum과 handler를 만들어줌
-            string rootDirPath = "../../../../";
-            string protoPath = rootDirPath + "SuperServer/Packet/ProtoBuff/Schema/";
+            string rootDirPath = "../../../../../";
+            string protoPath = rootDirPath + "Common/Protocol/bin/";
 
             foreach (string line in File.ReadAllLines(protoPath + "Protocol.proto"))
             {

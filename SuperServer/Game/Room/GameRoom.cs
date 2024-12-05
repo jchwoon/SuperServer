@@ -125,6 +125,14 @@ namespace SuperServer.Game.Room
             Broadcast(deSpawnPacket, obj.Position);
         }
 
+        public void ChangedRoom(int roomId, Hero hero)
+        {
+            ExitRoom<Hero>(hero);
+
+            GameRoom gameRoom = RoomManager.Instance.GetRoom(roomId);
+            gameRoom.EnterRoom<Hero>(hero);
+        }
+
         public void ReSpawn(Creature obj)
         {
             EObjectType type = obj.ObjectType;
