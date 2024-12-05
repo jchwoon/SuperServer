@@ -167,8 +167,12 @@ namespace SuperServer.Data
 
     public class SkillData
     {
-        public int SkillId;
+        public int TemplateId;
         public ESkillType SkillType;
+        public ESkillAreaType SkillAreaType;
+        public ESkillProjectileType SkillProjectileType;
+        public float SectorAngle;
+        public bool IsNormalSkill;
         public string SkillName;
         public string AnimName;
         public float SkillRange;
@@ -194,7 +198,7 @@ namespace SuperServer.Data
 
             foreach(SkillData skill in skills)
             {
-                dict.Add(skill.SkillId, skill);
+                dict.Add(skill.TemplateId, skill);
             }
 
             return dict;

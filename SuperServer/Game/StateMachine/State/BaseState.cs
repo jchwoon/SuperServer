@@ -46,14 +46,14 @@ namespace SuperServer.Game.StateMachine.State
             //타겟이 있고 거리가 되면 Skill 거리가 안되면 Move
             if (_machine.Target != null)
             {
-                float dist = Vector3.Distance(_machine.Owner.Position, _machine.Target.Position);
                 BaseSkill skill = _machine.Owner.SkillComponent.GetCanUseSkill(_machine.Target);
 
-                if (skill == null || dist > _machine.Owner.SkillComponent.GetSkillRange(skill))
+                if (skill == null)
                 {
                     _machine.FindPathAndMove(_machine.Owner.Position, _machine.Target.Position, chase:true);
                     return;
                 }
+                _machine.CurrentSkill = skill;
                 _machine.ChangeState(_machine.SkillState);
                 return;
             }

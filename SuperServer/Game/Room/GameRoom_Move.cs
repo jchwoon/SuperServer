@@ -51,14 +51,9 @@ namespace SuperServer.Game.Room
         //단위 원 생각
         private Vector3 GetLookDir(float rotY)
         {
-            float radians = rotY * (float)(Math.PI / 180.0);
+            Vector3 dir = Utils.Utils.GetDirFromRotY(rotY);
 
-            float directionX = (float)Math.Sin(radians);
-            float directionZ = (float)Math.Cos(radians);
-
-            Vector3 direction = new Vector3(directionX, 0, directionZ); 
-
-            return direction.Normalize();
+            return dir.Normalize();
         }
 
         private void CompareExpectToRealAndSend(Hero hero, Vector3 expect, PosInfo real)
