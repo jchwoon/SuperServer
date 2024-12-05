@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Enum;
+using Google.Protobuf.Struct;
 using SuperServer.Game.Object;
 using SuperServer.Game.Skill;
 using System;
@@ -37,16 +38,7 @@ namespace SuperServer.Game.StateMachine.State
             if (_machine.Target == null)
                 return;
 
-            if (_machine.CurrentSkill != null)
-            {
-                _machine.CurrentSkill.UseSkill(_machine.Target.ObjectId);
-                return;
-            }
-            else
-                _machine.Owner.SkillComponent.UseNormalSkill(_machine.Target.ObjectId);
-
+            _machine.CurrentSkill.UseSkill(_machine.Target.ObjectId);
         }
-
-
     }
 }

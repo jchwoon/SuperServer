@@ -104,17 +104,13 @@ message DeSpawnToC
 
 message ReqUseSkillToS 
 {
-	int32 skillId = 1;
-	int32 targetId = 2;
-    string playAnimName = 3;
+	SkillInfo skillInfo = 1;
 }
 
 message ResUseSkillToC 
 {
 	int32 objectId = 1;
-	int32 skillId = 2;
-	int32 targetId = 3;
-    string playAnimName = 4;
+	SkillInfo skillInfo = 2;
 }
 
 message ModifyStatToC

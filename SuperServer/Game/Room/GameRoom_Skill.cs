@@ -1,4 +1,5 @@
-﻿using SuperServer.Game.Object;
+﻿using Google.Protobuf.Struct;
+using SuperServer.Game.Object;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace SuperServer.Game.Room
 {
     public partial class GameRoom
     {
-        public void UseSkill(Creature owner, int skillId, int targetId)
+        public void UseSkill(Creature owner, SkillInfo skillInfo)
         {
             if (owner == null)
                 return;
 
-            owner.SkillComponent.UseSKill(skillId, targetId);
+            owner.SkillComponent.UseSKill(skillInfo);
         }
     }
 }

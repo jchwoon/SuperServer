@@ -92,10 +92,13 @@ namespace SuperServer.Game.Object
             if (Room == null)
                 return;
 
-            _skillPacket.SkillId = skillId;
             _skillPacket.ObjectId = this.ObjectId;
-            _skillPacket.TargetId = targetId;
-            _skillPacket.PlayAnimName = animName;
+            _skillPacket.SkillInfo = new SkillInfo()
+            {
+                PlayAnimName = animName,
+                SkillId = skillId,
+                TargetId = targetId,
+            };
 
             Room.Broadcast(_skillPacket, Position);
         }
