@@ -202,6 +202,44 @@ namespace SuperServer.Game.Room
             return monster;
         }
 
+        public List<Creature> FindCreatureInInterestRegion(Vector3 pos)
+        {
+            List<Creature> creatures = new List<Creature>();
+
+            creatures.AddRange(FindHeroInInterestRegion(pos));
+            creatures.AddRange(FindMonsterInInterestRegion(pos));
+
+            return creatures;
+        }
+        public List<Monster> FindMonsterInInterestRegion(Vector3 pos)
+        {
+            List<Monster> monsters = new List<Monster>();
+
+            //ToDo : 최적화 필요 구역을 나눌 필요가 있음
+            foreach (Monster monster in _monsters.Values)
+            {
+                float dist = (monster.Position - pos).MagnitudeSqr();
+                if (dist > SqrInterestRange) continue;
+                monsters.Add(monster);
+            }
+
+            return monsters;
+        }
+        public List<Hero> FindHeroInInterestRegion(Vector3 pos)
+        {
+            List<Hero> heroes = new List<Hero>();
+
+            //ToDo : 최적화 필요 구역을 나눌 필요가 있음
+            foreach (Hero hero in _heroes.Values)
+            {
+                float dist = (hero.Position - pos).MagnitudeSqr();
+                if (dist > SqrInterestRange) continue;
+                heroes.Add(hero);
+            }
+
+            return heroes;
+        }
+
         public List<BaseObject> GetAllObjects()
         {
             List<BaseObject> objects = new List<BaseObject>();
@@ -224,6 +262,18 @@ namespace SuperServer.Game.Room
             foreach(NPC npc in _npcs.Values)
             {
                 objects.Add(npc);
+            }
+
+            return objects;
+        }
+
+        public List<Creature> GetAllMonster()
+        {
+            List<Creature> objects = new List<Creature>();
+
+            foreach (Monster monster in _monsters.Values)
+            {
+                objects.Add(monster);
             }
 
             return objects;

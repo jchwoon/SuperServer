@@ -26,10 +26,10 @@ namespace SuperServer.Game.StateMachine
         public MonsterMachine(Monster monster)
         {
             Owner = monster;
-            SetState();
+            InitState();
         }
 
-        private void SetState()
+        private void InitState()
         {
             IdleState = new IdleState(this);
             MoveState = new MoveState(this);

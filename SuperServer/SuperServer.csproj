@@ -26,10 +26,4 @@
     <Folder Include="Packet\ProtoBuff\Schema\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\Common\protoc-28.3-win64\bin\Enum.proto" Link="Packet\ProtoBuff\Schema\Enum.proto" />
-    <None Include="..\..\Common\protoc-28.3-win64\bin\Protocol.proto" Link="Packet\ProtoBuff\Schema\Protocol.proto" />
-    <None Include="..\..\Common\protoc-28.3-win64\bin\Struct.proto" Link="Packet\ProtoBuff\Schema\Struct.proto" />
-  </ItemGroup>
-
 </Project>

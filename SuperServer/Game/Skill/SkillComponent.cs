@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Enum;
+using Google.Protobuf.Struct;
 using SuperServer.Data;
 using SuperServer.Game.Object;
 using System;
@@ -31,38 +32,37 @@ namespace SuperServer.Game.Skill
                         continue;
 
                     BaseSkill skill = null;
-                    switch (skillData.SkillType)
+                    switch (skillData.SkillProjectileType)
                     {
-                        case ESkillType.Normal:
-                            skill = new NormalSkill(Owner, skillData, id);
-                            NormalSkillId = skill.SkillId;
+                        case ESkillProjectileType.None:
+                            skill = new NonProjectileSkill(Owner, skillData, id);
+                            
                             break;
                     }
+                    if (skill.SkillData.IsNormalSkill == true)
+                        NormalSkillId = skill.TemplateId;
                     if (skill != null)
                         _skills.Add(id, skill);
                 }
             }
         }
-        public void UseSKill(int skillId, int targetId)
+
+        public void UseSKill(SkillInfo skillInfo)
         {
             BaseSkill skill;
-            if (_skills.TryGetValue(skillId, out skill) == false)
+            if (_skills.TryGetValue(skillInfo.SkillId, out skill) == false)
                 return;
 
-            skill.UseSkill(targetId);
+            skill.UseSkill(skillInfo.TargetId, skillInfo.RotY);
         }
 
-        public void UseNormalSkill(int targetId)
-        {
-            UseSKill(NormalSkillId, targetId);
-        }
-
-        //일반 스킬을 맨 마지막에
+        #region AI
+        //등록된 skill들 중 사용 가능한 스킬을 뽑기 일반 스킬을 맨 마지막에
         public BaseSkill GetCanUseSkill(BaseObject target)
         {
             foreach (BaseSkill skill in _skills.Values)
             {
-                if (skill.SkillId == NormalSkillId) continue;
+                if (skill.TemplateId == NormalSkillId) continue;
                 if (skill.CheckCanUseSkill(target) == true)
                 {
                     return skill;
@@ -75,6 +75,7 @@ namespace SuperServer.Game.Skill
 
             return null;
         }
+        #endregion
 
         public BaseSkill GetSkillById(int skillId)
         {

@@ -99,7 +99,7 @@ class PacketHandler
         if (room == null)
             return;
 
-        GameCommander.Instance.Push(room.UseSkill, hero, skillPacket.SkillId, skillPacket.TargetId);
+        GameCommander.Instance.Push(room.UseSkill, hero, skillPacket.SkillInfo);
     }
 
     public static void PickupDropItemToSHandler(PacketSession session, IMessage packet)
