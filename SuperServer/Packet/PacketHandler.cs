@@ -178,7 +178,7 @@ class PacketHandler
         GameRoom room = hero.Room;
         if (room == null)
             return;
-        GameCommander.Instance.Push(room.ChangedRoom, changeRoomPacket.RoomId, hero);
+        GameCommander.Instance.Push(room.ChangeRoom, changeRoomPacket.RoomId, hero);
     }
 
 }

@@ -50,7 +50,7 @@ namespace SuperServer.Game.Room
             NpcCreater.Init(this);
         }
 
-        public void EnterRoom<T>(BaseObject obj) where T : BaseObject
+        public void EnterRoom<T>(BaseObject obj, bool isChangeRoom = false) where T : BaseObject
         {
             if (obj == null)
                 return;
@@ -63,11 +63,15 @@ namespace SuperServer.Game.Room
                 _heroes.Add(hero.ObjectId, hero);
 
                 ResEnterRoomToC resEnterPacket = new ResEnterRoomToC();
-                resEnterPacket.MyHero = hero.MyHeroInfo;
+                resEnterPacket.IsChangeRoom = isChangeRoom;
 
-                foreach (ItemInfo info in hero.Inventory.GetAllItemInfos())
+                if (isChangeRoom == false)
                 {
-                    resEnterPacket.Items.Add(info);
+                    resEnterPacket.MyHero = hero.MyHeroInfo;
+                    foreach (ItemInfo info in hero.Inventory.GetAllItemInfos())
+                    {
+                        resEnterPacket.Items.Add(info);
+                    }
                 }
 
                 hero.Session.Send(resEnterPacket);
@@ -125,12 +129,16 @@ namespace SuperServer.Game.Room
             Broadcast(deSpawnPacket, obj.Position);
         }
 
-        public void ChangedRoom(int roomId, Hero hero)
+        public void ChangeRoom(int roomId, Hero hero)
         {
-            ExitRoom<Hero>(hero);
-
             GameRoom gameRoom = RoomManager.Instance.GetRoom(roomId);
-            gameRoom.EnterRoom<Hero>(hero);
+            if (gameRoom == null)
+                return;
+            if (gameRoom == this)
+                return;
+
+            ExitRoom<Hero>(hero);
+            gameRoom.EnterRoom<Hero>(hero, isChangeRoom : true);
         }
 
         public void ReSpawn(Creature obj)

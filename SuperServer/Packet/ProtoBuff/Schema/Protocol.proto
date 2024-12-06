@@ -60,15 +60,11 @@ message ReqEnterRoomToS
 message ResEnterRoomToC
 {
     MyHeroInfo myHero = 1;
-    repeated ItemInfo items = 2;
+    bool isChangeRoom = 2;
+    repeated ItemInfo items = 3;
 }
 
 message ChangeRoomToS
-{
-    int32 roomId = 1;
-}
-
-message ChangeRoomToC
 {
     int32 roomId = 1;
 }

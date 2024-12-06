@@ -121,7 +121,7 @@ namespace SuperServer.Game.Object
                     dropItem.PosInfo.PosY += offset.Y;
                     dropItem.PosInfo.PosZ += offset.Z;
                     GameRoom room = Room;
-                    GameCommander.Instance.Push(room.EnterRoom<DropItem>, dropItem);
+                    GameCommander.Instance.Push(room.EnterRoom<DropItem>, dropItem, false);
                 }
             }
         }

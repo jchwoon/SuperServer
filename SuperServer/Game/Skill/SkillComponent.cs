@@ -36,7 +36,6 @@ namespace SuperServer.Game.Skill
                     {
                         case ESkillProjectileType.None:
                             skill = new NonProjectileSkill(Owner, skillData, id);
-                            
                             break;
                     }
                     if (skill.SkillData.IsNormalSkill == true)

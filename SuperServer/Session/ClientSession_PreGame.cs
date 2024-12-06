@@ -134,7 +134,7 @@ namespace SuperServer.Session
                 room = RoomManager.Instance.GetRoom(1);
             }
 
-            GameCommander.Instance.Push(room.EnterRoom<Hero>, PlayingHero);
+            GameCommander.Instance.Push(room.EnterRoom<Hero>, PlayingHero, false);
         }
 
         private void SetLobbyHero(DBHero hero)
