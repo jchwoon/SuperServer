@@ -131,6 +131,7 @@ message ModifyOneStatToC
     float changedValue = 2;
     float gapValue = 3;
     EStatType statType = 4;
+    EFontType fontType = 5;
 }
 
 message DieToC
