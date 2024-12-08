@@ -69,6 +69,18 @@ message ChangeRoomToS
     int32 roomId = 1;
 }
 
+message MakePartyToS
+{
+    int32 partyId = 1;
+    string partyName = 2;
+    bool isSingle = 3;
+}
+
+message JoinPartyToS
+{
+    int32 partyId = 1;
+}
+
 message SpawnToC
 {
     repeated HeroInfo heroes = 1;

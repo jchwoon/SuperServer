@@ -382,6 +382,13 @@ namespace SuperServer.Data
         public float yPos;
         public float zPos;
     }
+    public class PartyData
+    {
+        public int partyId;
+        public string partyName;
+        public int maxNum;
+        public bool isFull;
+    }
 
     [Serializable]
     public class NPCDataLoader : ILoader<int, NPCData>

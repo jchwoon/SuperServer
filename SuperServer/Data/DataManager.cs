@@ -30,6 +30,7 @@ namespace SuperServer.Data
         public static Dictionary<int, EquipmentData> EquipmentDict { get; private set; } = new Dictionary<int, EquipmentData>();
         public static Dictionary<int, EtcData> EtcDict { get; private set; } = new Dictionary<int, EtcData>();
         public static Dictionary<int, NPCData> NpcDict { get; private set; } = new Dictionary<int, NPCData>();
+        public static Dictionary<int, PartyData> PartyDict { get; private set; } = new Dictionary<int, PartyData>();
 
         public static void Init()
         {
