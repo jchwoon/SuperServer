@@ -374,6 +374,7 @@ namespace SuperServer.Data
             return dict;
         }
     }
+
     public class NPCData
     {
         public int npcId;
@@ -381,13 +382,6 @@ namespace SuperServer.Data
         public float xPos;
         public float yPos;
         public float zPos;
-    }
-    public class PartyData
-    {
-        public int partyId;
-        public string partyName;
-        public int maxNum;
-        public bool isFull;
     }
 
     [Serializable]
@@ -401,6 +395,31 @@ namespace SuperServer.Data
             foreach (NPCData npcDatas in npcs)
             {
                 dict.Add(npcDatas.npcId, npcDatas);
+            }
+
+            return dict;
+        }
+    }
+
+    public class PartyData
+    {
+        public int partyId;
+        public string partyName;
+        public int maxNum;
+        public bool isFull;
+    }
+
+    [Serializable]
+    public class PartyDataLoader : ILoader<int, PartyData>
+    {
+        public List<PartyData> parties = new List<PartyData>();
+        public Dictionary<int, PartyData> MakeDict()
+        {
+            Dictionary<int, PartyData> dict = new Dictionary<int, PartyData>();
+
+            foreach (PartyData partyDatas in parties)
+            {
+                dict.Add(partyDatas.partyId, partyDatas);
             }
 
             return dict;

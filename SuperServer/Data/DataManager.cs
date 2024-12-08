@@ -43,6 +43,7 @@ namespace SuperServer.Data
             RewardDict = LoadJson<RewardDataLoader, int, RewardData>("RewardData").MakeDict();
             RewardTableDict = LoadJson<RewardTableDataLoadaer, int, RewardTableData>("RewardTableData").MakeDict();
             NpcDict = LoadJson<NPCDataLoader, int, NPCData>("NPCData").MakeDict();
+            PartyDict = LoadJson<PartyDataLoader, int, PartyData>("PartyData").MakeDict();
             //Skill
             HeroSkillDict = LoadJson<SkillDataLoader, int, SkillData>("HeroSkillData").MakeDict();
             MonsterSkillDict = LoadJson<SkillDataLoader, int, SkillData>("MonsterSkillData").MakeDict();
