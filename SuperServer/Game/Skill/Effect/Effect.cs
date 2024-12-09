@@ -61,7 +61,7 @@ namespace SuperServer.Game.Skill.Effect
         {
             foreach (AddStatInfo info in data.AddStatValues)
             {
-                owner.AddStat(info.StatType, info.Value);
+                owner.AddStat(info.StatType, info.Value, EFontType.Heal);
             }
         }
 

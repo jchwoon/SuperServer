@@ -22,7 +22,7 @@ namespace SuperServer.Game.StateMachine
         public BaseObject Target { get; set; }
         public float ToNextPosDist { get; private set; }
         public BaseSkill CurrentSkill { get;  set; }
-        public bool OverPoolRange { get; set; }
+        public bool isBackToOriginPos { get; set; }
         public MonsterMachine(Monster monster)
         {
             Owner = monster;
@@ -73,22 +73,21 @@ namespace SuperServer.Game.StateMachine
 
         public void CheckArrivalFirstAggroPos()
         {
-            if (Owner.AggroComponent.FirstAggroPos.HasValue == false)
+            if (Owner.AggroComponent.FirstAggroPos.HasValue == false || isBackToOriginPos == false)
                 return;
 
             float distSqr = (Owner.Position - Owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
             if (distSqr <= 0.1f)
             {
-                //Todo 원래 상태로 회복
                 Owner.Reset();
                 Owner.AggroComponent.FirstAggroPos = null;
-                OverPoolRange = false;
+                isBackToOriginPos = false;
             }
         }
 
         public bool IsChaseMode()
         {
-            if (Target != null || OverPoolRange)
+            if (Target != null || isBackToOriginPos)
                 return true;
 
             return false;

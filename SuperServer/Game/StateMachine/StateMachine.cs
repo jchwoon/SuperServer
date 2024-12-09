@@ -37,7 +37,7 @@ namespace SuperServer.Game.StateMachine
 
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (CurrentState == null)
                 return;
@@ -50,14 +50,6 @@ namespace SuperServer.Game.StateMachine
             _machineJob = GameCommander.Instance.PushAfter(UpdateTick, Update);
         }
 
-        public void CancelJob()
-        {
-            if (_machineJob != null)
-            {
-                Console.WriteLine("Cancel");
-                _machineJob.IsCancel = true;
-            }
-        }
         public virtual void OnDie()
         {
             

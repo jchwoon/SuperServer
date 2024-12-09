@@ -49,7 +49,7 @@ namespace SuperServer.Game.Object
                 return;
 
             int retDamage = Math.Max(1, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
-            AddStat(EStatType.Hp, -retDamage);
+            AddStat(EStatType.Hp, -retDamage, EFontType.NormalHit);
 
             if (StatComponent.StatInfo.Hp <= 0)
             {
@@ -78,13 +78,13 @@ namespace SuperServer.Game.Object
         }
 
 
-        public void AddStat(EStatType statType, float gapValue, bool sendPacket = true)
+        public void AddStat(EStatType statType, float gapValue, EFontType fontType = EFontType.None, bool sendPacket = true)
         {
             //값의 변경이 일어나고
             float changeValue = StatComponent.GetStat(statType) + gapValue;
             StatComponent.SetStat(statType, changeValue);
             if (sendPacket == true)
-                BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue);
+                BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue, fontType);
         }
 
         public void BroadcastSkill(int skillId, int targetId, string animName)
@@ -113,7 +113,7 @@ namespace SuperServer.Game.Object
 
             Room.Broadcast(_modifyStatPacket, Position);
         }
-        public void BroadcastOneStat(EStatType statType, float changedValue, float gapValue)
+        public void BroadcastOneStat(EStatType statType, float changedValue, float gapValue, EFontType fontType)
         {
             if (Room == null)
                 return;
@@ -122,6 +122,7 @@ namespace SuperServer.Game.Object
             _modifyOneStatPacket.StatType = statType;
             _modifyOneStatPacket.ChangedValue = changedValue;
             _modifyOneStatPacket.GapValue = gapValue;
+            _modifyOneStatPacket.FontType = fontType;
 
             Room.Broadcast(_modifyOneStatPacket, Position);
         }
