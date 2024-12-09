@@ -61,7 +61,7 @@ namespace SuperServer.Game.StateMachine.State
             //자신의 스포닝풀 범위를 넘었으면 복귀 or 어그로가 끌렸는데 갑자기 타겟이 없어졌으면 복귀
             if (_owner.AggroComponent.FirstAggroPos.HasValue)
             {
-                if (_machine.OverPoolRange || _machine.Target == null)
+                if (_machine.isBackToOriginPos || _machine.Target == null)
                 {
                     _machine.FindPathAndMove(_machine.Owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase: true);
                     return;

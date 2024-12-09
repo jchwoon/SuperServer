@@ -13,19 +13,9 @@ namespace SuperServer.Game.Skill
 {
     public class NonProjectileSkill : BaseSkill
     {
-        int _currentComboIdx = 0;
-        Dictionary<int, string> _normalSkillComboName = new Dictionary<int, string>();
         public NonProjectileSkill(Creature owner, SkillData skillData, int skillId) : base(owner, skillData, skillId)
         {
-            for (int i = 0; i < skillData.ComboNames.Count; i++)
-            {
-                _normalSkillComboName.Add(i, skillData.ComboNames[i]);
-            }
-        }
-
-        protected override List<Creature> GetSkillTargets(int targetId)
-        {
-            return null;
+            
         }
 
         public override void UseSkill(int targetId, float rotY)
@@ -50,10 +40,6 @@ namespace SuperServer.Game.Skill
             if (Owner == null || Owner.Room == null)
                 return;
 
-            bool canUse = CheckCanUseSkill();
-            if (canUse == false)
-                return;
-
             Creature target = Owner.Room.FindCreatureById(targetId);
             if (target == null)
                 return;
@@ -62,7 +48,7 @@ namespace SuperServer.Game.Skill
             if (DataManager.EffectDict.TryGetValue(SkillData.EffectId, out effectData) == false)
                 return;
 
-            GameCommander.Instance.PushAfter(GetSkillDelayTick(),
+            GameCommander.Instance.PushAfter(GetSkillEffectTick(),
             () =>
             {
                 target.EffectComponent.ApplyEffect(Owner, effectData);
@@ -77,13 +63,14 @@ namespace SuperServer.Game.Skill
         private void UseSectorSkill(int targetId, float rotY)
         {
             Creature target = Owner.Room.FindCreatureById(targetId);
+            //스킬 쓸 방향 계산
             Vector3 skillCastDir;
-
             if (target != null)
                 skillCastDir = (target.Position - Owner.Position).Normalize();
             else
                 skillCastDir = Utils.Utils.GetDirFromRotY(rotY);
 
+            //스킬 Effect를 받을 몬스터 계산
             List<Creature> effectedCreatures = new List<Creature>();
             EffectData effectData;
             if (DataManager.EffectDict.TryGetValue(SkillData.EffectId, out effectData) == false)
@@ -92,10 +79,10 @@ namespace SuperServer.Game.Skill
             List<Monster> monsters = Owner.Room.FindMonsterInInterestRegion(Owner.Position);
             foreach (Monster monster in monsters)
             {
-                //거리 Check
+                //거리 검사
                 float dist = Vector3.Distance(monster.Position, Owner.Position);
                 if (dist > SkillData.SkillRange) continue;
-                //Sector Check
+                //Sector 검사
                 Vector3 ownerToMonsterDir = (monster.Position - Owner.Position).Normalize();
                 float dotValue = Vector2.Dot(
                     new Vector2(ownerToMonsterDir.X, ownerToMonsterDir.Z),
@@ -106,66 +93,20 @@ namespace SuperServer.Game.Skill
                     effectedCreatures.Add(monster);
             }
 
+            //SkillEffect주기
             foreach (Creature creature in effectedCreatures)
             {
-                GameCommander.Instance.PushAfter(GetSkillDelayTick(),
+                GameCommander.Instance.PushAfter(GetSkillEffectTick(),
                 () =>
                 {
                     creature.EffectComponent.ApplyEffect(Owner, effectData);
                 });
             }
 
+            //브로드케스트 및 Refresh
             Owner.SkillComponent.LastSkill = this;
             BroadcastSkill(targetId);
             Refresh();
-        }
-
-        protected override bool CheckCoolTime()
-        {
-            long elapsedTime = GetElapsedTimeAfterLastUseSkill();
-            if (elapsedTime >= SkillData.AnimTime * GetCalculateAtkSpeedTick())
-                return true;
-
-            return false;
-        }
-
-        protected override int GetSkillDelayTick()
-        {
-            return (int)(GetCalculateAtkSpeedTick() * SkillData.EffectDelayRatio);
-        }
-
-        protected override string GetPlayAnimName()
-        {
-            if (CheckSuccessCombo() == false)
-                _currentComboIdx = 0;
-            return _normalSkillComboName[_currentComboIdx];
-        }
-        protected override void Refresh()
-        {
-            base.Refresh();
-            //UpdateComboIdx();
-        }
-
-        //콤보 적용여부를 판단
-        private bool CheckSuccessCombo()
-        {
-            long elapsedTime = GetElapsedTimeAfterLastUseSkill();
-            if (elapsedTime - SkillData.AnimTime * GetCalculateAtkSpeedTick() < SkillData.ComboTime * 1000)
-                return true;
-
-            return false;
-        }
-        private void UpdateComboIdx()
-        {
-            if (_currentComboIdx >= SkillData.MaxComboIdx)
-                _currentComboIdx = 0;
-            else
-                _currentComboIdx++;
-        }
-        //공격속도에 비례된 Tick값을 반환
-        private long GetCalculateAtkSpeedTick()
-        {
-            return (long)(SkillData.AnimTime * (1.0f / Owner.StatComponent.StatInfo.AtkSpeed) * 1000);
         }
     }
 }

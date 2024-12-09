@@ -52,6 +52,20 @@ namespace SuperServer.Game.Skill
             if (_skills.TryGetValue(skillInfo.SkillId, out skill) == false)
                 return;
 
+            if (CheckLastSkillIsUsing() == true)
+                return;
+
+            if (skill.CheckCanUseSkill() == false)
+                return;
+
+            //콤보스킬인지 체크
+            if (skill.SkillData.IsComboSkill)
+            {
+                skill.CalculateComboAndApply();
+            }
+
+            //위의 스킬이 콤보스킬이면 스킬 인포에서 받은 콤보스킬아이디를 통해 skillData를
+            //꺼내서 위의 skill의 SkillData를 교체
             skill.UseSkill(skillInfo.TargetId, skillInfo.RotY);
         }
 
@@ -90,11 +104,6 @@ namespace SuperServer.Game.Skill
             if (LastSkill == null)
                 return false;
             return LastSkill.CheckUsingSkill();
-        }
-
-        public float GetSkillRange(BaseSkill skill)
-        {
-            return skill.GetSkillRange();
         }
     }
 }

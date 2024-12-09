@@ -62,7 +62,7 @@ namespace SuperServer.Game.StateMachine.State
             if (dist > range)
             {
                 _owner.AggroComponent.ClearTarget(_machine?.Target);
-                _machine.OverPoolRange = true;
+                _machine.isBackToOriginPos = true;
             }
         }
 
