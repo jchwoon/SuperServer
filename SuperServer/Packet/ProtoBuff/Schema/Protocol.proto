@@ -81,6 +81,18 @@ message JoinPartyToS
     int32 partyId = 1;
 }
 
+message ReqEnterDungeonToS
+{
+    int32 heroIdx = 1;
+    int32 roomId = 2;
+}
+
+message ResEnterDungeonToC
+{
+    MyHeroInfo myHero = 1;
+}
+
+
 message SpawnToC
 {
     repeated HeroInfo heroes = 1;

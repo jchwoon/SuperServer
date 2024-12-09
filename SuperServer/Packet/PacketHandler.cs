@@ -179,6 +179,21 @@ class PacketHandler
         if (room == null)
             return;
         GameCommander.Instance.Push(room.ChangeRoom, changeRoomPacket.RoomId, hero);
+    } 
+    public static void EnterDungeonToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        ChangeRoomToS changeRoomPacket = (ChangeRoomToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+        GameCommander.Instance.Push(room.ChangeRoom, changeRoomPacket.RoomId, hero);
     }
+    
 
 }
