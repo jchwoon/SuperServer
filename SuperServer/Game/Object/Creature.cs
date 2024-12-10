@@ -87,17 +87,22 @@ namespace SuperServer.Game.Object
                 BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue, fontType);
         }
 
-        public void BroadcastSkill(int skillId, int targetId, string animName)
+        public void BroadcastSkill(int skillId, int skillTargetId, int skillLocationTargetId,  string animName, bool sendPos = false)
         {
             if (Room == null)
                 return;
 
+            if (sendPos)
+            {
+                _skillPacket.PosInfo = this.PosInfo;
+            }
             _skillPacket.ObjectId = this.ObjectId;
             _skillPacket.SkillInfo = new SkillInfo()
             {
                 PlayAnimName = animName,
                 SkillId = skillId,
-                TargetId = targetId,
+                SkillTargetId = skillTargetId,
+                SkillLocationTargetId = skillLocationTargetId,
             };
 
             Room.Broadcast(_skillPacket, Position);
