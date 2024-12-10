@@ -69,11 +69,21 @@ message ChangeRoomToS
     int32 roomId = 1;
 }
 
+message ChangeRoomToC
+{
+    int32 roomId = 1;
+}
+
 message SpawnToC
 {
     repeated HeroInfo heroes = 1;
     repeated CreatureInfo creatures= 2;
     repeated ObjectInfo objects = 3;
+}
+
+message CreatePartyToS
+{
+    HeroInfo hero = 1;
 }
 
 message ReqLeaveGameToS
@@ -194,9 +204,4 @@ message ChangeSlotTypeToC
 {
     int32 itemDbId = 1;
     ESlotType slotType = 2;
-}
-
-message CreatePartyToS
-{
-
 }
