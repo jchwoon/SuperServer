@@ -2,6 +2,7 @@
 using Google.Protobuf.Protocol;
 using ServerCore;
 using SuperServer.Commander;
+using SuperServer.Game.Party;
 using SuperServer.Game.Room;
 using SuperServer.Logic;
 using SuperServer.Session;
@@ -181,4 +182,15 @@ class PacketHandler
         GameCommander.Instance.Push(room.ChangeRoom, changeRoomPacket.RoomId, hero);
     }
 
+    public static void CreatePartyToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        CreatePartyToS createPartyPacket = (CreatePartyToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameCommander.Instance.Push(PartyManager.Instance.CreateParty, hero);
+    }
 }

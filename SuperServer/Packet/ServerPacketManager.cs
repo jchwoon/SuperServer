@@ -41,6 +41,7 @@ public enum PacketId
   EquipItemToS = 32,
   UnEquipItemToS = 33,
   ChangeSlotTypeToC = 34,
+  CreatePartyToS = 35,
 
 }
 
@@ -103,6 +104,8 @@ class PacketManager
         _handler.Add((ushort)PacketId.EquipItemToS, PacketHandler.EquipItemToSHandler);
         _parseHandler.Add((ushort)PacketId.UnEquipItemToS, ParsePacket<UnEquipItemToS>);
         _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);
+        _parseHandler.Add((ushort)PacketId.CreatePartyToS, ParsePacket<CreatePartyToS>);
+        _handler.Add((ushort)PacketId.CreatePartyToS, PacketHandler.CreatePartyToSHandler);
     
     }
 
