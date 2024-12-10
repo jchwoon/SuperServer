@@ -14,7 +14,7 @@ namespace SuperServer.Game.Skill.Effect
         Dictionary<long, Effect> _effects = new Dictionary<long, Effect>();
         public Creature Owner;
 
-        public static long _effectIdGenerator = 1;
+        public static long _effectId = 1;
         public static readonly Dictionary<EEffectType, IEffectPolicy> _policies = new Dictionary<EEffectType, IEffectPolicy>()
         {
             { EEffectType.Damage, new DamageEffectPolicy() },
@@ -29,6 +29,9 @@ namespace SuperServer.Game.Skill.Effect
 
         public void ApplyEffect(Creature provider, EffectData data)
         {
+            if (data == null)
+                return;
+
             switch (data.EffectDurationType)
             {
                 case EEffectDurationType.None:
@@ -87,7 +90,7 @@ namespace SuperServer.Game.Skill.Effect
 
         public static long GenerateEffectId()
         {
-            return Interlocked.Increment(ref _effectIdGenerator);
+            return Interlocked.Increment(ref _effectId);
         }
 
         private Effect GenerateEffect(long effectId, Creature owner, Creature provider, EffectData data, IEffectPolicy policy)

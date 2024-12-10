@@ -15,10 +15,10 @@ namespace SuperServer.Utils
             float dirX = MathF.Sin(radians);
             float dirZ = MathF.Cos(radians);
 
-            return new Vector3(dirX, 0, dirZ);
+            return new Vector3(dirX, 0, dirZ).Normalize();
         }
 
-        public const float RadianToDegree = (MathF.PI / 180.0f);
-        public const float DegreeToRadian = (180.0f / MathF.PI);
+        public const float DegreeToRadian = (MathF.PI / 180.0f);
+        public const float RadianToDegree = (180.0f / MathF.PI);
     }
 }

@@ -2,6 +2,7 @@
 using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.Game.Object;
+using SuperServer.Job;
 using SuperServer.Utils;
 using System;
 using System.Collections;
@@ -27,12 +28,79 @@ namespace SuperServer.Game.Skill
         }
 
         //타겟을 구하고 타겟한테 Effect를 주고 브로드캐스트
-        public abstract void UseSkill(int targetId, float rotY);
-        public abstract void UseSkill(int targetId);
+        public abstract void UseSkill(int skillTargetId, int locationTargetId, float? rotY);
 
-        protected void BroadcastSkill(int targetId)
+        protected void BroadcastSkill(int skillTargetId, int skillLocationTargetId, bool sendPos = false)
         {
-            Owner.BroadcastSkill(TemplateId, targetId, SkillData.AnimName);
+            Owner.BroadcastSkill(TemplateId, skillTargetId, skillLocationTargetId, SkillData.AnimName, sendPos);
+        }
+
+        public Vector2 GetSkillCastDir(Creature target, float? rotY)
+        {
+            Vector3 skillCastDir;
+            if (target.ObjectId == Owner.ObjectId && rotY.HasValue)
+            {
+                skillCastDir = Utils.Utils.GetDirFromRotY(rotY.Value);
+            }
+            else
+            {
+                skillCastDir = (target.Position - Owner.Position).Normalize();
+            }
+
+            return new Vector2(skillCastDir.X, skillCastDir.Z);
+        }
+
+        //누구기준으로 쓸건지 -> target
+        public List<Creature> GetSkillEffectedTargets(Creature skillLocationTarget, Vector2 skillCastDir)
+        {
+            List<Creature> effectedCreatures = new List<Creature>();
+
+            switch (SkillData.SkillAreaType)
+            {
+                case ESkillAreaType.Single:
+                    if (CheckSkillUsageType(skillLocationTarget, SkillData.SkillUsageTargetType))
+                        effectedCreatures.Add(skillLocationTarget);
+                    break;
+                case ESkillAreaType.Area:
+                    List<Creature> creatures = Owner.Room.FindCreatureInInterestRegion(Owner.Position);
+                    foreach (Creature creature in creatures)
+                    {
+                        //피아식별 검사
+                        if (CheckSkillUsageType(creature, SkillData.SkillUsageTargetType) == false) continue;
+                        //거리 검사
+                        float dist = Vector3.Distance(creature.Position, skillLocationTarget.Position);
+                        if (dist > SkillData.SkillRange) continue;
+                        //Sector 검사
+                        Vector3 ownerToMonsterDir = (creature.Position - Owner.Position).Normalize();
+                        float dotValue = Vector2.Dot(
+                            new Vector2(ownerToMonsterDir.X, ownerToMonsterDir.Z),
+                            new Vector2(skillCastDir.X, skillCastDir.Y));
+
+                        float skillSectorValue = MathF.Cos(SkillData.SectorAngle * Utils.Utils.DegreeToRadian);
+                        if (skillSectorValue <= dotValue)
+                            effectedCreatures.Add(creature);
+                    }
+                    break;
+                default:
+                    return effectedCreatures;
+            }
+
+            return effectedCreatures;
+        }
+
+        private bool CheckSkillUsageType(Creature target, ESkillUsageTargetType usageType)
+        {
+            switch (usageType)
+            {
+                case ESkillUsageTargetType.Self:
+                    return target.ObjectId == Owner.ObjectId;
+                case ESkillUsageTargetType.Ally:
+                    return target.ObjectId == Owner.ObjectId;
+                case ESkillUsageTargetType.Enemy:
+                    return target.ObjectType != Owner.ObjectType;
+                default:
+                    return false;
+            }
         }
 
         public void CalculateComboAndApply()
