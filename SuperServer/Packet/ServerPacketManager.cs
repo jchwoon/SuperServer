@@ -88,6 +88,8 @@ class PacketManager
         _handler.Add((ushort)PacketId.ReqEnterRoomToS, PacketHandler.ReqEnterRoomToSHandler);
         _parseHandler.Add((ushort)PacketId.ChangeRoomToS, ParsePacket<ChangeRoomToS>);
         _handler.Add((ushort)PacketId.ChangeRoomToS, PacketHandler.ChangeRoomToSHandler);
+        _parseHandler.Add((ushort)PacketId.CreatePartyToS, ParsePacket<CreatePartyToS>);
+        _handler.Add((ushort)PacketId.CreatePartyToS, PacketHandler.CreatePartyToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqLeaveGameToS, ParsePacket<ReqLeaveGameToS>);
         _handler.Add((ushort)PacketId.ReqLeaveGameToS, PacketHandler.ReqLeaveGameToSHandler);
         _parseHandler.Add((ushort)PacketId.MoveToS, ParsePacket<MoveToS>);
@@ -103,10 +105,7 @@ class PacketManager
         _parseHandler.Add((ushort)PacketId.EquipItemToS, ParsePacket<EquipItemToS>);
         _handler.Add((ushort)PacketId.EquipItemToS, PacketHandler.EquipItemToSHandler);
         _parseHandler.Add((ushort)PacketId.UnEquipItemToS, ParsePacket<UnEquipItemToS>);
-        _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);
-        _parseHandler.Add((ushort)PacketId.CreatePartyToS, ParsePacket<CreatePartyToS>);
-        _handler.Add((ushort)PacketId.CreatePartyToS, PacketHandler.CreatePartyToSHandler);
-    
+        _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);    
     }
 
     public void ReceivePacket(PacketSession session, ArraySegment<byte> segment)
