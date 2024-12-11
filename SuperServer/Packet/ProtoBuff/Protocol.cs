@@ -69,8 +69,8 @@ namespace Google.Protobuf.Protocol {
             "QxIQCghpdGVtRGJJZBgBIAEoBSIgCgxFcXVpcEl0ZW1Ub1MSEAoIaXRlbURi",
             "SWQYASABKAUiIgoOVW5FcXVpcEl0ZW1Ub1MSEAoIaXRlbURiSWQYASABKAUi",
             "TAoRQ2hhbmdlU2xvdFR5cGVUb0MSEAoIaXRlbURiSWQYASABKAUSJQoIc2xv",
-            "dFR5cGUYAiABKA4yEy5Qcm90b2NvbC5FU2xvdFR5cGVCG6oCGEdvb2dsZS5Q",
-            "cm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
+            "dFR5cGUYAiABKA4yEy5Qcm90b2NvbC5FU2xvdFR5cGUiEAoOQ3JlYXRlUGFy",
+            "dHlUb1NCG6oCGEdvb2dsZS5Qcm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.Enum.EnumReflection.Descriptor, global::Google.Protobuf.Struct.StructReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
