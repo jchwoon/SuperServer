@@ -37,7 +37,7 @@ namespace SuperServer.Game.Object
         {
             StartLifeTime();
         }
-        //Temp 나중에 주울려는 사람이 owner와 일치하는지 check먼저
+
         public void OnPickedUp()
         {
             if (Room == null)
@@ -72,7 +72,7 @@ namespace SuperServer.Game.Object
         {
             if (picker.DbHeroId != OwnerDBId)
                 return EPickupFailReason.NotMine;
-            else if (picker.Inventory.CheckFull(ItemData) == true)
+            else if (picker.Inventory.CheckFull(ItemData, Count) == true)
                 return EPickupFailReason.Full;
 
             return EPickupFailReason.None;

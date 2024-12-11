@@ -55,25 +55,38 @@ public class InventoryComponent
         }
     }
 
-    public bool CheckFull(ItemData itemData)
+    public bool CheckFull(ItemData itemData, int itemCount)
     {
         bool isFull = false;
-        switch (itemData.ItemType)
+        if (itemData.Stackable)
         {
-            case EItemType.Consume:
-                if (_consumeItems.Count >= _consumableSlotCount)
-                    isFull = true;
-                break;
-            case EItemType.Equip:
-                if (_equipItems.Count >= _equipmentSlotCount)
-                    isFull = true;
-                break;
-            case EItemType.Etc:
-                if (_etcItems.Count >= _etcSlotCount)
-                    isFull = true;
-                break;
-            default:
-                break;
+            List<Item> stackableItems = FindCanStackItems(itemData.ItemId);
+            int totalAvailableCount = 0;
+            foreach(Item item in stackableItems)
+            {
+                totalAvailableCount += item.GetAvailableStackCount();
+            }
+            if (totalAvailableCount < itemCount) isFull = true;
+        }
+        else
+        {
+            switch (itemData.ItemType)
+            {
+                case EItemType.Consume:
+                    if (_consumeItems.Count >= _consumableSlotCount)
+                        isFull = true;
+                    break;
+                case EItemType.Equip:
+                    if (_equipItems.Count >= _equipmentSlotCount)
+                        isFull = true;
+                    break;
+                case EItemType.Etc:
+                    if (_etcItems.Count >= _etcSlotCount)
+                        isFull = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         return isFull;
