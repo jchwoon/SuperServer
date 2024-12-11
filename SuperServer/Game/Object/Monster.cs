@@ -91,7 +91,8 @@ namespace SuperServer.Game.Object
                 return;
 
             hero.GiveExpAndGold(tableData);
-            DropItem(hero, tableData);
+            //인벤이 꽉 차 있으면 DropItem 아니면 AddInven
+            AddInvenItemAndDropItem(hero, tableData);
         }
 
         private Hero SelectRecipient()
@@ -102,26 +103,35 @@ namespace SuperServer.Game.Object
             return hero;
         }
 
-        private void DropItem(Hero recipient, RewardTableData tableData)
+        private void AddInvenItemAndDropItem(Hero recipient, RewardTableData tableData)
         {
             foreach (RewardInfo info in tableData.RewardInfos)
             {
                 double randValue = _rand.NextDouble();
                 if (randValue < info.Probability)
                 {
-                    RewardData rewardData;
-                    if (DataManager.RewardDict.TryGetValue(info.RewardId, out rewardData) == false)
+                    if (DataManager.RewardDict.TryGetValue(info.RewardId, out RewardData rewardData) == false)
                         return;
-                    
+
+                    if (DataManager.ItemDict.TryGetValue(rewardData.ItemId, out ItemData itemData) == false)
+                        return;
+
                     DropItem dropItem = ObjectManager.Instance.Spawn<DropItem>();
                     dropItem.Init(recipient, rewardData);
-                    Vector3 offset = GetRandomOffset(1);
-                    dropItem.PosInfo.MergeFrom(PosInfo);
-                    dropItem.PosInfo.PosX += offset.X;
-                    dropItem.PosInfo.PosY += offset.Y;
-                    dropItem.PosInfo.PosZ += offset.Z;
-                    GameRoom room = Room;
-                    GameCommander.Instance.Push(room.EnterRoom<DropItem>, dropItem, false);
+                    if (recipient.Inventory.CheckFull(itemData, rewardData.Count))
+                    {
+                        Vector3 offset = GetRandomOffset(1);
+                        dropItem.PosInfo.MergeFrom(PosInfo);
+                        dropItem.PosInfo.PosX += offset.X;
+                        dropItem.PosInfo.PosY += offset.Y;
+                        dropItem.PosInfo.PosZ += offset.Z;
+                        GameRoom room = Room;
+                        GameCommander.Instance.Push(room.EnterRoom<DropItem>, dropItem, false);
+                    }
+                    else
+                    {
+                        recipient.Inventory.AddItem(dropItem);
+                    }
                 }
             }
         }

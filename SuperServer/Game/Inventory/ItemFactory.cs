@@ -56,6 +56,7 @@ namespace SuperServer.Game.Inventory
             //스택커블로 채울 수 있다면 먼저 채워넣기
             if (dropItem.ItemData.Stackable == true)
             {
+                //같은 TemplateId를 갖는 Item들을 모두 뽑아오기
                 List<Item> stackableItems = dropItem.Owner.Inventory.FindCanStackItems(dropItem.ItemData.ItemId);
 
                 foreach (Item stackableItem in stackableItems)
@@ -78,7 +79,7 @@ namespace SuperServer.Game.Inventory
             }
 
             //새로운 DBItem생성
-            if (dropItemCount > 0 && dropItem.Owner.Inventory.CheckFull(dropItem.ItemData) == false)
+            if (dropItemCount > 0 && dropItem.Owner.Inventory.CheckFull(dropItem.ItemData, dropItem.Count) == false)
             {
                 ESlotType slotType = ESlotType.None;
                 switch (dropItem.ItemData.ItemType)

@@ -84,7 +84,7 @@ namespace SuperServer.Game.Room
                 _monsters.Add(monster.ObjectId, monster);
                 monster.Update();
             }
-            // DropItem
+            // AddInvenItemAndDropItem
             else if (type == EObjectType.DropItem)
             {
                 DropItem dropItem = (DropItem)obj;
