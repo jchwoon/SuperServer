@@ -35,8 +35,6 @@ namespace SuperServer.Game.Room
                         _room.EnterRoom<Monster>(monster);
                     });
                 }
-
-
             }
         }
 

@@ -127,6 +127,7 @@ message ResUseSkillToC
 {
 	int32 objectId = 1;
 	SkillInfo skillInfo = 2;
+    PosInfo posInfo = 3;
 }
 
 message ModifyStatToC
