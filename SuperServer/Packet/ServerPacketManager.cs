@@ -43,6 +43,7 @@ public enum PacketId
   EquipItemToS = 34,
   UnEquipItemToS = 35,
   ChangeSlotTypeToC = 36,
+
 }
 
 
@@ -105,7 +106,8 @@ class PacketManager
         _parseHandler.Add((ushort)PacketId.EquipItemToS, ParsePacket<EquipItemToS>);
         _handler.Add((ushort)PacketId.EquipItemToS, PacketHandler.EquipItemToSHandler);
         _parseHandler.Add((ushort)PacketId.UnEquipItemToS, ParsePacket<UnEquipItemToS>);
-        _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);    
+        _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);
+    
     }
 
     public void ReceivePacket(PacketSession session, ArraySegment<byte> segment)
