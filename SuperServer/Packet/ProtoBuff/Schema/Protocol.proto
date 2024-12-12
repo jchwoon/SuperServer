@@ -84,6 +84,7 @@ message SpawnToC
 message CreatePartyToS
 {
     HeroInfo hero = 1;
+    int32 partyId = 2;
 }
 
 message ReqLeaveGameToS
