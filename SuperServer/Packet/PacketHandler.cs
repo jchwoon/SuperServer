@@ -190,7 +190,7 @@ class PacketHandler
         Hero hero = cSession.PlayingHero;
         if (hero == null)
             return;
-
+        
         GameCommander.Instance.Push(PartyManager.Instance.CreateParty, hero);
     }
 }
