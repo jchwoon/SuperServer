@@ -21,7 +21,7 @@ namespace SuperServer.Game.Room
 
             dropItem.Pickup(picker);
         }
-        public void HandleUseItem(Hero hero, int itemDbId)
+        public void HandleUseItem(Hero hero, long itemDbId)
         {
             Item item = hero.Inventory.GetItemByDbId(itemDbId);
 
@@ -33,7 +33,7 @@ namespace SuperServer.Game.Room
                 return;
         }
 
-        public void HandleEquipItem(Hero hero, int itemDbId)
+        public void HandleEquipItem(Hero hero, long itemDbId)
         {
             Item item = hero.Inventory.GetItemByDbId(itemDbId);
 
@@ -45,7 +45,7 @@ namespace SuperServer.Game.Room
             equipItem.EquipItem(hero);
         }
 
-        public void HandleUnEquipItem(Hero hero, int itemDbId)
+        public void HandleUnEquipItem(Hero hero, long itemDbId)
         {
             Item item = hero.Inventory.GetItemByDbId(itemDbId);
 

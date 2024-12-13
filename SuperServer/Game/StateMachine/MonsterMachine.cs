@@ -38,16 +38,35 @@ namespace SuperServer.Game.StateMachine
         }
         public Creature FindTarget()
         {
-            int targetId = Owner.AggroComponent.GetTopDamageAttackerId();
-            Hero target = Owner.Room?.FindHeroById(targetId);
+            List<int> targetIds = Owner.AggroComponent.GetAttackerIdsSortByDamage();
 
-            if (target != null && target.CurrentState == ECreatureState.Die)
+            foreach (int id in targetIds)
             {
-                Owner.AggroComponent.ClearTarget(target);
-                return null;
+                Hero target = Owner.Room?.FindHeroById(id);
+
+                if (target.CurrentState == ECreatureState.Die)
+                {
+                    Owner.AggroComponent.ClearTarget(target);
+                    continue;
+                }
+                return target;
             }
 
-            return target;
+            if (Owner.MonsterData.AggroType != EMonsterAggroType.Auto)
+                return null;
+
+            float detectionRangeSqr = Owner.MonsterData.DetectionRange * Owner.MonsterData.DetectionRange;
+            List<Hero> heroes = Owner.Room.FindHeroInInterestRegion(Owner.Position)
+                .Where(h => (h.Position - Owner.Position).MagnitudeSqr() <= detectionRangeSqr)
+                .OrderBy(h => (h.Position - Owner.Position).MagnitudeSqr()).ToList();
+
+            foreach (Hero hero in heroes)
+            {
+                if (hero.CurrentState == ECreatureState.Die) continue;
+                return hero;
+            }
+
+            return null;
         }
 
         public bool FindPathAndMove(Vector3 start, Vector3 dest, bool chase = false)

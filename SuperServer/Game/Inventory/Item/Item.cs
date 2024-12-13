@@ -17,7 +17,7 @@ public class Item
     public ItemData ItemData { get; private set; }
     public ItemInfo Info { get; private set; } = new ItemInfo();
 
-    public int ItemDbId
+    public long ItemDbId
     {
         get { return Info.ItemDbId; }
         set { Info.ItemDbId = value; }

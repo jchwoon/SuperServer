@@ -36,7 +36,9 @@ namespace SuperServer.DB
     [Table("Item")]
     public class DBItem
     {
-        public int DBItemId { get; set; }
+        //데이터 베이스에서 자체 Id생성 금지 Application에서 관리하도록
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long DBItemId { get; set; }
         public int ItemTemplateId { get; set; }
         public int Count { get; set; }
         public ESlotType SlotType { get; set; }

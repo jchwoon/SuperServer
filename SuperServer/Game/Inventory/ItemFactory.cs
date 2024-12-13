@@ -98,24 +98,19 @@ namespace SuperServer.Game.Inventory
                 if (slotType == ESlotType.None)
                     return;
 
-                DBItem newItem = new DBItem()
+                DBItem newDBItem = new DBItem()
                 {
+                    DBItemId = DBCommander.GenerateItemDbId(),
                     Count = dropItemCount,
                     OwnerDbId = dropItem.OwnerDBId,
                     ItemTemplateId = dropItem.ItemData.ItemId,
                     SlotType = slotType
                 };
 
-                DBCommander.Instance.Push(DBLogic.Instance.AddNewItem, dropItem.Owner, newItem);
-            }
-        }
-
-        public void ApplyNewItemToInven(Hero hero, DBItem newDBItem)
-        {
-            if (newDBItem != null)
-            {
-                Item newItem = MakeItem(newDBItem);
-                hero.Inventory.AddItem(newItem, true);
+                //메모리 먼저 적용
+                Item item = MakeItem(newDBItem);
+                dropItem.Owner.Inventory.AddItem(item, true);
+                DBCommander.Instance.Push(DBLogic.Instance.AddNewItem, dropItem.Owner, newDBItem);
             }
         }
     }

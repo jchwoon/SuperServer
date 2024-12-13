@@ -16,6 +16,19 @@ namespace SuperServer.Logic
 {
     public class DBLogic : Singleton<DBLogic>
     {
+        public static long _itemDbIdGenerator = 0;
+        public static long GenerateItemDbId() { return Interlocked.Increment(ref _itemDbIdGenerator); }
+
+        public static void InitDbIds()
+        {
+            using (var context = new GameDBContext())
+            {
+                DBItem itemDb = context.Items.OrderByDescending(i => i.DBItemId).FirstOrDefault();
+                if (itemDb != null)
+                    Interlocked.Exchange(ref _itemDbIdGenerator, itemDb.DBItemId);
+            }
+        }
+
         public void SaveHero(Hero hero, GameRoom room)
         {
             if (hero == null)
@@ -65,7 +78,7 @@ namespace SuperServer.Logic
             }
         }
 
-        public void ApplyChangedCountItem(int dbItemId, int addCount)
+        public void ApplyChangedCountItem(long dbItemId, int addCount)
         {
             using (GameDBContext db = new GameDBContext())
             {
@@ -91,7 +104,10 @@ namespace SuperServer.Logic
                 bool success = db.SaveChangeEx();
                 if (success)
                 {
-                    GameCommander.Instance.Push(ItemFactory.Instance.ApplyNewItemToInven, hero, newItemDb);
+                }
+                else
+                {
+                    Console.WriteLine("fail");
                 }
             }
         }

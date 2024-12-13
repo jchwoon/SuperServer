@@ -5,6 +5,7 @@ using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.Game.Object;
 using SuperServer.Game.Room;
+using SuperServer.Logic;
 using SuperServer.Session;
 
 namespace SuperServer
@@ -34,6 +35,7 @@ namespace SuperServer
         {
             ConfigManager.LoadConfigData();
             DataManager.Init();
+            DBLogic.InitDbIds();
             ObjectManager.Instance.PreGenerateId(1000);
             SessionManager.Instance.PreGenerateId(1000);
             RoomManager.Instance.PreLoadRoom();

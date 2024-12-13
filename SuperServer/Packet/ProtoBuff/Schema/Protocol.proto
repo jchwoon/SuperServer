@@ -183,26 +183,26 @@ message AddItemToC
 
 message UseItemToS
 {
-    int32 itemdDbId = 1;
+    int64 itemdDbId = 1;
 }
 
 message UseItemToC
 {
-    int32 itemDbId = 1;
+    int64 itemDbId = 1;
 }
 
 message EquipItemToS
 {
-    int32 itemDbId = 1;
+    int64 itemDbId = 1;
 }
 
 message UnEquipItemToS
 {
-    int32 itemDbId = 1;
+    int64 itemDbId = 1;
 }
 
 message ChangeSlotTypeToC
 {
-    int32 itemDbId = 1;
+    int64 itemDbId = 1;
     ESlotType slotType = 2;
 }

@@ -88,6 +88,8 @@ namespace SuperServer.Data
         public float AtkSpeed;
         public float Sight;
         public List<int> SkillIds;
+        public float DetectionRange;
+        public EMonsterAggroType AggroType;
         public EMonsterGrade MonsterGrade;
     }
 

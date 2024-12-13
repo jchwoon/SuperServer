@@ -15,19 +15,19 @@ public class InventoryComponent
 {
     public Hero Owner { get; private set; }
 
-    Dictionary<int, Item> _ownerAllItems = new Dictionary<int, Item>();
+    Dictionary<long, Item> _ownerAllItems = new Dictionary<long, Item>();
     //Equipped
     Dictionary<ESlotType, Equipment> _equippedItems = new Dictionary<ESlotType, Equipment>();
     //Inventory
-    Dictionary<int, Item> _equipItems = new Dictionary<int, Item>();
-    Dictionary<int, Item> _consumeItems = new Dictionary<int, Item>();
-    Dictionary<int, Item> _etcItems = new Dictionary<int, Item>();
+    Dictionary<long, Item> _equipItems = new Dictionary<long, Item>();
+    Dictionary<long, Item> _consumeItems = new Dictionary<long, Item>();
+    Dictionary<long, Item> _etcItems = new Dictionary<long, Item>();
 
     Dictionary<EConsumableType, long> _lastUseTicks = new Dictionary<EConsumableType, long>();
     int _consumableSlotCount;
     int _equipmentSlotCount;
     int _etcSlotCount;
-    public const int DefaultSlotCount = 30;
+    public const int DefaultSlotCount = 1;
     public InventoryComponent(Hero hero)
     {
         Owner = hero;
@@ -58,6 +58,25 @@ public class InventoryComponent
     public bool CheckFull(ItemData itemData, int itemCount)
     {
         bool isFull = false;
+        //들어갈 슬롯 먼저 체크
+        switch (itemData.ItemType)
+        {
+            case EItemType.Consume:
+                if (_consumeItems.Count >= _consumableSlotCount)
+                    isFull = true;
+                break;
+            case EItemType.Equip:
+                if (_equipItems.Count >= _equipmentSlotCount)
+                    isFull = true;
+                break;
+            case EItemType.Etc:
+                if (_etcItems.Count >= _etcSlotCount)
+                    isFull = true;
+                break;
+            default:
+                break;
+        }
+        //스택가능한 아이탬이라면 인벤토리 안에 스택을 채울 수 있는 아이탬이 있는지 체크
         if (itemData.Stackable)
         {
             List<Item> stackableItems = FindCanStackItems(itemData.ItemId);
@@ -66,27 +85,7 @@ public class InventoryComponent
             {
                 totalAvailableCount += item.GetAvailableStackCount();
             }
-            if (totalAvailableCount < itemCount) isFull = true;
-        }
-        else
-        {
-            switch (itemData.ItemType)
-            {
-                case EItemType.Consume:
-                    if (_consumeItems.Count >= _consumableSlotCount)
-                        isFull = true;
-                    break;
-                case EItemType.Equip:
-                    if (_equipItems.Count >= _equipmentSlotCount)
-                        isFull = true;
-                    break;
-                case EItemType.Etc:
-                    if (_etcItems.Count >= _etcSlotCount)
-                        isFull = true;
-                    break;
-                default:
-                    break;
-            }
+            if (totalAvailableCount >= itemCount) isFull = false;
         }
 
         return isFull;
@@ -120,7 +119,7 @@ public class InventoryComponent
     }
 
     //Stackable인 아이템
-    public void AddCount(int itemDbId, int count)
+    public void AddCount(long itemDbId, int count)
     {
         Item item = GetItemByDbId(itemDbId);
         if (item == null)
@@ -156,7 +155,7 @@ public class InventoryComponent
         return itemInfos;
     }
 
-    public Item GetItemByDbId(int itemDbId)
+    public Item GetItemByDbId(long itemDbId)
     {
         Item item;
         if (_ownerAllItems.TryGetValue(itemDbId, out item) == false)
@@ -196,7 +195,7 @@ public class InventoryComponent
         return equipItem;
     }
 
-    public void RemoveItem(int itemDbId)
+    public void RemoveItem(long itemDbId)
     {
         _ownerAllItems.Remove(itemDbId);
         _equipItems.Remove(itemDbId);

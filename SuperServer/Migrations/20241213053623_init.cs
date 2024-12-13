@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SuperServer.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,8 +49,7 @@ namespace SuperServer.Migrations
                 name: "Item",
                 columns: table => new
                 {
-                    DBItemId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DBItemId = table.Column<long>(type: "bigint", nullable: false),
                     ItemTemplateId = table.Column<int>(type: "int", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false),
                     SlotType = table.Column<int>(type: "int", nullable: false),

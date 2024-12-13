@@ -18,6 +18,10 @@ namespace SuperServer.Game.StateMachine
             Owner = owner;
         }
 
+        public List<int> GetAttackerIdsSortByDamage()
+        {
+            return _attackers.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
+        }
         public int GetTopDamageAttackerId()
         {
             return _attackers.OrderByDescending(x => x.Value).Select(x => x.Key).FirstOrDefault();

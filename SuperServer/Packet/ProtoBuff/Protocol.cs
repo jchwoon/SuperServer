@@ -67,10 +67,10 @@ namespace Google.Protobuf.Protocol {
             "dBgBIAEoDjIbLlByb3RvY29sLkVQaWNrdXBGYWlsUmVhc29uIlsKCkFkZEl0",
             "ZW1Ub0MSJAoIaXRlbUluZm8YASABKAsyEi5Qcm90b2NvbC5JdGVtSW5mbxIn",
             "CgdhZGRUeXBlGAIgASgOMhYuUHJvdG9jb2wuRUFkZEl0ZW1UeXBlIh8KClVz",
-            "ZUl0ZW1Ub1MSEQoJaXRlbWREYklkGAEgASgFIh4KClVzZUl0ZW1Ub0MSEAoI",
-            "aXRlbURiSWQYASABKAUiIAoMRXF1aXBJdGVtVG9TEhAKCGl0ZW1EYklkGAEg",
-            "ASgFIiIKDlVuRXF1aXBJdGVtVG9TEhAKCGl0ZW1EYklkGAEgASgFIkwKEUNo",
-            "YW5nZVNsb3RUeXBlVG9DEhAKCGl0ZW1EYklkGAEgASgFEiUKCHNsb3RUeXBl",
+            "ZUl0ZW1Ub1MSEQoJaXRlbWREYklkGAEgASgDIh4KClVzZUl0ZW1Ub0MSEAoI",
+            "aXRlbURiSWQYASABKAMiIAoMRXF1aXBJdGVtVG9TEhAKCGl0ZW1EYklkGAEg",
+            "ASgDIiIKDlVuRXF1aXBJdGVtVG9TEhAKCGl0ZW1EYklkGAEgASgDIkwKEUNo",
+            "YW5nZVNsb3RUeXBlVG9DEhAKCGl0ZW1EYklkGAEgASgDEiUKCHNsb3RUeXBl",
             "GAIgASgOMhMuUHJvdG9jb2wuRVNsb3RUeXBlQhuqAhhHb29nbGUuUHJvdG9i",
             "dWYuUHJvdG9jb2xiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
@@ -6958,10 +6958,10 @@ namespace Google.Protobuf.Protocol {
 
     /// <summary>Field number for the "itemdDbId" field.</summary>
     public const int ItemdDbIdFieldNumber = 1;
-    private int itemdDbId_;
+    private long itemdDbId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int ItemdDbId {
+    public long ItemdDbId {
       get { return itemdDbId_; }
       set {
         itemdDbId_ = value;
@@ -6991,7 +6991,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (ItemdDbId != 0) hash ^= ItemdDbId.GetHashCode();
+      if (ItemdDbId != 0L) hash ^= ItemdDbId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -7010,9 +7010,9 @@ namespace Google.Protobuf.Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ItemdDbId != 0) {
+      if (ItemdDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemdDbId);
+        output.WriteInt64(ItemdDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -7024,9 +7024,9 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ItemdDbId != 0) {
+      if (ItemdDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemdDbId);
+        output.WriteInt64(ItemdDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -7038,8 +7038,8 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (ItemdDbId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemdDbId);
+      if (ItemdDbId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemdDbId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -7053,7 +7053,7 @@ namespace Google.Protobuf.Protocol {
       if (other == null) {
         return;
       }
-      if (other.ItemdDbId != 0) {
+      if (other.ItemdDbId != 0L) {
         ItemdDbId = other.ItemdDbId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -7076,7 +7076,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            ItemdDbId = input.ReadInt32();
+            ItemdDbId = input.ReadInt64();
             break;
           }
         }
@@ -7099,7 +7099,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            ItemdDbId = input.ReadInt32();
+            ItemdDbId = input.ReadInt64();
             break;
           }
         }
@@ -7156,10 +7156,10 @@ namespace Google.Protobuf.Protocol {
 
     /// <summary>Field number for the "itemDbId" field.</summary>
     public const int ItemDbIdFieldNumber = 1;
-    private int itemDbId_;
+    private long itemDbId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int ItemDbId {
+    public long ItemDbId {
       get { return itemDbId_; }
       set {
         itemDbId_ = value;
@@ -7189,7 +7189,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (ItemDbId != 0) hash ^= ItemDbId.GetHashCode();
+      if (ItemDbId != 0L) hash ^= ItemDbId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -7208,9 +7208,9 @@ namespace Google.Protobuf.Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -7222,9 +7222,9 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -7236,8 +7236,8 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (ItemDbId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemDbId);
+      if (ItemDbId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemDbId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -7251,7 +7251,7 @@ namespace Google.Protobuf.Protocol {
       if (other == null) {
         return;
       }
-      if (other.ItemDbId != 0) {
+      if (other.ItemDbId != 0L) {
         ItemDbId = other.ItemDbId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -7274,7 +7274,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
         }
@@ -7297,7 +7297,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
         }
@@ -7354,10 +7354,10 @@ namespace Google.Protobuf.Protocol {
 
     /// <summary>Field number for the "itemDbId" field.</summary>
     public const int ItemDbIdFieldNumber = 1;
-    private int itemDbId_;
+    private long itemDbId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int ItemDbId {
+    public long ItemDbId {
       get { return itemDbId_; }
       set {
         itemDbId_ = value;
@@ -7387,7 +7387,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (ItemDbId != 0) hash ^= ItemDbId.GetHashCode();
+      if (ItemDbId != 0L) hash ^= ItemDbId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -7406,9 +7406,9 @@ namespace Google.Protobuf.Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -7420,9 +7420,9 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -7434,8 +7434,8 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (ItemDbId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemDbId);
+      if (ItemDbId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemDbId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -7449,7 +7449,7 @@ namespace Google.Protobuf.Protocol {
       if (other == null) {
         return;
       }
-      if (other.ItemDbId != 0) {
+      if (other.ItemDbId != 0L) {
         ItemDbId = other.ItemDbId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -7472,7 +7472,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
         }
@@ -7495,7 +7495,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
         }
@@ -7552,10 +7552,10 @@ namespace Google.Protobuf.Protocol {
 
     /// <summary>Field number for the "itemDbId" field.</summary>
     public const int ItemDbIdFieldNumber = 1;
-    private int itemDbId_;
+    private long itemDbId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int ItemDbId {
+    public long ItemDbId {
       get { return itemDbId_; }
       set {
         itemDbId_ = value;
@@ -7585,7 +7585,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (ItemDbId != 0) hash ^= ItemDbId.GetHashCode();
+      if (ItemDbId != 0L) hash ^= ItemDbId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -7604,9 +7604,9 @@ namespace Google.Protobuf.Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -7618,9 +7618,9 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -7632,8 +7632,8 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (ItemDbId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemDbId);
+      if (ItemDbId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemDbId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -7647,7 +7647,7 @@ namespace Google.Protobuf.Protocol {
       if (other == null) {
         return;
       }
-      if (other.ItemDbId != 0) {
+      if (other.ItemDbId != 0L) {
         ItemDbId = other.ItemDbId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -7670,7 +7670,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
         }
@@ -7693,7 +7693,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
         }
@@ -7751,10 +7751,10 @@ namespace Google.Protobuf.Protocol {
 
     /// <summary>Field number for the "itemDbId" field.</summary>
     public const int ItemDbIdFieldNumber = 1;
-    private int itemDbId_;
+    private long itemDbId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int ItemDbId {
+    public long ItemDbId {
       get { return itemDbId_; }
       set {
         itemDbId_ = value;
@@ -7797,7 +7797,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (ItemDbId != 0) hash ^= ItemDbId.GetHashCode();
+      if (ItemDbId != 0L) hash ^= ItemDbId.GetHashCode();
       if (SlotType != global::Google.Protobuf.Enum.ESlotType.None) hash ^= SlotType.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -7817,9 +7817,9 @@ namespace Google.Protobuf.Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (SlotType != global::Google.Protobuf.Enum.ESlotType.None) {
         output.WriteRawTag(16);
@@ -7835,9 +7835,9 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ItemDbId != 0) {
+      if (ItemDbId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt32(ItemDbId);
+        output.WriteInt64(ItemDbId);
       }
       if (SlotType != global::Google.Protobuf.Enum.ESlotType.None) {
         output.WriteRawTag(16);
@@ -7853,8 +7853,8 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (ItemDbId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemDbId);
+      if (ItemDbId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemDbId);
       }
       if (SlotType != global::Google.Protobuf.Enum.ESlotType.None) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) SlotType);
@@ -7871,7 +7871,7 @@ namespace Google.Protobuf.Protocol {
       if (other == null) {
         return;
       }
-      if (other.ItemDbId != 0) {
+      if (other.ItemDbId != 0L) {
         ItemDbId = other.ItemDbId;
       }
       if (other.SlotType != global::Google.Protobuf.Enum.ESlotType.None) {
@@ -7897,7 +7897,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
           case 16: {
@@ -7924,7 +7924,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            ItemDbId = input.ReadInt32();
+            ItemDbId = input.ReadInt64();
             break;
           }
           case 16: {

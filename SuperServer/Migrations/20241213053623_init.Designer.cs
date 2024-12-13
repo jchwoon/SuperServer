@@ -12,8 +12,8 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20241202084340_Init")]
-    partial class Init
+    [Migration("20241213053623_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,11 +88,8 @@ namespace SuperServer.Migrations
 
             modelBuilder.Entity("SuperServer.DB.DBItem", b =>
                 {
-                    b.Property<int>("DBItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DBItemId"), 1L, 1);
+                    b.Property<long>("DBItemId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");

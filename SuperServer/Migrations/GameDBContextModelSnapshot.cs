@@ -86,11 +86,8 @@ namespace SuperServer.Migrations
 
             modelBuilder.Entity("SuperServer.DB.DBItem", b =>
                 {
-                    b.Property<int>("DBItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DBItemId"), 1L, 1);
+                    b.Property<long>("DBItemId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
