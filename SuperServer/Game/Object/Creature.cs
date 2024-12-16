@@ -49,7 +49,7 @@ namespace SuperServer.Game.Object
                 return;
 
             int retDamage = Math.Max(0, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
-            AddStat(EStatType.Hp, -retDamage, EFontType.NormalHit);
+            AddStat(EStatType.Hp, -retDamage, retDamage == 0 ? EFontType.Miss : EFontType.NormalHit);
 
             if (StatComponent.StatInfo.Hp <= 0)
             {
