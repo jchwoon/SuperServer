@@ -48,7 +48,7 @@ namespace SuperServer.Game.Object
             if (CurrentState == ECreatureState.Die)
                 return;
 
-            int retDamage = Math.Max(1, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
+            int retDamage = Math.Max(0, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
             AddStat(EStatType.Hp, -retDamage, EFontType.NormalHit);
 
             if (StatComponent.StatInfo.Hp <= 0)
