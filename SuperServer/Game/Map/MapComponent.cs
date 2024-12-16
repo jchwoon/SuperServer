@@ -108,7 +108,7 @@ namespace SuperServer.Game.Map
             1.4f,
         };
 
-        public List<Vector3Int> FindPath(Vector3Int startPos, Vector3Int destPos, int maxDepth = 10)
+        public List<Vector3Int> FindPath(Vector3Int startPos, Vector3Int destPos, int maxDepth = 30)
         {
             PriorityQueue<PQNode> pq = new PriorityQueue<PQNode>();
             Dictionary<Vector3Int, float> bestCostPath = new Dictionary<Vector3Int, float>();

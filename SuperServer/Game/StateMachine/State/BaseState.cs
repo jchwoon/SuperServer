@@ -43,6 +43,16 @@ namespace SuperServer.Game.StateMachine.State
 
             _machine.Target = _machine.FindTarget();
 
+            //자신의 스포닝풀 범위를 넘었으면 복귀 or 어그로가 끌렸는데 갑자기 타겟이 없어졌으면 복귀
+            //if (_owner.AggroComponent.FirstAggroPos.HasValue)
+            //{
+            //    if (_machine.isBackToOriginPos || _machine.Target == null)
+            //    {
+            //        _machine.FindPathAndMove(_machine.Owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase: true);
+            //        return;
+            //    }
+            //}
+
             //타겟이 있고 거리가 되면 Skill 거리가 안되면 Move
             if (_machine.Target != null)
             {
@@ -56,16 +66,6 @@ namespace SuperServer.Game.StateMachine.State
                 _machine.CurrentSkill = skill;
                 _machine.ChangeState(_machine.SkillState);
                 return;
-            }
-
-            //자신의 스포닝풀 범위를 넘었으면 복귀 or 어그로가 끌렸는데 갑자기 타겟이 없어졌으면 복귀
-            if (_owner.AggroComponent.FirstAggroPos.HasValue)
-            {
-                if (_machine.isBackToOriginPos || _machine.Target == null)
-                {
-                    _machine.FindPathAndMove(_machine.Owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase: true);
-                    return;
-                }
             }
 
             //패트롤포스가 있으면 정찰

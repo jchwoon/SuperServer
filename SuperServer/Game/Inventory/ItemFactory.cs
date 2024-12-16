@@ -100,7 +100,7 @@ namespace SuperServer.Game.Inventory
 
                 DBItem newDBItem = new DBItem()
                 {
-                    DBItemId = DBCommander.GenerateItemDbId(),
+                    DBItemId = DBLogic.GenerateItemDbId(),
                     Count = dropItemCount,
                     OwnerDbId = dropItem.OwnerDBId,
                     ItemTemplateId = dropItem.ItemData.ItemId,

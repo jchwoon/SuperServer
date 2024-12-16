@@ -81,12 +81,6 @@ message SpawnToC
     repeated ObjectInfo objects = 3;
 }
 
-message CreatePartyToS
-{
-    HeroInfo hero = 1;
-    int32 partyId = 2;
-}
-
 message ReqLeaveGameToS
 {
 
@@ -206,4 +200,9 @@ message ChangeSlotTypeToC
 {
     int64 itemDbId = 1;
     ESlotType slotType = 2;
+}
+
+message CreatePartyToS
+{
+
 }

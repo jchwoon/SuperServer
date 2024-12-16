@@ -36,8 +36,8 @@ namespace SuperServer.Game.StateMachine.State
             if (_machine.Owner.SkillComponent.CheckLastSkillIsUsing() == true)
                 return;
 
-            CheckIsOverOfPoolRange();
-            _machine.CheckArrivalFirstAggroPos();
+            //CheckIsOverOfPoolRange();
+            //_machine.CheckArrivalFirstAggroPos();
             CalculateUpdateTick();
         }
 
@@ -49,22 +49,22 @@ namespace SuperServer.Game.StateMachine.State
             _machine.UpdateTick = (int)((nextDist / speed) * 1000);
         }
 
-        private void CheckIsOverOfPoolRange()
-        {
-            if (_owner.PoolData == null)
-                return;
-            if (_owner.AggroComponent.FirstAggroPos.HasValue == false)
-                return;
+        //private void CheckIsOverOfPoolRange()
+        //{
+        //    if (_owner.PoolData == null)
+        //        return;
+        //    if (_owner.AggroComponent.FirstAggroPos.HasValue == false)
+        //        return;
 
-            float range = _owner.PoolData.SpawnRange;
-            float dist = Vector3.Distance(_owner.Position, _poolCenter);
+        //    float range = _owner.PoolData.SpawnRange;
+        //    float dist = Vector3.Distance(_owner.Position, _poolCenter);
 
-            if (dist > range)
-            {
-                _owner.AggroComponent.ClearTarget(_machine?.Target);
-                _machine.isBackToOriginPos = true;
-            }
-        }
+        //    if (dist > range)
+        //    {
+        //        _owner.AggroComponent.ClearTarget(_machine?.Target);
+        //        _machine.isBackToOriginPos = true;
+        //    }
+        //}
 
 
     }

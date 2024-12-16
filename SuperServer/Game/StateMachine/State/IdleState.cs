@@ -31,7 +31,7 @@ namespace SuperServer.Game.StateMachine.State
             if (_machine.Owner.SkillComponent.CheckLastSkillIsUsing() == true)
                 return;
 
-            _machine.CheckArrivalFirstAggroPos();
+            //_machine.CheckArrivalFirstAggroPos();
             _machine.PatrolPos = GetPatrolRandomPos();
         }
 

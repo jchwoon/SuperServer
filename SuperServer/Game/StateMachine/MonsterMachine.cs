@@ -22,7 +22,7 @@ namespace SuperServer.Game.StateMachine
         public BaseObject Target { get; set; }
         public float ToNextPosDist { get; private set; }
         public BaseSkill CurrentSkill { get;  set; }
-        public bool isBackToOriginPos { get; set; }
+        //public bool isBackToOriginPos { get; set; }
         public MonsterMachine(Monster monster)
         {
             Owner = monster;
@@ -55,6 +55,13 @@ namespace SuperServer.Game.StateMachine
             if (Owner.MonsterData.AggroType != EMonsterAggroType.Auto)
                 return null;
 
+            //만약 어그로가 한번 끌렸다면 계속 그 히어로를 찾아 추적
+            if (Target != null && Target.Room?.RoomId == Owner.Room?.RoomId)
+            {
+                return Target as Creature;
+            }
+
+            //감지 범위 내에 가장 가까운 히어로를 찾는다
             float detectionRangeSqr = Owner.MonsterData.DetectionRange * Owner.MonsterData.DetectionRange;
             List<Hero> heroes = Owner.Room.FindHeroInInterestRegion(Owner.Position)
                 .Where(h => (h.Position - Owner.Position).MagnitudeSqr() <= detectionRangeSqr)
@@ -90,23 +97,23 @@ namespace SuperServer.Game.StateMachine
             return true;
         }
 
-        public void CheckArrivalFirstAggroPos()
-        {
-            if (Owner.AggroComponent.FirstAggroPos.HasValue == false || isBackToOriginPos == false)
-                return;
+        //public void CheckArrivalFirstAggroPos()
+        //{
+        //    if (Owner.AggroComponent.FirstAggroPos.HasValue == false || isBackToOriginPos == false)
+        //        return;
 
-            float distSqr = (Owner.Position - Owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
-            if (distSqr <= 0.1f)
-            {
-                Owner.Reset();
-                Owner.AggroComponent.FirstAggroPos = null;
-                isBackToOriginPos = false;
-            }
-        }
+        //    float distSqr = (Owner.Position - Owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
+        //    if (distSqr <= 0.1f)
+        //    {
+        //        Owner.Reset();
+        //        Owner.AggroComponent.FirstAggroPos = null;
+        //        isBackToOriginPos = false;
+        //    }
+        //}
 
         public bool IsChaseMode()
         {
-            if (Target != null || isBackToOriginPos)
+            if (Target != null)
                 return true;
 
             return false;
