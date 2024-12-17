@@ -53,6 +53,12 @@ namespace SuperServer.Game.Skill
         //누구기준으로 쓸건지 -> target
         public List<Creature> GetSkillEffectedTargets(Creature skillLocationTarget, Vector2 skillCastDir)
         {
+            if (Owner == null)
+                return null;
+
+            if (Owner.Room == null)
+                return null;
+
             List<Creature> effectedCreatures = new List<Creature>();
 
             switch (SkillData.SkillAreaType)
@@ -65,6 +71,8 @@ namespace SuperServer.Game.Skill
                     List<Creature> creatures = Owner.Room.FindCreatureInInterestRegion(Owner.Position);
                     foreach (Creature creature in creatures)
                     {
+                        //MaxTarget검사
+                        if (effectedCreatures.Count >= SkillData.MaxTargetInRange) break;
                         //피아식별 검사
                         if (CheckSkillUsageType(creature, SkillData.SkillUsageTargetType) == false) continue;
                         //거리 검사

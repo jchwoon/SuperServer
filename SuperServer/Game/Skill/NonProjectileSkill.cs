@@ -48,6 +48,8 @@ namespace SuperServer.Game.Skill
         {
             if (Owner == null || Owner.Room == null)
                 return;
+            if (Owner.CurrentState == ECreatureState.Die)
+                return;
 
             //스킬이 발생되는 타겟 위치를 얻기위해
             Creature locationTarget = Owner.Room.FindCreatureById(locationTargetId);
@@ -66,6 +68,8 @@ namespace SuperServer.Game.Skill
                 IJob job = GameCommander.Instance.PushAfter(GetSkillEffectTick(),
                 () =>
                 {
+                    if (Owner == null || Owner.Room == null || Owner.CurrentState == ECreatureState.Die) return;
+
                     List<Creature> effectedCreatures = GetSkillEffectedTargets(locationTarget, skillCastDir);
                     foreach (Creature creature in effectedCreatures)
                     {
@@ -116,8 +120,6 @@ namespace SuperServer.Game.Skill
 
                 count++;
             }
-
-            Console.WriteLine(count);
 
             Owner.PosInfo.PosX = currentPos.X;
             Owner.PosInfo.PosY = currentPos.Y;

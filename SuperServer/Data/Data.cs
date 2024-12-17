@@ -183,6 +183,7 @@ namespace SuperServer.Data
         public string SkillName;
         public string AnimName;
         public float SkillRange;
+        public int MaxTargetInRange;
         public int CostMp;
         public float CoolTime;
         public float Dist;

@@ -92,6 +92,7 @@ public class Hero : Creature
 
         base.OnDie(killer);
 
+        //??
         StatComponent.SetStat(EStatType.Mp, StatComponent.GetStat(EStatType.MaxMp));
         ReserveRespawn();
     }

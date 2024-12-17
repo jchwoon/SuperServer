@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Game.Room;
 using SuperServer.Utils;
+using Google.Protobuf.Protocol;
 
 namespace SuperServer.Game.Object
 {
@@ -45,8 +46,10 @@ namespace SuperServer.Game.Object
         public override void OnDamage(Creature attacker, float damage)
         {
             base.OnDamage(attacker,damage);
-            AggroComponent.OnDamage(attacker.ObjectId, damage);
-            Machine.OnDamage();
+            int retDamage = GetCalculatedDamage(damage);
+            AggroComponent.OnDamage(attacker.ObjectId, retDamage);
+            if (retDamage > 0)
+                Machine.OnDamage();
         }
 
         public override void OnDie(Creature killer)
@@ -57,6 +60,7 @@ namespace SuperServer.Game.Object
             base.OnDie(killer);
 
             Machine.OnDie();
+
             GameCommander.Instance.PushAfter(1000, Room.ExitRoom<Monster>, this);
             GameCommander.Instance.PushAfter(3000, Room.ReSpawn, this);
         }
@@ -64,8 +68,9 @@ namespace SuperServer.Game.Object
         public override void ReSpawn()
         {
             base.ReSpawn();
-            Machine.ChangeState(Machine.IdleState);
             AggroComponent.Clear();
+            Machine.Clear();
+            Machine.ChangeState(Machine.IdleState);
         }
 
         public void Reset()

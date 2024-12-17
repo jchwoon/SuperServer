@@ -14,14 +14,18 @@ namespace SuperServer.Game.StateMachine
 {
     public class MonsterMachine : StateMachine<Monster>
     {
-        public IdleState IdleState { get; set; }
-        public MoveState MoveState { get; set; }
-        public SkillState SkillState { get; set; }
-        public DieState DieState { get; set; }
+        public IdleState IdleState { get; private set; }
+        public MoveState MoveState { get; private set; }
+        public SkillState SkillState { get; private set; }
+        public DieState DieState { get; private set; }
+        public HitState HitState { get; private set; }
         public Vector3? PatrolPos { get; set; }
         public BaseObject Target { get; set; }
+        public BaseSkill CurrentSkill { get; set; }
         public float ToNextPosDist { get; private set; }
-        public BaseSkill CurrentSkill { get;  set; }
+        public long BehaviorLockingTick { get; set; }
+        const float HIT_STUN_DUTARTION = 0.37f;
+
         //public bool isBackToOriginPos { get; set; }
         public MonsterMachine(Monster monster)
         {
@@ -35,6 +39,7 @@ namespace SuperServer.Game.StateMachine
             MoveState = new MoveState(this);
             SkillState = new SkillState(this);
             DieState = new DieState(this);
+            HitState = new HitState(this);
         }
         public Creature FindTarget()
         {
@@ -43,6 +48,8 @@ namespace SuperServer.Game.StateMachine
             foreach (int id in targetIds)
             {
                 Hero target = Owner.Room?.FindHeroById(id);
+
+                if (target  == null) continue;
 
                 if (target.CurrentState == ECreatureState.Die)
                 {
@@ -56,7 +63,7 @@ namespace SuperServer.Game.StateMachine
                 return null;
 
             //만약 어그로가 한번 끌렸다면 계속 그 히어로를 찾아 추적
-            if (Target != null && Target.Room?.RoomId == Owner.Room?.RoomId)
+            if (Target != null && Target.Room?.RoomId == Owner.Room?.RoomId && Target.CurrentState != ECreatureState.Die)
             {
                 return Target as Creature;
             }
@@ -121,8 +128,14 @@ namespace SuperServer.Game.StateMachine
 
         public void OnDamage()
         {
+            if (Owner.CurrentState == ECreatureState.Die)
+                return;
+
             if (Target == null)
                 CurrentState.Update();
+
+            ChangeState(HitState);
+            SetBehaviorLockTick(HIT_STUN_DUTARTION);
         }
 
         public override void OnDie()
@@ -132,6 +145,21 @@ namespace SuperServer.Game.StateMachine
             if (Target != null)
                 Target = null;
             ChangeState(DieState);
+        }
+
+        public bool CheckIsBehaviorLocking()
+        {
+            return BehaviorLockingTick > Environment.TickCount64 ? true : false;
+        }
+
+        private void SetBehaviorLockTick(float lockSec)
+        {
+            BehaviorLockingTick = Environment.TickCount64 + (long)(lockSec * 1000);
+        }
+
+        public void Clear()
+        {
+            Target = null;
         }
     }
 }

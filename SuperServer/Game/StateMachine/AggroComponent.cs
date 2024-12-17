@@ -1,4 +1,5 @@
-﻿using SuperServer.Game.Object;
+﻿using Google.Protobuf.Enum;
+using SuperServer.Game.Object;
 using SuperServer.Utils;
 using System;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SuperServer.Game.StateMachine
 {
     public class AggroComponent
     {
-        Dictionary<int, float> _attackers = new Dictionary<int, float>();
+        Dictionary<int, int> _attackers = new Dictionary<int, int>();
         //맨 처음 공격 당했을 때의 위치
         //public Vector3? FirstAggroPos { get; set; }
         public Creature Owner { get; private set; }
@@ -28,8 +29,10 @@ namespace SuperServer.Game.StateMachine
             return _attackers.OrderByDescending(x => x.Value).Select(x => x.Key).FirstOrDefault();
         }
 
-        public void OnDamage(int objectId, float damage)
+        public void OnDamage(int objectId, int damage)
         {
+            if (Owner.CurrentState == ECreatureState.Die)
+                return;
             //if (FirstAggroPos == null)
             //    FirstAggroPos = Owner.Position;
             if (_attackers.ContainsKey(objectId))

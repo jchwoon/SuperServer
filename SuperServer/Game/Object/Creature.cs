@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Game.StateMachine;
 using System.Reflection.PortableExecutable;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SuperServer.Game.Object
 {
@@ -48,13 +49,18 @@ namespace SuperServer.Game.Object
             if (CurrentState == ECreatureState.Die)
                 return;
 
-            int retDamage = Math.Max(0, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
+            int retDamage = GetCalculatedDamage(damage);
             AddStat(EStatType.Hp, -retDamage, retDamage == 0 ? EFontType.Miss : EFontType.NormalHit);
 
             if (StatComponent.StatInfo.Hp <= 0)
             {
                 OnDie(attacker);
             }
+        }
+
+        protected int GetCalculatedDamage(float damage)
+        {
+            return Math.Max(0, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
         }
 
         public virtual void OnDie(Creature killer)

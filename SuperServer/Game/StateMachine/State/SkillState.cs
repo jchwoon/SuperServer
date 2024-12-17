@@ -21,7 +21,7 @@ namespace SuperServer.Game.StateMachine.State
         {
             base.Enter();
             _machine.Owner.CurrentState = ECreatureState.Skill;
-            _machine.UpdateTick = (int)((1.0f / _machine.Owner.MonsterData.AtkSpeed) * 1000);
+            _machine.UpdateTick = 1000;
         }
         public override void Exit()
         {
@@ -32,13 +32,13 @@ namespace SuperServer.Game.StateMachine.State
         {
             base.Update();
 
+
             if (_machine.Owner.SkillComponent.CheckLastSkillIsUsing() == true)
                 return;
 
             if (_machine.Target == null)
                 return;
 
-            //Todo
             _machine.CurrentSkill.UseSkill(_machine.Target.ObjectId, _machine.Target.ObjectId, null);
         }
     }

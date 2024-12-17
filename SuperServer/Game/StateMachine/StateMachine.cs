@@ -45,6 +45,7 @@ namespace SuperServer.Game.StateMachine
             if (Owner.Room == null)
                 return;
 
+
             CurrentState.Update();
 
             _machineJob = GameCommander.Instance.PushAfter(UpdateTick, Update);

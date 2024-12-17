@@ -2,6 +2,7 @@
 using SuperServer.Game.Room;
 using SuperServer.Game.Skill;
 using SuperServer.Utils;
+using Google.Protobuf.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,11 @@ namespace SuperServer.Game.StateMachine.State
 
         public virtual void Update()
         {
+            if (_machine.Owner.CurrentState == ECreatureState.Die)
+                return;
+
+            if (_machine.CheckIsBehaviorLocking())
+                return;
             //스킬을 사용중인지
             if (_machine.Owner.SkillComponent.CheckLastSkillIsUsing() == true)
                 return;

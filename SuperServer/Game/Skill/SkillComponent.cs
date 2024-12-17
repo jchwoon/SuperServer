@@ -57,8 +57,7 @@ namespace SuperServer.Game.Skill
             //들어온 스킬이 이전 스킬을 취소 할 수 있는지 확인
             if (skill.SkillData.CanCancel)
             {
-                if (CurrentRegisterJob != null)
-                    CurrentRegisterJob.IsCancel = true;
+                CancelCurrentRegisterSkill();
             }
             else if (CheckLastSkillIsUsing() == true)
                 return;
@@ -110,6 +109,15 @@ namespace SuperServer.Game.Skill
             if (LastSkill == null)
                 return false;
             return LastSkill.CheckUsingSkill();
+        }
+
+        public void CancelCurrentRegisterSkill()
+        {
+            if (CurrentRegisterJob == null)
+                return;
+
+            LastSkill = null;
+            CurrentRegisterJob.IsCancel = true;
         }
     }
 }
