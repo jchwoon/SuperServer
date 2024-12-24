@@ -39,7 +39,7 @@ namespace SuperServer.Game.StateMachine.State
             if (_machine.Target == null)
                 return;
 
-            _machine.CurrentSkill.UseSkill(_machine.Target.ObjectId, _machine.Target.ObjectId, null);
+            _machine.CurrentSkill.UseSkill(_machine.Target.ObjectId);
         }
     }
 }

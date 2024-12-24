@@ -28,6 +28,7 @@ namespace SuperServer.DB
         public float PosZ { get; set; }
         public float RotY { get; set; }
         public ICollection<DBItem> Items { get; set; } = new List<DBItem>();
+        public List<int> Skills { get; set; } = new List<int>();
         public int EquipmentSlotCount { get; set; }
         public int ConsumableSlotCount { get; set; }
         public int ETCSlotCount { get; set; }

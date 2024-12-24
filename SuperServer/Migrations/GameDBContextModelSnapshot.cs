@@ -75,6 +75,9 @@ namespace SuperServer.Migrations
                     b.Property<float>("RotY")
                         .HasColumnType("real");
 
+                    b.Property<string>("Skills")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("DBHeroId");
 
                     b.HasIndex("HeroName")

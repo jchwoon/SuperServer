@@ -28,30 +28,35 @@ namespace SuperServer.Game.Skill
         }
 
         //타겟을 구하고 타겟한테 Effect를 주고 브로드캐스트
-        public abstract void UseSkill(int skillTargetId, int locationTargetId, float? rotY);
+        public abstract void UseSkill(int skillTargetId, float rotY);
+        public abstract void UseSkill(float rotY);
+        public abstract void UseSkill(int skillTargetId);
 
-        protected void BroadcastSkill(int skillTargetId, int skillLocationTargetId, bool sendPos = false)
+        protected void BroadcastSkill(int skillTargetId, bool sendPos = false)
         {
-            Owner.BroadcastSkill(TemplateId, skillTargetId, skillLocationTargetId, SkillData.AnimName, sendPos);
+            Owner.BroadcastSkill(SkillData.TemplateId, skillTargetId, SkillData.AnimName, sendPos);
+        }
+        protected void BroadcastSkill( bool sendPos = false)
+        {
+            Owner.BroadcastSkill(SkillData.TemplateId, SkillData.AnimName, sendPos);
         }
 
-        public Vector2 GetSkillCastDir(Creature target, float? rotY)
+        public Vector2 GetSkillCastDir(Creature target)
         {
-            Vector3 skillCastDir;
-            if (target.ObjectId == Owner.ObjectId && rotY.HasValue)
-            {
-                skillCastDir = Utils.Utils.GetDirFromRotY(rotY.Value);
-            }
-            else
-            {
-                skillCastDir = (target.Position - Owner.Position).Normalize();
-            }
+            Vector3 skillCastDir = (target.Position - Owner.Position).Normalize();
 
             return new Vector2(skillCastDir.X, skillCastDir.Z);
         }
 
-        //누구기준으로 쓸건지 -> target
-        public List<Creature> GetSkillEffectedTargets(Creature skillLocationTarget, Vector2 skillCastDir)
+        public Vector2 GetSkillCastDir(float rotY)
+        {
+            Vector3 skillCastDir = Utils.Utils.GetDirFromRotY(rotY);
+
+            return new Vector2(skillCastDir.X, skillCastDir.Z);
+        }
+
+        //타겟 스킬
+        public List<Creature> GetSkillEffectedTargets(Creature target, Vector2 skillCastDir)
         {
             if (Owner == null)
                 return null;
@@ -61,27 +66,61 @@ namespace SuperServer.Game.Skill
 
             List<Creature> effectedCreatures = new List<Creature>();
 
+
             switch (SkillData.SkillAreaType)
             {
                 case ESkillAreaType.Single:
-                    if (CheckSkillUsageType(skillLocationTarget, SkillData.SkillUsageTargetType))
-                        effectedCreatures.Add(skillLocationTarget);
+                    if (CheckSkillUsageType(target, SkillData.SkillUsageTargetType))
+                        effectedCreatures.Add(target);
                     break;
                 case ESkillAreaType.Area:
                     List<Creature> creatures = Owner.Room.FindCreatureInInterestRegion(Owner.Position);
                     foreach (Creature creature in creatures)
                     {
-                        //MaxTarget검사
-                        if (effectedCreatures.Count >= SkillData.MaxTargetInRange) break;
                         //피아식별 검사
                         if (CheckSkillUsageType(creature, SkillData.SkillUsageTargetType) == false) continue;
                         //거리 검사
-                        float dist = Vector3.Distance(creature.Position, skillLocationTarget.Position);
+                        //Temp Owner
+                        float dist = Vector3.Distance(creature.Position, target.Position);
                         if (dist > SkillData.SkillRange) continue;
                         //Sector 검사
-                        Vector3 ownerToMonsterDir = (creature.Position - Owner.Position).Normalize();
+                        Vector3 dir = (creature.Position - target.Position).Normalize();
                         float dotValue = Vector2.Dot(
-                            new Vector2(ownerToMonsterDir.X, ownerToMonsterDir.Z),
+                            new Vector2(dir.X, dir.Z),
+                            new Vector2(skillCastDir.X, skillCastDir.Y));
+
+                        float skillSectorValue = MathF.Cos(SkillData.SectorAngle * Utils.Utils.DegreeToRadian);
+                        if (skillSectorValue <= dotValue)
+                            effectedCreatures.Add(creature);
+                    }
+                    break;
+                default:
+                    return effectedCreatures;
+            }
+
+            return effectedCreatures;
+        }
+
+        //논타겟 스킬
+        public List<Creature> GetSkillEffectedTargets(Vector3 skillPos, Vector2 skillCastDir)
+        {
+            List<Creature> effectedCreatures = new List<Creature>();
+
+            switch (SkillData.SkillAreaType)
+            {
+                case ESkillAreaType.Area:
+                    List<Creature> creatures = Owner.Room.FindCreatureInInterestRegion(Owner.Position);
+                    foreach (Creature creature in creatures)
+                    {
+                        //피아식별 검사
+                        if (CheckSkillUsageType(creature, SkillData.SkillUsageTargetType) == false) continue;
+                        //거리 검사
+                        float dist = Vector3.Distance(creature.Position, skillPos);
+                        if (dist > SkillData.SkillRange) continue;
+                        //Sector 검사
+                        Vector3 dir = (creature.Position - skillPos).Normalize();
+                        float dotValue = Vector2.Dot(
+                            new Vector2(dir.X, dir.Z),
                             new Vector2(skillCastDir.X, skillCastDir.Y));
 
                         float skillSectorValue = MathF.Cos(SkillData.SectorAngle * Utils.Utils.DegreeToRadian);
@@ -103,7 +142,7 @@ namespace SuperServer.Game.Skill
                 case ESkillUsageTargetType.Self:
                     return target.ObjectId == Owner.ObjectId;
                 case ESkillUsageTargetType.Ally:
-                    return target.ObjectId == Owner.ObjectId;
+                    return target.ObjectType == Owner.ObjectType;
                 case ESkillUsageTargetType.Enemy:
                     return target.ObjectType != Owner.ObjectType;
                 default:

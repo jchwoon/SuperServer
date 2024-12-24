@@ -44,54 +44,132 @@ namespace SuperServer.Game.Skill
         //    return;
         //}
 
-        public override void UseSkill(int skillTargetId, int locationTargetId, float? rotY)
+        //NonTarget UseSkill
+        public override void UseSkill(float rotY)
         {
-            if (Owner == null || Owner.Room == null)
-                return;
-            if (Owner.CurrentState == ECreatureState.Die)
+            if (!IsValidOwnerState())
                 return;
 
-            //스킬이 발생되는 타겟 위치를 얻기위해
-            Creature locationTarget = Owner.Room.FindCreatureById(locationTargetId);
-            if (locationTarget == null)
-                return;
-            //어떤 타겟을 향해 스킬을 쓸지 판단하기 위해
-            Creature skillTarget = Owner.Room.FindCreatureById(skillTargetId);
-            if (skillTarget == null)
-                return;
-            Vector2 skillCastDir = GetSkillCastDir(skillTarget, rotY);
+            Vector2 skillCastDir = GetSkillCastDir(rotY);
 
             DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
 
             if (effectData != null)
             {
-                IJob job = GameCommander.Instance.PushAfter(GetSkillEffectTick(),
-                () =>
-                {
-                    if (Owner == null || Owner.Room == null || Owner.CurrentState == ECreatureState.Die) return;
-
-                    List<Creature> effectedCreatures = GetSkillEffectedTargets(locationTarget, skillCastDir);
-                    foreach (Creature creature in effectedCreatures)
-                    {
-                        if (creature == null)
-                            return;
-                        creature.EffectComponent.ApplyEffect(Owner, effectData);
-                    }
-                });
-                Owner.SkillComponent.CurrentRegisterJob = job;
+                //Temp Owner 나중에 스킬 위치를 받아와야함
+                //ApplySkillEffect(effectData, Owner, skillCastDir);
             }
 
             if (SkillData.IsMoveSkill)
             {
                 MoveFromSkill(new Vector3(skillCastDir.X, 0, skillCastDir.Y));
-                BroadcastSkill(skillTargetId, locationTargetId, sendPos:true);
+                BroadcastSkill(sendPos:true);
             }
             else
             {
-                BroadcastSkill(skillTargetId, locationTargetId);
+                BroadcastSkill();
             }
             Owner.SkillComponent.LastSkill = this;
             Refresh();
+        }
+
+        //SmartTarget
+        public override void UseSkill(int skillTargetId, float rotY)
+        {
+            if (!IsValidOwnerState())
+                return;
+
+            Creature skillTarget = Owner.Room.FindCreatureById(skillTargetId);
+            Vector2 skillCastDir = (skillTarget != null) ? GetSkillCastDir(skillTarget) : GetSkillCastDir(rotY);
+            
+
+            DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
+
+            if (effectData != null)
+            {
+                //Temp Owner 나중에 스킬 위치를 받아와야함
+                ApplySkillEffect(effectData, Owner, skillCastDir);
+            }
+
+            if (SkillData.IsMoveSkill)
+            {
+                MoveFromSkill(new Vector3(skillCastDir.X, 0, skillCastDir.Y));
+                BroadcastSkill(skillTargetId, sendPos: true);
+            }
+            else
+            {
+                BroadcastSkill(skillTargetId);
+            }
+            Owner.SkillComponent.LastSkill = this;
+            Refresh();
+        }
+
+        //Targeting
+        public override void UseSkill(int skillTargetId)
+        {
+            if (!IsValidOwnerState())
+                return;
+
+            Creature skillTarget = Owner.Room.FindCreatureById(skillTargetId);
+            if (skillTarget == null)
+                return;
+            Vector2 skillCastDir = GetSkillCastDir(skillTarget);
+
+
+            DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
+
+            if (effectData != null)
+            {
+                ApplySkillEffect(effectData, skillTarget, skillCastDir);
+            }
+
+            if (SkillData.IsMoveSkill)
+            {
+                MoveFromSkill(new Vector3(skillCastDir.X, 0, skillCastDir.Y));
+                BroadcastSkill(skillTargetId, sendPos: true);
+            }
+            else
+            {
+                BroadcastSkill(skillTargetId);
+            }
+            Owner.SkillComponent.LastSkill = this;
+            Refresh();
+        }
+
+        //논타겟
+        private void ApplySkillEffect(EffectData effectData, Vector3 skillPos, Vector2 castDir)
+        {
+            IJob job = GameCommander.Instance.PushAfter(GetSkillEffectTick(),
+            () =>
+            {
+                if (!IsValidOwnerState()) return;
+
+                List<Creature> effectedCreatures = GetSkillEffectedTargets(skillPos, castDir);
+                foreach (Creature creature in effectedCreatures)
+                {
+                    if (creature == null) continue;
+                    creature.EffectComponent.ApplyEffect(Owner, effectData);
+                }
+            });
+            Owner.SkillComponent.CurrentRegisterJob = job;
+        }
+
+        //타겟
+        private void ApplySkillEffect(EffectData effectData, Creature target, Vector2 castDir)
+        {
+            IJob job = GameCommander.Instance.PushAfter(GetSkillEffectTick(),
+            () =>
+            {
+                if (!IsValidOwnerState()) return;
+
+                List<Creature> effectedCreatures = GetSkillEffectedTargets(target, castDir);
+                foreach (Creature creature in effectedCreatures)
+                {
+                    if (creature == null) continue;
+                    creature.EffectComponent.ApplyEffect(Owner, effectData);
+                }
+            });
+            Owner.SkillComponent.CurrentRegisterJob = job;
         }
 
         private void MoveFromSkill(Vector3 dir, int depth = 20)
@@ -125,5 +203,11 @@ namespace SuperServer.Game.Skill
             Owner.PosInfo.PosY = currentPos.Y;
             Owner.PosInfo.PosZ = currentPos.Z;
         }
+
+        private bool IsValidOwnerState()
+        {
+            return Owner != null && Owner.Room != null && Owner.CurrentState != ECreatureState.Die;
+        }
+
     }
 }

@@ -71,7 +71,19 @@ namespace SuperServer.Game.Skill
 
             //위의 스킬이 콤보스킬이면 스킬 인포에서 받은 콤보스킬아이디를 통해 skillData를
             //꺼내서 위의 skill의 SkillData를 교체
-            skill.UseSkill(skillInfo.SkillTargetId, skillInfo.SkillLocationTargetId, skillInfo.RotY);
+
+            switch (skill.SkillData.SkillTargetingType)
+            {
+                case ESkillTargetingType.Target:
+                    skill.UseSkill(skillInfo.SkillTargetId);
+                    break;
+                case ESkillTargetingType.NonTarget:
+                    skill.UseSkill(skillInfo.RotY);
+                    break;
+                case ESkillTargetingType.SmartTarget:
+                    skill.UseSkill(skillInfo.SkillTargetId, skillInfo.RotY);
+                    break;
+            }
         }
 
         #region AI

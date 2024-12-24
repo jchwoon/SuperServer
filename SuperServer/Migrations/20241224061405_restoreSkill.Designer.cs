@@ -12,8 +12,8 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20241213053623_init")]
-    partial class init
+    [Migration("20241224061405_restoreSkill")]
+    partial class restoreSkill
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,6 +76,9 @@ namespace SuperServer.Migrations
 
                     b.Property<float>("RotY")
                         .HasColumnType("real");
+
+                    b.Property<string>("Skills")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DBHeroId");
 

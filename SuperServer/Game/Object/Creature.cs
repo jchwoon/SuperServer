@@ -93,7 +93,7 @@ namespace SuperServer.Game.Object
                 BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue, fontType);
         }
 
-        public void BroadcastSkill(int skillId, int skillTargetId, int skillLocationTargetId,  string animName, bool sendPos = false)
+        public void BroadcastSkill(int skillId, int skillTargetId,  string animName, bool sendPos = false)
         {
             if (Room == null)
                 return;
@@ -108,7 +108,25 @@ namespace SuperServer.Game.Object
                 PlayAnimName = animName,
                 SkillId = skillId,
                 SkillTargetId = skillTargetId,
-                SkillLocationTargetId = skillLocationTargetId,
+            };
+
+            Room.Broadcast(_skillPacket, Position);
+        }
+
+        public void BroadcastSkill(int skillId, string animName, bool sendPos = false)
+        {
+            if (Room == null)
+                return;
+
+            if (sendPos)
+            {
+                _skillPacket.PosInfo = this.PosInfo;
+            }
+            _skillPacket.ObjectId = this.ObjectId;
+            _skillPacket.SkillInfo = new SkillInfo()
+            {
+                PlayAnimName = animName,
+                SkillId = skillId,
             };
 
             Room.Broadcast(_skillPacket, Position);

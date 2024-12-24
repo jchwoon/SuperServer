@@ -176,6 +176,7 @@ namespace SuperServer.Data
         public ESkillSlotType SkillSlotType;
         public ESkillAreaType SkillAreaType;
         public ESkillUsageTargetType SkillUsageTargetType;
+        public ESkillTargetingType SkillTargetingType;
         public float SectorAngle;
         public bool CanCancel;
         public bool IsComboSkill;
@@ -183,7 +184,6 @@ namespace SuperServer.Data
         public string SkillName;
         public string AnimName;
         public float SkillRange;
-        public int MaxTargetInRange;
         public int CostMp;
         public float CoolTime;
         public float Dist;
