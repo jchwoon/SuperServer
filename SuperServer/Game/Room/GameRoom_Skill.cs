@@ -10,12 +10,12 @@ namespace SuperServer.Game.Room
 {
     public partial class GameRoom
     {
-        public void UseSkill(Creature owner, SkillInfo skillInfo)
+        public void UseSkill(Creature owner, SkillInfo skillInfo, PosInfo skillPivot)
         {
             if (owner == null)
                 return;
 
-            owner.SkillComponent.UseSKill(skillInfo);
+            owner.SkillComponent.UseSKill(skillInfo, skillPivot);
         }
     }
 }

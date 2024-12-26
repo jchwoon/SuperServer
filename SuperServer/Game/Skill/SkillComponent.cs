@@ -24,31 +24,31 @@ namespace SuperServer.Game.Skill
             Owner = owner;
         }
 
-        public void RegisterSkill(List<int> skillIds)
+        public void RegisterSkill(Dictionary<int, int> skills)
         {
-            foreach (int id in skillIds)
+            foreach (KeyValuePair<int, int> s in skills)
             {
-                if (DataManager.SkillDict.TryGetValue(id, out SkillData skillData) == true)
+                if (DataManager.SkillDict.TryGetValue(s.Key, out SkillData skillData) == true)
                 {
-                    if (_skills.ContainsKey(id))
+                    if (_skills.ContainsKey(s.Key))
                         continue;
 
                     BaseSkill skill = null;
                     switch (skillData.SkillProjectileType)
                     {
                         case ESkillProjectileType.None:
-                            skill = new NonProjectileSkill(Owner, skillData, id);
+                            skill = new NonProjectileSkill(Owner, skillData, s.Key, s.Value);
                             break;
                     }
                     if (skill.SkillData.SkillSlotType == ESkillSlotType.Normal)
                         NormalSkillId = skill.TemplateId;
                     if (skill != null)
-                        _skills.Add(id, skill);
+                        _skills.Add(s.Key, skill);
                 }
             }
         }
 
-        public void UseSKill(SkillInfo skillInfo)
+        public void UseSKill(SkillInfo skillInfo, PosInfo skillPivot)
         {
             BaseSkill skill;
             if (_skills.TryGetValue(skillInfo.SkillId, out skill) == false)
@@ -78,10 +78,10 @@ namespace SuperServer.Game.Skill
                     skill.UseSkill(skillInfo.SkillTargetId);
                     break;
                 case ESkillTargetingType.NonTarget:
-                    skill.UseSkill(skillInfo.RotY);
+                    skill.UseSkill(skillPivot);
                     break;
                 case ESkillTargetingType.SmartTarget:
-                    skill.UseSkill(skillInfo.SkillTargetId, skillInfo.RotY);
+                    skill.UseSkill(skillInfo.SkillTargetId, skillPivot);
                     break;
             }
         }
@@ -114,6 +114,16 @@ namespace SuperServer.Game.Skill
                 return null;
 
             return skill;
+        }
+
+        public Dictionary<int, int> GetAllSkillLevels()
+        {
+            Dictionary<int, int> allSkillLevel = new Dictionary<int, int>();
+            foreach (KeyValuePair<int, BaseSkill> kvp in _skills)
+            {
+                allSkillLevel.Add(kvp.Key, kvp.Value.SkillLevel);
+            }
+            return allSkillLevel;
         }
 
         public bool CheckLastSkillIsUsing()

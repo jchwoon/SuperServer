@@ -62,6 +62,7 @@ message ResEnterRoomToC
     MyHeroInfo myHero = 1;
     bool isChangeRoom = 2;
     repeated ItemInfo items = 3;
+    repeated SkillInfo skills = 4;
 }
 
 message ChangeRoomToS
@@ -116,6 +117,7 @@ message DeSpawnToC
 message ReqUseSkillToS 
 {
 	SkillInfo skillInfo = 1;
+    PosInfo skillPivot = 2;
 }
 
 message ResUseSkillToC 

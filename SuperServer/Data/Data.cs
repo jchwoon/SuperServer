@@ -112,7 +112,6 @@ namespace SuperServer.Data
 
     public class PoolData
     {
-        public int SpawnId;
         public int MaxEntityCount;
         public int MonsterId;
         public float RespawnTime;
@@ -170,7 +169,7 @@ namespace SuperServer.Data
     public class SkillData
     {
         public int TemplateId;
-        public int NextComboSkillTemplateId;
+        public int NextSkillTemplateId;
         public ESkillType SkillType;
         public ESkillProjectileType SkillProjectileType;
         public ESkillSlotType SkillSlotType;

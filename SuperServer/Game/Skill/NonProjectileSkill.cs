@@ -9,55 +9,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Job;
+using Google.Protobuf.Struct;
 
 namespace SuperServer.Game.Skill
 {
     public class NonProjectileSkill : BaseSkill
     {
-        public NonProjectileSkill(Creature owner, SkillData skillData, int skillId) : base(owner, skillData, skillId)
+        public NonProjectileSkill(Creature owner, SkillData skillData, int skillId, int skillLevel) : base(owner, skillData, skillId, skillLevel)
         {
             
         }
 
-        //public override void UseSkill(int lookTargetId)
-        //{
-        //    if (Owner == null || Owner.Room == null)
-        //        return;
-
-        //    Creature target = Owner.Room.FindCreatureById(lookTargetId);
-        //    if (target == null)
-        //        return;
-
-        //    EffectData effectData;
-        //    if (DataManager.EffectDict.TryGetValue(SkillData.EffectId, out effectData) == false)
-        //        return;
-
-        //    GameCommander.Instance.PushAfter(GetSkillEffectTick(),
-        //    () =>
-        //    {
-        //        target.EffectComponent.ApplyEffect(Owner, effectData);
-        //    });
-
-        //    Owner.SkillComponent.LastSkill = this;
-        //    BroadcastSkill(lookTargetId);
-        //    Refresh();
-        //    return;
-        //}
-
         //NonTarget UseSkill
-        public override void UseSkill(float rotY)
+        public override void UseSkill(PosInfo skillPivot)
         {
             if (!IsValidOwnerState())
                 return;
 
-            Vector2 skillCastDir = GetSkillCastDir(rotY);
+            Vector2 skillCastDir = GetSkillCastDir(skillPivot.RotY);
 
             DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
 
             if (effectData != null)
             {
-                //Temp Owner 나중에 스킬 위치를 받아와야함
-                //ApplySkillEffect(effectData, Owner, skillCastDir);
+                ApplySkillEffect(effectData,
+                    new Vector3(skillPivot.PosX, skillPivot.PosY, skillPivot.PosZ),
+                    skillCastDir);
             }
 
             if (SkillData.IsMoveSkill)
@@ -74,13 +51,13 @@ namespace SuperServer.Game.Skill
         }
 
         //SmartTarget
-        public override void UseSkill(int skillTargetId, float rotY)
+        public override void UseSkill(int skillTargetId, PosInfo skillPivot)
         {
             if (!IsValidOwnerState())
                 return;
 
             Creature skillTarget = Owner.Room.FindCreatureById(skillTargetId);
-            Vector2 skillCastDir = (skillTarget != null) ? GetSkillCastDir(skillTarget) : GetSkillCastDir(rotY);
+            Vector2 skillCastDir = (skillTarget != null) ? GetSkillCastDir(skillTarget) : GetSkillCastDir(skillPivot.RotY);
             
 
             DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
@@ -88,7 +65,9 @@ namespace SuperServer.Game.Skill
             if (effectData != null)
             {
                 //Temp Owner 나중에 스킬 위치를 받아와야함
-                ApplySkillEffect(effectData, Owner, skillCastDir);
+                ApplySkillEffect(effectData,
+                    new Vector3(skillPivot.PosX, skillPivot.PosY, skillPivot.PosZ),
+                    skillCastDir);
             }
 
             if (SkillData.IsMoveSkill)

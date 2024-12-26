@@ -72,6 +72,11 @@ namespace SuperServer.Game.Room
                     {
                         resEnterPacket.Items.Add(info);
                     }
+                    foreach (KeyValuePair<int, int> kvp in hero.SkillComponent.GetAllSkillLevels())
+                    {
+                        SkillInfo info = new SkillInfo() { SkillId = kvp.Key, SkillLevel = kvp.Value };
+                        resEnterPacket.Skills.Add(info);
+                    }
                 }
 
                 hero.Session.Send(resEnterPacket);

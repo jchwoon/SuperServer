@@ -24,14 +24,16 @@ namespace SuperServer.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var skillsConverter = new ValueConverter<List<int>, string>(
-            v => JsonSerializer.Serialize(v, new JsonSerializerOptions { WriteIndented = false }),
-            v => JsonSerializer.Deserialize<List<int>>(v, (JsonSerializerOptions)null) ?? new List<int>());
+            var skillsConverter = new ValueConverter<Dictionary<int, int>, string>(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                v => JsonSerializer.Deserialize<Dictionary<int, int>>(v, (JsonSerializerOptions)null) ?? new Dictionary<int, int>()
+            );
 
-            var skillsComparer = new ValueComparer<List<int>>(
-            (c1, c2) => c1 != null && c2 != null && c1.SequenceEqual(c2),
-            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-            c => c.ToList());
+            var skillsComparer = new ValueComparer<Dictionary<int, int>>(
+                (c1, c2) => c1 != null && c2 != null && c1.Count == c2.Count && !c1.Except(c2).Any(),
+                c => c == null ? 0 : c.Aggregate(0, (hash, pair) => HashCode.Combine(hash, pair.Key, pair.Value)),
+                c => c == null ? new Dictionary<int, int>() : c.ToDictionary(entry => entry.Key, entry => entry.Value)
+            );
 
             modelBuilder.Entity<DBHero>()
                 .Property(h => h.Skills)

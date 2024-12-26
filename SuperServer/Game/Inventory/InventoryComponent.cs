@@ -27,7 +27,7 @@ public class InventoryComponent
     int _consumableSlotCount;
     int _equipmentSlotCount;
     int _etcSlotCount;
-    public const int DefaultSlotCount = 1;
+    public const int DefaultSlotCount = 40;
     public InventoryComponent(Hero hero)
     {
         Owner = hero;

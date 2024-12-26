@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Enum;
+using Google.Protobuf.Struct;
 using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.Game.Object;
@@ -15,21 +16,32 @@ namespace SuperServer.Game.Skill
 {
     public abstract class BaseSkill
     {
+        private int skillId;
+
         public Creature Owner { get; protected set; }
         public int TemplateId { get; protected set; }
         public SkillData SkillData { get; protected set; }
         public long LastCoolTick { get; protected set; }
+        public int SkillLevel { get; protected set; }
 
-        public BaseSkill(Creature owner, SkillData skillData, int templateId)
+        public BaseSkill(Creature owner, SkillData skillData, int templateId, int skillLevel)
         {
             Owner = owner;
             SkillData = skillData;
             TemplateId = templateId;
+            SkillLevel = skillLevel;    
+        }
+
+        protected BaseSkill(Creature owner, SkillData skillData, int skillId)
+        {
+            Owner = owner;
+            SkillData = skillData;
+            this.skillId = skillId;
         }
 
         //타겟을 구하고 타겟한테 Effect를 주고 브로드캐스트
-        public abstract void UseSkill(int skillTargetId, float rotY);
-        public abstract void UseSkill(float rotY);
+        public abstract void UseSkill(int skillTargetId, PosInfo skillPivot);
+        public abstract void UseSkill(PosInfo skillPivot);
         public abstract void UseSkill(int skillTargetId);
 
         protected void BroadcastSkill(int skillTargetId, bool sendPos = false)
@@ -154,7 +166,7 @@ namespace SuperServer.Game.Skill
         {
             if (CheckSuccessCombo() == true)
             {
-                if (DataManager.SkillDict.TryGetValue(SkillData.NextComboSkillTemplateId, out SkillData nextSkillData) == true)
+                if (DataManager.SkillDict.TryGetValue(SkillData.NextSkillTemplateId, out SkillData nextSkillData) == true)
                     SkillData = nextSkillData;
             }
             else

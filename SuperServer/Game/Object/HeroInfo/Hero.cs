@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using SuperServer.Game.Stat;
 using Google.Protobuf.Protocol;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SuperServer.Logic;
 
 
 public class Hero : Creature
@@ -53,7 +54,7 @@ public class Hero : Creature
         };
         InitStat(hero);
         InitPosInfo(hero);
-        InitSkill();
+        InitSkill(hero);
         InitInventory(hero);
     }
 
@@ -73,9 +74,27 @@ public class Hero : Creature
         PosInfo.RotY = dbHero.RotY;
     }
 
-    private void InitSkill()
+    private void InitSkill(DBHero dbHero)
     {
-        SkillComponent.RegisterSkill(HeroData.SkillIds);
+        Dictionary<int, int> skills = new Dictionary<int, int>();
+        
+        if (dbHero.Skills.Count == 0)
+        {
+            foreach (int id in HeroData.SkillIds)
+            {
+                skills.Add(id, 1);
+            }
+            SkillComponent.RegisterSkill(skills);
+            DBCommander.Instance.Push(DBLogic.SaveSkillList, this);
+        }
+        else
+        {
+            foreach (KeyValuePair<int, int> s in dbHero.Skills)
+            {
+                skills.Add(s.Key, s.Value);
+            }
+            SkillComponent.RegisterSkill(skills);
+        }
     }
 
     private void InitInventory(DBHero dbHero)

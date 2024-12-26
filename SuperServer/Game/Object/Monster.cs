@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using SuperServer.Game.Room;
 using SuperServer.Utils;
 using Google.Protobuf.Protocol;
+using SuperServer.Logic;
 
 namespace SuperServer.Game.Object
 {
@@ -81,7 +82,13 @@ namespace SuperServer.Game.Object
 
         private void InitSkill()
         {
-            SkillComponent.RegisterSkill(MonsterData.SkillIds);
+            Dictionary<int, int> skills = new Dictionary<int, int>();
+
+            foreach (int id in MonsterData.SkillIds)
+            {
+                skills.Add(id, 1);
+            }
+            SkillComponent.RegisterSkill(skills);
         }
 
         private void SelectRecipientAndGiveReward()

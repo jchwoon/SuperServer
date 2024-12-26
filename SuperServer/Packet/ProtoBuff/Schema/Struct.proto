@@ -79,6 +79,6 @@ message SkillInfo
 {
 	int32 skillId = 1;
 	int32 skillTargetId = 2;
-    string playAnimName = 3;
-	float rotY = 4;
+	int32 skillLevel = 3;
+    string playAnimName = 4;
 }
