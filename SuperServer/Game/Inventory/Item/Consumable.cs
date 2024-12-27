@@ -58,7 +58,11 @@ namespace SuperServer.Game.Inventory
             if (DataManager.EffectDict.TryGetValue(ConsumableData.EffectId, out effectData) == false)
                 return;
 
-            owner.EffectComponent.ApplyEffect(owner, effectData);
+            EffectDataEx effectDataEx = new EffectDataEx()
+            {
+                effectData = effectData,
+            };
+            owner.EffectComponent.ApplyEffect(owner, effectDataEx);
         }
     }
 }

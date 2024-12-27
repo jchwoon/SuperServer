@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperServer.Job;
 using Google.Protobuf.Struct;
+using SuperServer.Game.Skill.Effect;
 
 namespace SuperServer.Game.Skill
 {
@@ -64,7 +65,7 @@ namespace SuperServer.Game.Skill
 
             if (effectData != null)
             {
-                //Temp Owner 나중에 스킬 위치를 받아와야함
+                //Temp _owner 나중에 스킬 위치를 받아와야함
                 ApplySkillEffect(effectData,
                     new Vector3(skillPivot.PosX, skillPivot.PosY, skillPivot.PosZ),
                     skillCastDir);
@@ -127,7 +128,8 @@ namespace SuperServer.Game.Skill
                 foreach (Creature creature in effectedCreatures)
                 {
                     if (creature == null) continue;
-                    creature.EffectComponent.ApplyEffect(Owner, effectData);
+                    EffectDataEx effectEx = new EffectDataEx() { effectData = effectData, level = SkillLevel-1 };
+                    creature.EffectComponent.ApplyEffect(Owner, effectEx);
                 }
             });
             Owner.SkillComponent.CurrentRegisterJob = job;
@@ -145,7 +147,8 @@ namespace SuperServer.Game.Skill
                 foreach (Creature creature in effectedCreatures)
                 {
                     if (creature == null) continue;
-                    creature.EffectComponent.ApplyEffect(Owner, effectData);
+                    EffectDataEx effectEx = new EffectDataEx() { effectData = effectData, level = SkillLevel-1 };
+                    creature.EffectComponent.ApplyEffect(Owner, effectEx);
                 }
             });
             Owner.SkillComponent.CurrentRegisterJob = job;

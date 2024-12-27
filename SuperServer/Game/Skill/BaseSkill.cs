@@ -92,7 +92,7 @@ namespace SuperServer.Game.Skill
                         //피아식별 검사
                         if (CheckSkillUsageType(creature, SkillData.SkillUsageTargetType) == false) continue;
                         //거리 검사
-                        //Temp Owner
+                        //Temp _owner
                         float dist = Vector3.Distance(creature.Position, target.Position);
                         if (dist > SkillData.SkillRange) continue;
                         //Sector 검사

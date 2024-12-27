@@ -76,5 +76,10 @@ namespace SuperServer.Utils
                 return default(T);
             return _datas[0];
         }
+
+        public List<T> GetAllDatas()
+        {
+            return _datas;
+        }
     }
 }

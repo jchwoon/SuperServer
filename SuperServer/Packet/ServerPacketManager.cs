@@ -43,6 +43,8 @@ public enum PacketId
   UnEquipItemToS = 34,
   ChangeSlotTypeToC = 35,
   CreatePartyToS = 36,
+  ApplyEffectToC = 37,
+  ReleaseEffectToC = 38,
 
 }
 

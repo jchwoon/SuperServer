@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.Enum;
 using SuperServer.Commander;
 using SuperServer.Data;
+using SuperServer.Game.Skill.Effect;
 using SuperServer.Logic;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,10 @@ namespace SuperServer.Game.Inventory
             //ApplyEffect
             EffectData effectData;
             if (DataManager.EffectDict.TryGetValue(EquipmentData.EffectId, out effectData) == true)
-                owner.EffectComponent.ApplyEffect(owner, effectData);
+            {
+                EffectDataEx effectEx = new EffectDataEx() { effectData = effectData };
+                owner.EffectComponent.ApplyEffect(owner, effectEx);
+            }
 
             //Db반영
             DBCommander.Instance.Push(DBLogic.Instance.UpdateEquipItem, owner, this);
@@ -101,7 +105,7 @@ namespace SuperServer.Game.Inventory
             //ReleaseEffect
             EffectData effectData;
             if (DataManager.EffectDict.TryGetValue(EquipmentData.EffectId, out effectData) == true)
-                owner.EffectComponent.ReleaseEffect(effectData.EffectId);
+                owner.EffectComponent.ReleaseEffect(effectData.TemplateId);
             //DB반영
             DBCommander.Instance.Push(DBLogic.Instance.UpdateEquipItem, owner, this);
             //패킷 보내기

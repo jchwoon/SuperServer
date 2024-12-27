@@ -34,7 +34,7 @@ namespace SuperServer.Game.StateMachine
             if (Owner.CurrentState == ECreatureState.Die)
                 return;
             //if (FirstAggroPos == null)
-            //    FirstAggroPos = Owner.Position;
+            //    FirstAggroPos = _owner.Position;
             if (_attackers.ContainsKey(objectId))
                 _attackers[objectId] += damage;
             else

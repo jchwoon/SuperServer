@@ -219,11 +219,16 @@ namespace SuperServer.Data
 
     public class EffectData
     {
-        public int EffectId;
+        public int TemplateId;
         public float DamageRatio;
+        public float HealthRatio;
+        public float EntityRatio;
+        public float GapPerLevel;
+        public float Duration;
         public List<AddStatInfo> AddStatValues;
         public EEffectType EffectType;
         public EEffectDurationType EffectDurationType;
+        public EEffectScalingType EffectScalingType;
     }
 
     [Serializable]
@@ -236,7 +241,7 @@ namespace SuperServer.Data
 
             foreach(EffectData effect in effects)
             {
-                dict.Add(effect.EffectId, effect);
+                dict.Add(effect.TemplateId, effect);
             }
 
             return dict;

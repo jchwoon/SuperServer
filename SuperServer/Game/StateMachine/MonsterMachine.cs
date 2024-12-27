@@ -106,14 +106,14 @@ namespace SuperServer.Game.StateMachine
 
         //public void CheckArrivalFirstAggroPos()
         //{
-        //    if (Owner.AggroComponent.FirstAggroPos.HasValue == false || isBackToOriginPos == false)
+        //    if (_owner.AggroComponent.FirstAggroPos.HasValue == false || isBackToOriginPos == false)
         //        return;
 
-        //    float distSqr = (Owner.Position - Owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
+        //    float distSqr = (_owner.Position - _owner.AggroComponent.FirstAggroPos.Value).MagnitudeSqr();
         //    if (distSqr <= 0.1f)
         //    {
-        //        Owner.Reset();
-        //        Owner.AggroComponent.FirstAggroPos = null;
+        //        _owner.Reset();
+        //        _owner.AggroComponent.FirstAggroPos = null;
         //        isBackToOriginPos = false;
         //    }
         //}

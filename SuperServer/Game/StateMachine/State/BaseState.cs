@@ -54,7 +54,7 @@ namespace SuperServer.Game.StateMachine.State
             //{
             //    if (_machine.isBackToOriginPos || _machine.Target == null)
             //    {
-            //        _machine.FindPathAndMove(_machine.Owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase: true);
+            //        _machine.FindPathAndMove(_machine._owner.Position, _owner.AggroComponent.FirstAggroPos.Value, chase: true);
             //        return;
             //    }
             //}

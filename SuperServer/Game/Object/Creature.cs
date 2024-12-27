@@ -24,6 +24,7 @@ namespace SuperServer.Game.Object
         public StatComponent StatComponent { get; private set; }
         public SkillComponent SkillComponent { get; private set; }
         public EffectComponent EffectComponent { get; private set; }
+        public ShieldComponent ShieldComponent { get; private set; }
         
         public PoolData PoolData { get; protected set; }
         ResUseSkillToC _skillPacket = new ResUseSkillToC();
@@ -37,6 +38,7 @@ namespace SuperServer.Game.Object
             SkillComponent = new SkillComponent(this);
             CreatureInfo = new CreatureInfo();
             EffectComponent = new EffectComponent(this);
+            ShieldComponent = new ShieldComponent(this);
             CreatureInfo.ObjectInfo = ObjectInfo;
             CreatureInfo.StatInfo = StatComponent.StatInfo;
         }
@@ -49,7 +51,8 @@ namespace SuperServer.Game.Object
             if (CurrentState == ECreatureState.Die)
                 return;
 
-            int retDamage = GetCalculatedDamage(damage);
+            int remainDamage = ShieldComponent.OnDamage((int)damage);
+            int retDamage = GetCalculatedDamage(remainDamage);
             AddStat(EStatType.Hp, -retDamage, retDamage == 0 ? EFontType.Miss : EFontType.NormalHit);
 
             if (StatComponent.StatInfo.Hp <= 0)
