@@ -2176,7 +2176,7 @@ namespace Google.Protobuf.Struct {
       }
     }
 
-    /// <summary>Field number for the "TemplateId" field.</summary>
+    /// <summary>Field number for the "templateId" field.</summary>
     public const int TemplateIdFieldNumber = 2;
     private int templateId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2530,7 +2530,7 @@ namespace Google.Protobuf.Struct {
       }
     }
 
-    /// <summary>Field number for the "TemplateId" field.</summary>
+    /// <summary>Field number for the "templateId" field.</summary>
     public const int TemplateIdFieldNumber = 2;
     private int templateId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

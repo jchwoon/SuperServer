@@ -45,6 +45,7 @@ public enum PacketId
   CreatePartyToS = 36,
   ApplyEffectToC = 37,
   ReleaseEffectToC = 38,
+  ChangeShieldValueToC = 39,
 
 }
 

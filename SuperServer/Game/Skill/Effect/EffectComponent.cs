@@ -67,8 +67,12 @@ namespace SuperServer.Game.Skill.Effect
                 return;
             long effectId = GenerateEffectId();
             Effect effect = GenerateEffect(effectId, Owner, provider, data, policy);
-            _effects.Add(effectId, effect);
 
+            if (data.effectData.IsStackable == false)
+            {
+                ReleaseEffect(data.effectData.TemplateId);
+            }
+            _effects.Add(effectId, effect);
             effect.Apply();
 
             SendApplyEffect(effect);
@@ -96,9 +100,11 @@ namespace SuperServer.Game.Skill.Effect
 
         public void ReleaseEffect(int templateId)
         {
+            Console.WriteLine(_effects.Count);
             Effect effect = _effects.Values.FirstOrDefault(e => e.EffectDataEx.effectData.TemplateId == templateId);
             if (effect != null)
             {
+                Console.WriteLine(effect.EffectId);
                 _effects.Remove(effect.EffectId);
                 effect.Release();
                 SendReleaseEffect(effect);
@@ -136,6 +142,8 @@ namespace SuperServer.Game.Skill.Effect
         {
             if (effect == null) return;
 
+            Console.WriteLine("Apply");
+
             ApplyEffectToC apllyPacket = new ApplyEffectToC();
             apllyPacket.ObjectId = Owner.ObjectId;
             apllyPacket.TemplateId = effect.EffectDataEx.effectData.TemplateId;
@@ -147,6 +155,8 @@ namespace SuperServer.Game.Skill.Effect
         private void SendReleaseEffect(Effect effect)
         {
             if (effect == null) return;
+
+            Console.WriteLine("Release");
 
             ReleaseEffectToC releasePacket = new ReleaseEffectToC();
             releasePacket.ObjectId = Owner.ObjectId;

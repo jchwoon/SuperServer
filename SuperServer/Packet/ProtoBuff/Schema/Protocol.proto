@@ -221,3 +221,9 @@ message ReleaseEffectToC
     int32 objectId = 1;
     int64 effectId = 2;
 }
+
+message ChangeShieldValueToC
+{
+    int32 objectId = 1;
+    int32 shieldValue = 2;
+}

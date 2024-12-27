@@ -225,6 +225,7 @@ namespace SuperServer.Data
         public float EntityRatio;
         public float GapPerLevel;
         public float Duration;
+        public bool IsStackable;
         public List<AddStatInfo> AddStatValues;
         public EEffectType EffectType;
         public EEffectDurationType EffectDurationType;

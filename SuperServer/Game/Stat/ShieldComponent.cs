@@ -1,4 +1,5 @@
-﻿using SuperServer.Data;
+﻿using Google.Protobuf.Protocol;
+using SuperServer.Data;
 using SuperServer.Game.Object;
 using SuperServer.Game.Skill.Effect;
 using SuperServer.Job;
@@ -26,7 +27,6 @@ namespace SuperServer.Game.Stat
         Creature _owner;
         PriorityQueue<ShieldTimer> _shieldTimerQueue = new PriorityQueue<ShieldTimer>();
         Dictionary<int, Shield> _shields = new Dictionary<int, Shield>();
-        //Dictionary<int, long> _shieldIds = new Dictionary<int, long>();
         
         public ShieldComponent(Creature owner)
         {
@@ -35,7 +35,9 @@ namespace SuperServer.Game.Stat
         public int OnDamage(int damage)
         {
             int remainDamage = damage;
-            foreach (ShieldTimer shieldTimer in _shieldTimerQueue.GetAllDatas())
+            List<ShieldTimer> timer = new List<ShieldTimer>();
+            timer.AddRange(_shieldTimerQueue.GetAllDatas());
+            foreach (ShieldTimer shieldTimer in timer)
             {
                 if (remainDamage <= 0) break;
                 if (_shields.TryGetValue(shieldTimer.TemplateId, out Shield shield))
@@ -45,7 +47,13 @@ namespace SuperServer.Game.Stat
                     remainDamage = Math.Max(0, remainDamage - shieldValue);
 
                     if (shield.IsBroken)
+                    {
                         RemoveShield(shieldTimer.TemplateId);
+                    }
+                    else
+                    {
+                        SendShieldValue();
+                    }
                 }
             }
 
@@ -56,12 +64,6 @@ namespace SuperServer.Game.Stat
         {
             int templateId = effectData.TemplateId;
 
-            //같은 Effect가 들어오면 제거하기
-            if (_shields.ContainsKey(templateId))
-            {
-                RemoveShield(templateId);
-            }
-
             _shields[templateId] = new Shield(value);
 
             ShieldTimer shieldTimer = new ShieldTimer
@@ -71,12 +73,18 @@ namespace SuperServer.Game.Stat
             };
 
             _shieldTimerQueue.Push(shieldTimer);
+
+            SendShieldValue();
         }
 
         public void RemoveShield(int templateId)
         {
-            _owner.EffectComponent.ReleaseEffect(templateId);
-            _shields.Remove(templateId);
+            if (_shields.TryGetValue(templateId, out Shield shield))
+            {
+                _shields.Remove(templateId);
+                SendShieldValue();
+                _owner.EffectComponent.ReleaseEffect(templateId);
+            }
 
             while (_shieldTimerQueue.Count != 0)
             {
@@ -90,6 +98,21 @@ namespace SuperServer.Game.Stat
                     break;
                 }
             }
+        }
+
+        private void SendShieldValue()
+        {
+            int totalShieldValue = 0;
+            foreach (Shield shield in _shields.Values)
+            {
+                totalShieldValue += shield.ShieldValue;
+            }
+
+            ChangeShieldValueToC changeShieldPacket = new ChangeShieldValueToC();
+            changeShieldPacket.ObjectId = _owner.ObjectId;
+            changeShieldPacket.ShieldValue = totalShieldValue;
+
+            _owner.Room?.Broadcast(changeShieldPacket, _owner.Position);
         }
     }
 }
