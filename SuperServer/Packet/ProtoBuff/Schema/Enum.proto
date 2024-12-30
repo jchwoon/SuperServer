@@ -7,7 +7,7 @@ option csharp_namespace = "Google.Protobuf.Enum";
 enum EHeroClassType
 {
 	EHERO_CLASS_TYPE_NONE = 0;
-	EHERO_CLASS_TYPE_WARRIOR = 1;
+	EHERO_CLASS_TYPE_GUARDIAN = 1;
 	EHERO_CLASS_TYPE_ARCHER = 2;
 	EHERO_CLASS_TYPE_MAGE = 3;
 }
