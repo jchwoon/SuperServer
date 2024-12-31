@@ -80,10 +80,8 @@ namespace SuperServer.Commander
                     MaxMp = heroStat.MaxMp,
                     MaxHp = heroStat.MaxHp,
                     AtkDamage = heroStat.AtkDamage,
-                    AtkSpeed = heroStat.BaseAtkSpeed,
                     MoveSpeed = heroStat.MoveSpeed,
                     Defence = heroStat.Defence,
-                    AddAtkSpeedMultiplier = heroStat.AddAtkSpeedMultiplier
                 };
 
 

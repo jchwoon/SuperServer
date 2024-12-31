@@ -14,7 +14,7 @@ public class HeroGrowthComponent
         get { return Owner.HeroInfo.LobbyHeroInfo.Level; } 
         set { Owner.HeroInfo.LobbyHeroInfo.Level = value; }
     }
-    public int Exp
+    public long Exp
     {
         get { return Owner.MyHeroInfo.Exp; }
         set { Owner.MyHeroInfo.Exp = value; }
@@ -61,7 +61,7 @@ public class HeroGrowthComponent
         return isUp;
     }
 
-    public int GetExpAmountForNextLevel(int level)
+    public long GetExpAmountForNextLevel(int level)
     {
         HeroStatData statData;
         if (DataManager.HeroStatDict.TryGetValue(level, out statData) == false)

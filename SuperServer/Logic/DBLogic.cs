@@ -52,11 +52,9 @@ namespace SuperServer.Logic
                 dbHero.HeroStat.HP = hero.StatComponent.StatInfo.Hp;
                 dbHero.HeroStat.MaxMp = hero.StatComponent.StatInfo.MaxMp;
                 dbHero.HeroStat.MP = hero.StatComponent.StatInfo.Mp;
-                dbHero.HeroStat.AtkSpeed = hero.StatComponent.StatInfo.AtkSpeed;
                 dbHero.HeroStat.AtkDamage = hero.StatComponent.StatInfo.AtkDamage;
                 dbHero.HeroStat.Defence = hero.StatComponent.StatInfo.Defence;
                 dbHero.HeroStat.MoveSpeed = hero.StatComponent.StatInfo.MoveSpeed;
-                dbHero.HeroStat.AddAtkSpeedMultiplier = hero.StatComponent.StatInfo.AddAtkSpeedMultiplier;
 
                 dbHero.Exp = hero.MyHeroInfo.Exp;
                 dbHero.Gold = hero.MyHeroInfo.Gold;

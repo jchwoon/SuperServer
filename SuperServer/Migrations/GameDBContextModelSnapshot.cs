@@ -48,8 +48,8 @@ namespace SuperServer.Migrations
                     b.Property<int>("EquipmentSlotCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Exp")
-                        .HasColumnType("int");
+                    b.Property<long>("Exp")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Gold")
                         .HasColumnType("int");
@@ -118,14 +118,8 @@ namespace SuperServer.Migrations
                             b1.Property<int>("DBHeroId")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("AddAtkSpeedMultiplier")
-                                .HasColumnType("int");
-
                             b1.Property<int>("AtkDamage")
                                 .HasColumnType("int");
-
-                            b1.Property<float>("AtkSpeed")
-                                .HasColumnType("real");
 
                             b1.Property<int>("Defence")
                                 .HasColumnType("int");

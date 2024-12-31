@@ -140,13 +140,11 @@ public class Hero : Creature
         int addMaxMp = currentStatData.MaxMp - prevStatData.MaxMp;
         int addAtkDamage = currentStatData.AtkDamage - prevStatData.AtkDamage;
         int addDefence = currentStatData.Defence - prevStatData.Defence;
-        int addAtkSpeedMultiplier = currentStatData.AddAtkSpeedMultiplier - prevStatData.AddAtkSpeedMultiplier;
 
         AddStat(EStatType.MaxHp, addMaxHp, sendPacket:false);
         AddStat(EStatType.MaxMp, addMaxMp, sendPacket: false);
         AddStat(EStatType.Atk, addAtkDamage, sendPacket: false);
         AddStat(EStatType.Defence, addDefence, sendPacket: false);
-        AddStat(EStatType.AddAtkSpeedMultiplier, addAtkSpeedMultiplier, sendPacket: false);
     }
 
     public override void ReSpawn()

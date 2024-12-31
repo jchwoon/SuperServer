@@ -12,7 +12,7 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20241225005025_init")]
+    [Migration("20241231135321_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,8 +50,8 @@ namespace SuperServer.Migrations
                     b.Property<int>("EquipmentSlotCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Exp")
-                        .HasColumnType("int");
+                    b.Property<long>("Exp")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Gold")
                         .HasColumnType("int");
@@ -120,14 +120,8 @@ namespace SuperServer.Migrations
                             b1.Property<int>("DBHeroId")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("AddAtkSpeedMultiplier")
-                                .HasColumnType("int");
-
                             b1.Property<int>("AtkDamage")
                                 .HasColumnType("int");
-
-                            b1.Property<float>("AtkSpeed")
-                                .HasColumnType("real");
 
                             b1.Property<int>("Defence")
                                 .HasColumnType("int");

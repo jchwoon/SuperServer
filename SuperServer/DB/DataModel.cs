@@ -20,7 +20,7 @@ namespace SuperServer.DB
         public DateTime CreateAt { get; set; }
         public int Level { get; set; }
         public int Gold { get; set; }
-        public int Exp { get; set; }
+        public long Exp { get; set; }
         public Stats HeroStat { get; set; }
         public int RoomId { get; set; }
         public float PosX { get; set; }
@@ -59,7 +59,5 @@ namespace SuperServer.DB
         public int AtkDamage { get; set; }
         public int Defence { get; set; }
         public float MoveSpeed { get; set; }
-        public float AtkSpeed { get; set; }
-        public int AddAtkSpeedMultiplier { get; set; }
     }
 }

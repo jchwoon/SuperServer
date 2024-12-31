@@ -27,7 +27,7 @@ message CreatureInfo
 message MyHeroInfo
 {
 	HeroInfo heroInfo = 1;
-	int32 exp = 2;
+	int64 exp = 2;
 	int32 gold = 3;
 	int32 equipInvenSlotCount = 4;
 	int32 consumeInvenSlotCount = 5;
@@ -41,12 +41,9 @@ message StatInfo
 	float moveSpeed = 3;
 	float chaseSpeed = 4;
 	int32 atkDamage = 5;
-	float baseAtkSpeed = 6;
-	float atkSpeed = 7;
-	int32 defence = 8;
-	int32 mp = 9;
-	int32 maxMp = 10;
-	int32 addAtkSpeedMultiplier = 11;
+	int32 defence = 6;
+	int32 mp = 7;
+	int32 maxMp = 8;
 }
 
 message PosInfo
