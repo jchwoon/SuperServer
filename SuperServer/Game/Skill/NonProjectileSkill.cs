@@ -57,18 +57,17 @@ namespace SuperServer.Game.Skill
             if (!IsValidOwnerState())
                 return;
 
+            Vector3 skillPos = new Vector3(skillPivot.PosX, skillPivot.PosY, skillPivot.PosZ);
+
             Creature skillTarget = Owner.Room.FindCreatureById(skillTargetId);
-            Vector2 skillCastDir = (skillTarget != null) ? GetSkillCastDir(skillTarget) : GetSkillCastDir(skillPivot.RotY);
+            Vector2 skillCastDir = (skillTarget != null) ? GetSkillCastDir(skillTarget, skillPos) : GetSkillCastDir(skillPivot.RotY);
             
 
             DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
 
             if (effectData != null)
             {
-                //Temp _owner 나중에 스킬 위치를 받아와야함
-                ApplySkillEffect(effectData,
-                    new Vector3(skillPivot.PosX, skillPivot.PosY, skillPivot.PosZ),
-                    skillCastDir);
+                ApplySkillEffect(effectData, skillPos, skillCastDir);
             }
 
             if (SkillData.IsMoveSkill)
@@ -93,19 +92,17 @@ namespace SuperServer.Game.Skill
             Creature skillTarget = Owner.Room.FindCreatureById(skillTargetId);
             if (skillTarget == null)
                 return;
-            Vector2 skillCastDir = GetSkillCastDir(skillTarget);
-
 
             DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
 
             if (effectData != null)
             {
-                ApplySkillEffect(effectData, skillTarget, skillCastDir);
+                ApplySkillEffect(effectData, skillTarget);
             }
-
+            //시전자와 타겟의 방향
             if (SkillData.IsMoveSkill)
             {
-                MoveFromSkill(new Vector3(skillCastDir.X, 0, skillCastDir.Y));
+                MoveFromSkill((skillTarget.Position - Owner.Position).Normalize());
                 BroadcastSkill(skillTargetId, sendPos: true);
             }
             else
@@ -136,14 +133,14 @@ namespace SuperServer.Game.Skill
         }
 
         //타겟
-        private void ApplySkillEffect(EffectData effectData, Creature target, Vector2 castDir)
+        private void ApplySkillEffect(EffectData effectData, Creature target)
         {
             IJob job = GameCommander.Instance.PushAfter(GetSkillEffectTick(),
             () =>
             {
                 if (!IsValidOwnerState()) return;
 
-                List<Creature> effectedCreatures = GetSkillEffectedTargets(target, castDir);
+                List<Creature> effectedCreatures = GetSkillEffectedTargets(target);
                 foreach (Creature creature in effectedCreatures)
                 {
                     if (creature == null) continue;

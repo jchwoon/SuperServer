@@ -53,9 +53,9 @@ namespace SuperServer.Game.Skill
             Owner.BroadcastSkill(SkillData.TemplateId, SkillData.AnimName, sendPos);
         }
 
-        public Vector2 GetSkillCastDir(Creature target)
+        public Vector2 GetSkillCastDir(Creature target, Vector3 skillPivot)
         {
-            Vector3 skillCastDir = (target.Position - Owner.Position).Normalize();
+            Vector3 skillCastDir = (target.Position - skillPivot).Normalize();
 
             return new Vector2(skillCastDir.X, skillCastDir.Z);
         }
@@ -68,7 +68,7 @@ namespace SuperServer.Game.Skill
         }
 
         //타겟 스킬
-        public List<Creature> GetSkillEffectedTargets(Creature target, Vector2 skillCastDir)
+        public List<Creature> GetSkillEffectedTargets(Creature target)
         {
             if (Owner == null)
                 return null;
@@ -94,14 +94,6 @@ namespace SuperServer.Game.Skill
                         //거리 검사
                         float dist = Vector3.Distance(creature.Position, target.Position);
                         if (dist > SkillData.SkillRange) continue;
-                        //Sector 검사
-                        Vector3 dir = (creature.Position - target.Position).Normalize();
-                        float dotValue = Vector2.Dot(
-                            new Vector2(dir.X, dir.Z),
-                            new Vector2(skillCastDir.X, skillCastDir.Y));
-
-                        float skillSectorValue = MathF.Cos(SkillData.SectorAngle * Utils.Utils.DegreeToRadian);
-                        if (skillSectorValue <= dotValue)
                             effectedCreatures.Add(creature);
                     }
                     break;
