@@ -51,7 +51,7 @@ namespace SuperServer.Game.Skill.Effect
     {
         public void Attach(Creature owner, Creature provider, EffectDataEx data)
         {
-            float damage = provider.StatComponent.StatInfo.AtkDamage * data.effectData.DamageRatio;
+            float damage = provider.StatComponent.StatInfo.AtkDamage * data.effectData.Ratio[data.level == 0 ? 0 : data.level - 1];
             owner.OnDamage(provider, damage);
         }
 
@@ -67,7 +67,7 @@ namespace SuperServer.Game.Skill.Effect
         {
             foreach (AddStatInfo info in data.effectData.AddStatValues)
             {
-                owner.AddStat(info.StatType, info.Value, EFontType.Heal);
+                owner.AddStat(info.StatType, info.addValue[data.level == 0 ? 0 : data.level - 1], EFontType.Heal);
             }
         }
 
@@ -76,14 +76,14 @@ namespace SuperServer.Game.Skill.Effect
 
         }
     }
-    //단순히 스텟만 적용되는 Effect Ex) 아이템 장착
+
     public class AddStatEffectPolicy : IEffectPolicy
     {
         public void Attach(Creature owner, Creature provider, EffectDataEx data)
         {
             foreach (AddStatInfo info in data.effectData.AddStatValues)
             {
-                float value = info.Value;
+                float value = info.addValue[data.level == 0 ? 0 : data.level - 1];
                 owner.AddStat(info.StatType, value, sendPacket:false);
             }
             owner.BroadcastStat();
@@ -93,8 +93,8 @@ namespace SuperServer.Game.Skill.Effect
         {
             foreach (AddStatInfo info in data.effectData.AddStatValues)
             {
-                float addValue = info.Value;
-                owner.AddStat(info.StatType, -addValue, sendPacket: false);
+                float value = info.addValue[data.level == 0 ? 0 : data.level - 1];
+                owner.AddStat(info.StatType, -value, sendPacket: false);
             }
             owner.BroadcastStat();
         }
@@ -110,7 +110,7 @@ namespace SuperServer.Game.Skill.Effect
             {
                 case EEffectScalingType.Maxhp:
                     float maxHp = provider.StatComponent.GetStat(EStatType.MaxHp);
-                    value = (int)(maxHp * (data.effectData.HealthRatio + (data.level * data.effectData.GapPerLevel)));
+                    value = (int)(maxHp * (data.effectData.Ratio[data.level == 0 ? 0 : data.level - 1]));
                     break;
             }
             owner.ShieldComponent.ApplyShield(data.effectData, value);
@@ -126,12 +126,12 @@ namespace SuperServer.Game.Skill.Effect
     {
         public void Attach(Creature owner, Creature provider, EffectDataEx data)
         {
-
+            owner.AggroComponent.ForceAggro(provider);
         }
 
         public void Detach(Creature owner, EffectDataEx data)
         {
-
+            owner.AggroComponent.RemoveForceAggroTarget();
         }
     }
 }

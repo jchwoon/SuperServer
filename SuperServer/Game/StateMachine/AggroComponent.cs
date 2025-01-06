@@ -14,6 +14,7 @@ namespace SuperServer.Game.StateMachine
         //맨 처음 공격 당했을 때의 위치
         //public Vector3? FirstAggroPos { get; set; }
         public Creature Owner { get; private set; }
+        public Creature ForceAggroTarget { get; private set; }
         public AggroComponent(Creature owner)
         {
             Owner = owner;
@@ -21,7 +22,17 @@ namespace SuperServer.Game.StateMachine
 
         public List<int> GetAttackerIdsSortByDamage()
         {
-            return _attackers.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
+            List<int> sortedIdByDamage = new List<int>();
+            if (ForceAggroTarget != null)
+            {
+                sortedIdByDamage.Add(ForceAggroTarget.ObjectId);
+            }
+            foreach (int i in _attackers.OrderByDescending(x => x.Value).Select(x => x.Key))
+            {
+                sortedIdByDamage.Add(i);
+            }
+
+            return sortedIdByDamage;
         }
 
         public int GetTopDamageAttackerId()
@@ -33,12 +44,24 @@ namespace SuperServer.Game.StateMachine
         {
             if (Owner.CurrentState == ECreatureState.Die)
                 return;
-            //if (FirstAggroPos == null)
-            //    FirstAggroPos = _owner.Position;
+
             if (_attackers.ContainsKey(objectId))
                 _attackers[objectId] += damage;
             else
                 _attackers.Add(objectId, damage);
+        }
+
+        public void ForceAggro(Creature target)
+        {
+            if (Owner.CurrentState == ECreatureState.Die)
+                return;
+
+            ForceAggroTarget = target;
+        }
+
+        public void RemoveForceAggroTarget()
+        {
+            ForceAggroTarget = null;
         }
 
         public void Clear()

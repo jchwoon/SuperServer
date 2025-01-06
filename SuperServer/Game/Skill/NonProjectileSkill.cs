@@ -29,13 +29,15 @@ namespace SuperServer.Game.Skill
 
             Vector2 skillCastDir = GetSkillCastDir(skillPivot.RotY);
 
-            DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
-
-            if (effectData != null)
+            foreach (int id in SkillData.EffectIds)
             {
-                ApplySkillEffect(effectData,
-                    new Vector3(skillPivot.PosX, skillPivot.PosY, skillPivot.PosZ),
-                    skillCastDir);
+                DataManager.EffectDict.TryGetValue(id, out EffectData effectData);
+                if (effectData != null)
+                {
+                    ApplySkillEffect(effectData,
+                        new Vector3(skillPivot.PosX, skillPivot.PosY, skillPivot.PosZ),
+                        skillCastDir);
+                }
             }
 
             if (SkillData.IsMoveSkill)
@@ -61,13 +63,17 @@ namespace SuperServer.Game.Skill
 
             Creature skillTarget = Owner.Room.FindCreatureById(skillTargetId);
             Vector2 skillCastDir = (skillTarget != null) ? GetSkillCastDir(skillTarget, skillPos) : GetSkillCastDir(skillPivot.RotY);
-            
 
-            DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
 
-            if (effectData != null)
+            foreach (int id in SkillData.EffectIds)
             {
-                ApplySkillEffect(effectData, skillPos, skillCastDir);
+                DataManager.EffectDict.TryGetValue(id, out EffectData effectData);
+                if (effectData != null)
+                {
+                    ApplySkillEffect(effectData,
+                        skillPos,
+                        skillCastDir);
+                }
             }
 
             if (SkillData.IsMoveSkill)
@@ -93,12 +99,15 @@ namespace SuperServer.Game.Skill
             if (skillTarget == null)
                 return;
 
-            DataManager.EffectDict.TryGetValue(SkillData.EffectId, out EffectData effectData);
-
-            if (effectData != null)
+            foreach (int id in SkillData.EffectIds)
             {
-                ApplySkillEffect(effectData, skillTarget);
+                DataManager.EffectDict.TryGetValue(id, out EffectData effectData);
+                if (effectData != null)
+                {
+                    ApplySkillEffect(effectData, skillTarget);
+                }
             }
+
             //시전자와 타겟의 방향
             if (SkillData.IsMoveSkill)
             {
@@ -122,15 +131,28 @@ namespace SuperServer.Game.Skill
                 if (!IsValidOwnerState()) return;
 
                 List<Creature> effectedCreatures = GetSkillEffectedTargets(skillPos, castDir);
+                EffectDataEx effectEx = new EffectDataEx() 
+                { 
+                    effectData = effectData, 
+                    level = SkillLevel - 1, 
+                };
                 foreach (Creature creature in effectedCreatures)
                 {
                     if (creature == null) continue;
-                    EffectDataEx effectEx = new EffectDataEx() { effectData = effectData, level = SkillLevel-1 };
-                    creature.EffectComponent.ApplyEffect(Owner, effectEx);
+                    if (effectData.FeedbackEffect)
+                    {
+                        Owner.EffectComponent.ApplyEffect(Owner, effectEx);
+                    }
+                    else
+                    {
+                        creature.EffectComponent.ApplyEffect(Owner, effectEx);
+                    }
                 }
             });
             Owner.SkillComponent.CurrentRegisterJob = job;
         }
+
+
 
         //타겟
         private void ApplySkillEffect(EffectData effectData, Creature target)

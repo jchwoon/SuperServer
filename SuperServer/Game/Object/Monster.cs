@@ -21,8 +21,6 @@ namespace SuperServer.Game.Object
     {
         public MonsterMachine Machine { get; set; }
         public MonsterData MonsterData { get; set; }
-        public AggroComponent AggroComponent { get; set; }
-
 
         public void Init(int monsterId, PoolData poolData)
         {

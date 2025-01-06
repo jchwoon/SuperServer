@@ -25,7 +25,8 @@ namespace SuperServer.Game.Object
         public SkillComponent SkillComponent { get; private set; }
         public EffectComponent EffectComponent { get; private set; }
         public ShieldComponent ShieldComponent { get; private set; }
-        
+        public AggroComponent AggroComponent { get; protected set; }
+
         public PoolData PoolData { get; protected set; }
         ResUseSkillToC _skillPacket = new ResUseSkillToC();
         ModifyStatToC _modifyStatPacket = new ModifyStatToC();

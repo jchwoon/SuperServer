@@ -108,6 +108,8 @@ namespace SuperServer.Game.Skill
         public List<Creature> GetSkillEffectedTargets(Vector3 skillPos, Vector2 skillCastDir)
         {
             List<Creature> effectedCreatures = new List<Creature>();
+            int maxEntityCount = SkillData.MaxEntityCount;
+            int currentCount = 0;
 
             switch (SkillData.SkillAreaType)
             {
@@ -115,6 +117,8 @@ namespace SuperServer.Game.Skill
                     List<Creature> creatures = Owner.Room.FindCreatureInInterestRegion(Owner.Position);
                     foreach (Creature creature in creatures)
                     {
+                        //효과를 주는 최대 마릿 수 제한
+                        if (maxEntityCount != 0 && currentCount >= maxEntityCount) break;
                         //피아식별 검사
                         if (CheckSkillUsageType(creature, SkillData.SkillUsageTargetType) == false) continue;
                         //거리 검사
@@ -144,6 +148,7 @@ namespace SuperServer.Game.Skill
             {
                 case ESkillUsageTargetType.Self:
                     return target.ObjectId == Owner.ObjectId;
+                    //나중에 파티시스템 만들면 수정
                 case ESkillUsageTargetType.Ally:
                     return target.ObjectType == Owner.ObjectType;
                 case ESkillUsageTargetType.Enemy:

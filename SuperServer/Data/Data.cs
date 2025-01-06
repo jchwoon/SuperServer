@@ -168,6 +168,7 @@ namespace SuperServer.Data
     {
         public int TemplateId;
         public int NextSkillTemplateId;
+        public EHeroClassType ClassType;
         public ESkillType SkillType;
         public ESkillProjectileType SkillProjectileType;
         public ESkillSlotType SkillSlotType;
@@ -178,16 +179,22 @@ namespace SuperServer.Data
         public bool CanCancel;
         public bool IsComboSkill;
         public bool IsMoveSkill;
+        public string SoundLabel;
         public string SkillName;
         public string AnimName;
+        public string IconName;
         public float SkillRange;
         public int CostMp;
+        public int MaxLevel;
+        public int MaxEntityCount;
         public float CoolTime;
+        public float Speed;
         public float Dist;
         public float AnimTime;
-        public int EffectId;
+        public List<int> EffectIds;
         public float EffectDelayRatio;
         public float ComboTime;
+        public float Duration;
     }
 
     [Serializable]
@@ -208,22 +215,22 @@ namespace SuperServer.Data
         }
     }
 
+
     public struct AddStatInfo
     {
         public EStatType StatType;
-        public float Value;
-        public bool Multiplier;
+        public List<float> addValue;
     }
 
     public class EffectData
     {
         public int TemplateId;
-        public float DamageRatio;
-        public float HealthRatio;
-        public float EntityRatio;
-        public float GapPerLevel;
+        public List<float> Ratio;
         public float Duration;
-        public bool IsStackable;
+        public bool Stackable;
+        public bool FeedbackEffect;
+        public string SoundLabel;
+        public string DescId;
         public List<AddStatInfo> AddStatValues;
         public EEffectType EffectType;
         public EEffectDurationType EffectDurationType;
