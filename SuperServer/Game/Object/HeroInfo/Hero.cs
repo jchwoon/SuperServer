@@ -85,7 +85,7 @@ public class Hero : Creature
                 skills.Add(id, 1);
             }
             SkillComponent.RegisterSkill(skills);
-            DBCommander.Instance.Push(DBLogic.SaveSkillList, this);
+            DBCommander.Instance.Push(DBLogic.Instance.SaveSkillList, this);
         }
         else
         {

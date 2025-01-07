@@ -100,11 +100,9 @@ namespace SuperServer.Game.Skill.Effect
 
         public void ReleaseEffect(int templateId)
         {
-            Console.WriteLine(_effects.Count);
             Effect effect = _effects.Values.FirstOrDefault(e => e.EffectDataEx.effectData.TemplateId == templateId);
             if (effect != null)
             {
-                Console.WriteLine(effect.EffectId);
                 _effects.Remove(effect.EffectId);
                 effect.Release();
                 SendReleaseEffect(effect);

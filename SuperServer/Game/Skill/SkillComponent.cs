@@ -1,8 +1,11 @@
 ﻿using Google.Protobuf.Enum;
+using Google.Protobuf.Protocol;
 using Google.Protobuf.Struct;
+using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.Game.Object;
 using SuperServer.Job;
+using SuperServer.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +17,7 @@ namespace SuperServer.Game.Skill
     public class SkillComponent
     {
         Dictionary<int, BaseSkill> _skills = new Dictionary<int, BaseSkill>();
+        bool _canUpdateSkillLevel = true;
         public Creature Owner { get; private set; }
         public int NormalSkillId { get; private set; }
         public BaseSkill LastSkill { get; set; }
@@ -107,6 +111,41 @@ namespace SuperServer.Game.Skill
         }
         #endregion
 
+        public void LevelUpSkill(int skillId, int point = 1)
+        {
+            BaseSkill skill = GetSkillById(skillId);
+            if (skill == null)
+                return;
+
+            Hero hero = Owner as Hero;
+            if (hero == null)
+                return;
+
+            //먼저 DB에 반영이 되었는지 체크 후
+            if (_canUpdateSkillLevel == false)
+                return;
+            //해당 스킬이 만렙인지 확인
+            if (skill.CheckCanLevelUp(point) == false)
+                return;
+
+            DBCommander.Instance.Push(DBLogic.Instance.LevelUpSkill, hero, skillId, point);
+            //이후 DB에서 처리 상태
+            _canUpdateSkillLevel = false;
+        }
+
+        //DB에서 Skill Level처리 완료 콜벡 -> 메모리 갱신
+        public void OnChangedSkillLevel(int templateId, int level)
+        {
+            BaseSkill skill = GetSkillById(templateId);
+            if (skill == null)
+                return;
+            skill.UpdateSkillLevel(level);
+            SendLevelUpPacket(templateId, level);
+            _canUpdateSkillLevel = true;
+        }
+
+        
+
         public BaseSkill GetSkillById(int skillId)
         {
             BaseSkill skill;
@@ -121,7 +160,7 @@ namespace SuperServer.Game.Skill
             Dictionary<int, int> allSkillLevel = new Dictionary<int, int>();
             foreach (KeyValuePair<int, BaseSkill> kvp in _skills)
             {
-                allSkillLevel.Add(kvp.Key, kvp.Value.SkillLevel);
+                allSkillLevel.Add(kvp.Key, kvp.Value.CurrentSkillLevel);
             }
             return allSkillLevel;
         }
@@ -140,6 +179,18 @@ namespace SuperServer.Game.Skill
 
             LastSkill = null;
             CurrentRegisterJob.IsCancel = true;
+        }
+
+        public void SendLevelUpPacket(int templateId, int level)
+        {
+            Hero hero = Owner as Hero;
+            if (hero == null)
+                return;
+
+            ResLevelUpSkillToC levelUpPacket = new ResLevelUpSkillToC();
+            levelUpPacket.SkillId = templateId;
+            levelUpPacket.SkillLevel = level;
+            hero?.Session.Send(levelUpPacket);
         }
     }
 }

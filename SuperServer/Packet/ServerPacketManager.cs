@@ -46,6 +46,8 @@ public enum PacketId
   ApplyEffectToC = 37,
   ReleaseEffectToC = 38,
   ChangeShieldValueToC = 39,
+  ReqLevelUpSkillToS = 40,
+  ResLevelUpSkillToC = 41,
 
 }
 
@@ -110,6 +112,8 @@ class PacketManager
         _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);
         _parseHandler.Add((ushort)PacketId.CreatePartyToS, ParsePacket<CreatePartyToS>);
         _handler.Add((ushort)PacketId.CreatePartyToS, PacketHandler.CreatePartyToSHandler);
+        _parseHandler.Add((ushort)PacketId.ReqLevelUpSkillToS, ParsePacket<ReqLevelUpSkillToS>);
+        _handler.Add((ushort)PacketId.ReqLevelUpSkillToS, PacketHandler.ReqLevelUpSkillToSHandler);
     
     }
 

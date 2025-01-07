@@ -21,7 +21,7 @@ namespace SuperServer.Game.Skill
             
         }
 
-        //NonTarget UseSkill
+        //NonTarget HandleUseSkill
         public override void UseSkill(PosInfo skillPivot)
         {
             if (!IsValidOwnerState())
@@ -131,20 +131,21 @@ namespace SuperServer.Game.Skill
                 if (!IsValidOwnerState()) return;
 
                 List<Creature> effectedCreatures = GetSkillEffectedTargets(skillPos, castDir);
-                EffectDataEx effectEx = new EffectDataEx() 
-                { 
-                    effectData = effectData, 
-                    level = SkillLevel - 1, 
-                };
-                foreach (Creature creature in effectedCreatures)
+                EffectDataEx effectEx = new EffectDataEx()
                 {
-                    if (creature == null) continue;
-                    if (effectData.FeedbackEffect)
+                    effectData = effectData,
+                    level = CurrentSkillLevel - 1,
+                    entityCount = effectedCreatures.Count
+                };
+                if (effectData.FeedbackEffect)
+                {
+                    Owner.EffectComponent.ApplyEffect(Owner, effectEx);
+                }
+                else
+                {
+                    foreach (Creature creature in effectedCreatures)
                     {
-                        Owner.EffectComponent.ApplyEffect(Owner, effectEx);
-                    }
-                    else
-                    {
+                        if (creature == null) continue;
                         creature.EffectComponent.ApplyEffect(Owner, effectEx);
                     }
                 }
@@ -166,7 +167,7 @@ namespace SuperServer.Game.Skill
                 foreach (Creature creature in effectedCreatures)
                 {
                     if (creature == null) continue;
-                    EffectDataEx effectEx = new EffectDataEx() { effectData = effectData, level = SkillLevel-1 };
+                    EffectDataEx effectEx = new EffectDataEx() { effectData = effectData, level = CurrentSkillLevel-1 };
                     creature.EffectComponent.ApplyEffect(Owner, effectEx);
                 }
             });

@@ -227,3 +227,14 @@ message ChangeShieldValueToC
     int32 objectId = 1;
     int32 shieldValue = 2;
 }
+
+message ReqLevelUpSkillToS
+{
+    int32 skillId = 1;
+}
+
+message ResLevelUpSkillToC
+{
+    int32 skillId = 1;
+    int32 skillLevel = 2;
+}

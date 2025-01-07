@@ -19,6 +19,7 @@ namespace SuperServer.Game.Skill.Effect
     {
         public EffectData effectData;
         public int level;
+        public int entityCount;
     }
     public class Effect
     {
@@ -84,6 +85,10 @@ namespace SuperServer.Game.Skill.Effect
             foreach (AddStatInfo info in data.effectData.AddStatValues)
             {
                 float value = info.addValue[data.level == 0 ? 0 : data.level - 1];
+                if (data.effectData.EffectScalingType == EEffectScalingType.Entity)
+                {
+                    value *= data.entityCount;
+                }
                 owner.AddStat(info.StatType, value, sendPacket:false);
             }
             owner.BroadcastStat();
@@ -94,6 +99,10 @@ namespace SuperServer.Game.Skill.Effect
             foreach (AddStatInfo info in data.effectData.AddStatValues)
             {
                 float value = info.addValue[data.level == 0 ? 0 : data.level - 1];
+                if (data.effectData.EffectScalingType == EEffectScalingType.Entity)
+                {
+                    value *= data.entityCount;
+                }
                 owner.AddStat(info.StatType, -value, sendPacket: false);
             }
             owner.BroadcastStat();

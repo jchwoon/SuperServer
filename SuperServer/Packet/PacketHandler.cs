@@ -100,7 +100,7 @@ class PacketHandler
         if (room == null)
             return;
 
-        GameCommander.Instance.Push(room.UseSkill, hero, skillPacket.SkillInfo, skillPacket.SkillPivot);
+        GameCommander.Instance.Push(room.HandleUseSkill, hero, skillPacket.SkillInfo, skillPacket.SkillPivot);
     }
 
     public static void PickupDropItemToSHandler(PacketSession session, IMessage packet)
@@ -192,5 +192,21 @@ class PacketHandler
             return;
         
         GameCommander.Instance.Push(PartyManager.Instance.CreateParty, hero);
+    }
+
+    public static void ReqLevelUpSkillToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        ReqLevelUpSkillToS levelUpSkillPacket = (ReqLevelUpSkillToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.HandleLevelUpSkill, hero, levelUpSkillPacket.SkillId);
     }
 }

@@ -22,21 +22,14 @@ namespace SuperServer.Game.Skill
         public int TemplateId { get; protected set; }
         public SkillData SkillData { get; protected set; }
         public long LastCoolTick { get; protected set; }
-        public int SkillLevel { get; protected set; }
+        public int CurrentSkillLevel { get; protected set; }
 
         public BaseSkill(Creature owner, SkillData skillData, int templateId, int skillLevel)
         {
             Owner = owner;
             SkillData = skillData;
             TemplateId = templateId;
-            SkillLevel = skillLevel;    
-        }
-
-        protected BaseSkill(Creature owner, SkillData skillData, int skillId)
-        {
-            Owner = owner;
-            SkillData = skillData;
-            this.skillId = skillId;
+            CurrentSkillLevel = skillLevel;    
         }
 
         //타겟을 구하고 타겟한테 Effect를 주고 브로드캐스트
@@ -285,6 +278,22 @@ namespace SuperServer.Game.Skill
         protected void RefreshCooldown()
         {
             LastCoolTick = Environment.TickCount64;
+        }
+        #endregion
+        #region Skill Level
+        public bool CheckCanLevelUp(int point)
+        {
+            int maxLevel = SkillData.MaxLevel;
+
+            if (maxLevel < CurrentSkillLevel + point)
+                return false;
+
+            return true;
+        }
+
+        public void UpdateSkillLevel(int level)
+        {
+            CurrentSkillLevel = level;
         }
         #endregion
     }

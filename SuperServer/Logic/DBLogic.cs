@@ -163,7 +163,7 @@ namespace SuperServer.Logic
             }
         }
         #region Skill
-        public static void SaveSkillList(Hero hero)
+        public void SaveSkillList(Hero hero)
         {
             if (hero == null)
                 return;
@@ -179,6 +179,30 @@ namespace SuperServer.Logic
                 dbHero.Skills = skills;
 
                 bool success = db.SaveChangeEx();
+            }
+        }
+
+        public void LevelUpSkill(Hero hero, int templateId,  int point = 1)
+        {
+            if (hero == null)
+                return;
+
+            using (GameDBContext db = new GameDBContext())
+            {
+                DBHero dbHero = db.Heroes.Where(h => h.DBHeroId == hero.DbHeroId).FirstOrDefault();
+                if (dbHero == null)
+                    return;
+
+                if (dbHero.Skills.TryGetValue(templateId, out int value) == false)
+                    return;
+
+                dbHero.Skills[templateId] = value + point;
+                    
+                bool success = db.SaveChangeEx();
+                if (success == true)
+                {
+                    GameCommander.Instance.Push(hero.SkillComponent.OnChangedSkillLevel, templateId, dbHero.Skills[templateId]);
+                }
             }
         }
         #endregion
