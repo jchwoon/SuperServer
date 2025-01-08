@@ -134,7 +134,7 @@ namespace SuperServer.Game.Skill
                 EffectDataEx effectEx = new EffectDataEx()
                 {
                     effectData = effectData,
-                    level = CurrentSkillLevel - 1,
+                    level = CurrentSkillLevel,
                     entityCount = effectedCreatures.Count
                 };
                 if (effectData.FeedbackEffect)
@@ -167,7 +167,7 @@ namespace SuperServer.Game.Skill
                 foreach (Creature creature in effectedCreatures)
                 {
                     if (creature == null) continue;
-                    EffectDataEx effectEx = new EffectDataEx() { effectData = effectData, level = CurrentSkillLevel-1 };
+                    EffectDataEx effectEx = new EffectDataEx() { effectData = effectData, level = CurrentSkillLevel };
                     creature.EffectComponent.ApplyEffect(Owner, effectEx);
                 }
             });

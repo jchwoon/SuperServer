@@ -12,7 +12,7 @@ using SuperServer.DB;
 namespace SuperServer.Migrations
 {
     [DbContext(typeof(GameDBContext))]
-    [Migration("20241231135321_init")]
+    [Migration("20250108142005_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace SuperServer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DBHeroId"), 1L, 1);
 
                     b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ActiveSkillPoint")
                         .HasColumnType("int");
 
                     b.Property<int>("Class")
@@ -60,6 +63,9 @@ namespace SuperServer.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PassiveSkillPoint")
                         .HasColumnType("int");
 
                     b.Property<float>("PosX")

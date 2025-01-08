@@ -209,4 +209,20 @@ class PacketHandler
 
         GameCommander.Instance.Push(room.HandleLevelUpSkill, hero, levelUpSkillPacket.SkillId);
     }
+
+    public static void ReqInitSkillPointToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        ReqInitSkillPointToS initSkillPointPacket = (ReqInitSkillPointToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.HandleInitSkillPoint, hero, initSkillPointPacket.SkillType);
+    }
 }

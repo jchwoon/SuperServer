@@ -254,3 +254,9 @@ enum EMonsterAggroType
 	EMONSTER_AGGRO_TYPE_MANUAL = 0;
 	EMONSTER_AGGRO_TYPE_AUTO = 1;
 }
+
+enum ECurrencyType
+{
+	ECURRENCY_TYPE_NONE = 0;
+	ECURRENCY_TYPE_GOLD = 1;
+}

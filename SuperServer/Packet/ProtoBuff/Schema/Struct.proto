@@ -79,3 +79,15 @@ message SkillInfo
 	int32 skillLevel = 3;
     string playAnimName = 4;
 }
+
+message SkillLevelInfo
+{
+	int32 skillId = 1;
+	int32 skillLevel = 2;
+}
+
+message SkillPointInfo
+{
+	int32 activeSkillPoint = 1;
+	int32 passiveSkillPoint = 2;
+}

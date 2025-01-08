@@ -31,6 +31,7 @@ namespace SuperServer.Data
         public static Dictionary<int, EquipmentData> EquipmentDict { get; private set; } = new Dictionary<int, EquipmentData>();
         public static Dictionary<int, EtcData> EtcDict { get; private set; } = new Dictionary<int, EtcData>();
         public static Dictionary<int, NPCData> NpcDict { get; private set; } = new Dictionary<int, NPCData>();
+        public static Dictionary<int, CostData> CostDict { get; private set; } = new Dictionary<int, CostData>();
 
         public static void Init()
         {
@@ -42,6 +43,7 @@ namespace SuperServer.Data
             RewardDict = LoadJson<RewardDataLoader, int, RewardData>("RewardData").MakeDict();
             RewardTableDict = LoadJson<RewardTableDataLoadaer, int, RewardTableData>("RewardTableData").MakeDict();
             NpcDict = LoadJson<NPCDataLoader, int, NPCData>("NPCData").MakeDict();
+            CostDict = LoadJson<CostDataLoader, int, CostData>("CostData").MakeDict();
             //Effect
             EffectDict = LoadJson<EffectDataLoader, int, EffectData>("EffectData").MakeDict();
             LevelEffectDict = LoadJson<EffectDataLoader, int, EffectData>("SkillEffectData").MakeDict();

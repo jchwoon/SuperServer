@@ -144,9 +144,9 @@ namespace SuperServer.Data
     public class HeroData : BaseData
     {
         public EHeroClassType HeroClassId;
-        public float ComboExitTime;
         public List<int> SkillIds;
         public float RespawnTime;
+        public int SkillInitId;
     }
     [Serializable]
     public class HeroDataLoader : ILoader<EHeroClassType, HeroData>
@@ -410,6 +410,30 @@ namespace SuperServer.Data
             foreach (NPCData npcDatas in npcs)
             {
                 dict.Add(npcDatas.npcId, npcDatas);
+            }
+
+            return dict;
+        }
+    }
+
+    public class CostData
+    {
+        public int TemplateId;
+        public ECurrencyType CurrencyType;
+        public int CostValue;
+    }
+
+    [Serializable]
+    public class CostDataLoader : ILoader<int, CostData>
+    {
+        public List<CostData> costs = new List<CostData>();
+        public Dictionary<int, CostData> MakeDict()
+        {
+            Dictionary<int, CostData> dict = new Dictionary<int, CostData>();
+
+            foreach (CostData cost in costs)
+            {
+                dict.Add(cost.TemplateId, cost);
             }
 
             return dict;

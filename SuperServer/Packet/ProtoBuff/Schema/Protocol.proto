@@ -63,6 +63,7 @@ message ResEnterRoomToC
     bool isChangeRoom = 2;
     repeated ItemInfo items = 3;
     repeated SkillInfo skills = 4;
+    SkillPointInfo skillPointInfo = 5;
 }
 
 message ChangeRoomToS
@@ -233,8 +234,14 @@ message ReqLevelUpSkillToS
     int32 skillId = 1;
 }
 
-message ResLevelUpSkillToC
+message ReqInitSkillPointToS
 {
-    int32 skillId = 1;
-    int32 skillLevel = 2;
+    ESkillType skillType = 1;
+}
+
+message UpdateSkillLevelToC
+{
+    repeated SkillLevelInfo skillLevelInfos = 1;
+    int32 activeSkillPoint = 2;
+    int32 passiveSkillPoint = 3;
 }

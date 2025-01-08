@@ -1,12 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Google.Protobuf.Enum;
+using Microsoft.EntityFrameworkCore;
 using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.DB;
 using SuperServer.Game.Inventory;
+using SuperServer.Game.Object;
 using SuperServer.Game.Room;
+using SuperServer.Game.Skill;
 using SuperServer.Utils;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -69,9 +73,10 @@ namespace SuperServer.Logic
                     dbHero.HeroStat.HP = hero.StatComponent.StatInfo.MaxHp;
                 }
 
-                if (db.SaveChangeEx() == false)
+                bool success = db.SaveChangeEx();
+                if (success == false)
                 {
-                    Console.WriteLine("Failed Save Hero");
+                    hero?.Session.CloseClientSocket();
                 }
             }
         }
@@ -89,6 +94,14 @@ namespace SuperServer.Logic
                 }
 
                 bool success = db.SaveChangeEx();
+                if (success == false)
+                {
+                    Hero hero = ObjectManager.Instance.FindHeroByDbId(dbItem.OwnerDbId);
+                    if (hero != null)
+                    {
+                        hero?.Session.CloseClientSocket();
+                    }
+                }
             }
         }
 
@@ -100,12 +113,9 @@ namespace SuperServer.Logic
                     db.Items.Add(newItemDb);
 
                 bool success = db.SaveChangeEx();
-                if (success)
+                if (success == false)
                 {
-                }
-                else
-                {
-                    Console.WriteLine("fail");
+                    hero?.Session.CloseClientSocket();
                 }
             }
         }
@@ -132,14 +142,16 @@ namespace SuperServer.Logic
                 }
                 else
                 {
-                    //var record6 = new TestModel { ID = 4, Value = "EF Core !" };
-                    //dbContext.Attach(record6); 
                     db.Attach(dbItem);
                     db.Entry(dbItem).Property(nameof(dbItem.Count)).IsModified = true;
                 }
 
 
                 bool success = db.SaveChangeEx();
+                if (success == false)
+                {
+                    inventory.Owner?.Session.CloseClientSocket();
+                }
             }
         }
 
@@ -160,6 +172,10 @@ namespace SuperServer.Logic
                 db.Entry(dbItem).Property(nameof(dbItem.SlotType)).IsModified = true;
 
                 bool success = db.SaveChangeEx();
+                if (success == false)
+                {
+                    hero?.Session.CloseClientSocket();
+                }
             }
         }
         #region Skill
@@ -179,10 +195,14 @@ namespace SuperServer.Logic
                 dbHero.Skills = skills;
 
                 bool success = db.SaveChangeEx();
+                if (success == false)
+                {
+                    hero?.Session.CloseClientSocket();
+                }
             }
         }
 
-        public void LevelUpSkill(Hero hero, int templateId,  int point = 1)
+        public void SaveSkillPoint(Hero hero, ESkillType skillType, int point)
         {
             if (hero == null)
                 return;
@@ -193,15 +213,20 @@ namespace SuperServer.Logic
                 if (dbHero == null)
                     return;
 
-                if (dbHero.Skills.TryGetValue(templateId, out int value) == false)
-                    return;
-
-                dbHero.Skills[templateId] = value + point;
-                    
-                bool success = db.SaveChangeEx();
-                if (success == true)
+                if (skillType == ESkillType.Active)
                 {
-                    GameCommander.Instance.Push(hero.SkillComponent.OnChangedSkillLevel, templateId, dbHero.Skills[templateId]);
+                    dbHero.ActiveSkillPoint = point;
+                }
+
+                if (skillType == ESkillType.Passive)
+                {
+                    dbHero.PassiveSkillPoint = point;
+                }
+
+                bool success = db.SaveChangeEx();
+                if (success == false)
+                {
+                    hero?.Session.CloseClientSocket();
                 }
             }
         }

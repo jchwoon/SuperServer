@@ -8,6 +8,7 @@ using SuperServer.Job;
 using SuperServer.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ namespace SuperServer.Game.Skill
         public int NormalSkillId { get; private set; }
         public BaseSkill LastSkill { get; set; }
         public IJob CurrentRegisterJob { get; set; }
+        public int ActiveSkillPoint { get; private set; }
+        public int PassiveSkillPoint { get; private set; }
 
         public SkillComponent(Creature owner)
         {
@@ -50,6 +53,12 @@ namespace SuperServer.Game.Skill
                         _skills.Add(s.Key, skill);
                 }
             }
+        }
+
+        public void InitSkillPoint(int activePoint, int passivePoint)
+        {
+            ActiveSkillPoint = activePoint;
+            PassiveSkillPoint = passivePoint;
         }
 
         public void UseSKill(SkillInfo skillInfo, PosInfo skillPivot)
@@ -90,6 +99,22 @@ namespace SuperServer.Game.Skill
             }
         }
 
+        public bool CheckLastSkillIsUsing()
+        {
+            if (LastSkill == null)
+                return false;
+            return LastSkill.CheckUsingSkill();
+        }
+
+        public void CancelCurrentRegisterSkill()
+        {
+            if (CurrentRegisterJob == null)
+                return;
+
+            LastSkill = null;
+            CurrentRegisterJob.IsCancel = true;
+        }
+
         #region AI
         //등록된 skill들 중 사용 가능한 스킬을 뽑기 일반 스킬을 맨 마지막에
         public BaseSkill GetCanUseSkill(BaseObject target)
@@ -111,10 +136,33 @@ namespace SuperServer.Game.Skill
         }
         #endregion
 
-        public void LevelUpSkill(int skillId, int point = 1)
+        #region Skill Level & Point
+        //Player 레벨 업
+        public void LevelUp(int preveLevel, int currentLevel)
         {
-            BaseSkill skill = GetSkillById(skillId);
+            Hero hero = Owner as Hero;
+            if (hero == null)
+                return;
+
+            int increasePoint = currentLevel - preveLevel;
+            ESkillType active = ESkillType.Active;
+            ESkillType passive = ESkillType.Passive;
+
+            SetSkillPoint(active, ActiveSkillPoint + increasePoint);
+            SetSkillPoint(passive, PassiveSkillPoint + increasePoint);
+
+            DBCommander.Instance.Push(DBLogic.Instance.SaveSkillPoint, hero, active, GetSkillPointBySkillType(active));
+            DBCommander.Instance.Push(DBLogic.Instance.SaveSkillPoint, hero, passive, GetSkillPointBySkillType(passive));
+        }
+        //스킬 레벨 업
+        public void LevelUpSkill(int templateId, int usePoint = 1)
+        {
+            BaseSkill skill = GetSkillById(templateId);
             if (skill == null)
+                return;
+
+            ESkillType skillType = skill.GetSkillType();
+            if (skillType == ESkillType.None)
                 return;
 
             Hero hero = Owner as Hero;
@@ -125,34 +173,81 @@ namespace SuperServer.Game.Skill
             if (_canUpdateSkillLevel == false)
                 return;
             //해당 스킬이 만렙인지 확인
-            if (skill.CheckCanLevelUp(point) == false)
+            if (skill.CheckCanLevelUp(usePoint) == false)
+                return;
+            //스킬 포인트가 유효한지
+            if (GetSkillPointBySkillType(skillType) < usePoint)
                 return;
 
-            DBCommander.Instance.Push(DBLogic.Instance.LevelUpSkill, hero, skillId, point);
-            //이후 DB에서 처리 상태
-            _canUpdateSkillLevel = false;
+            //스킬 포인트 차감
+            SetSkillPoint(skillType, GetSkillPointBySkillType(skillType) - usePoint);
+            //스킬 레벨 증가
+            int updateLevel = skill.CurrentSkillLevel + usePoint;
+            skill.UpdateSkillLevel(updateLevel);
+
+            //Send Packet
+            List<SkillLevelInfo> levelInfos = new List<SkillLevelInfo>();
+            SkillLevelInfo levelInfo = new SkillLevelInfo()
+            {
+                SkillId = templateId,
+                SkillLevel = updateLevel,
+            };
+            levelInfos.Add(levelInfo);
+            SendUpdateLevelPacket(levelInfos);
+
+            //DB 갱신
+            DBCommander.Instance.Push(DBLogic.Instance.SaveSkillList, hero);
+            DBCommander.Instance.Push(DBLogic.Instance.SaveSkillPoint, hero, skillType, GetSkillPointBySkillType(skillType));
         }
 
-        //DB에서 Skill Level처리 완료 콜벡 -> 메모리 갱신
-        public void OnChangedSkillLevel(int templateId, int level)
+        //플레이어가 갖고 있는 모든 스킬들을 초기화
+        public void CheckAndResetSkillPoint(ESkillType skillType)
         {
-            BaseSkill skill = GetSkillById(templateId);
-            if (skill == null)
+            Hero hero = Owner as Hero;
+            if (hero == null)
                 return;
-            skill.UpdateSkillLevel(level);
-            SendLevelUpPacket(templateId, level);
-            _canUpdateSkillLevel = true;
+
+            if (DataManager.CostDict.TryGetValue(hero.HeroData.SkillInitId, out CostData costData) == false)
+                return;
+
+            if (hero.CurrencyComponent.CanPay(costData.CurrencyType, costData.CostValue) == false)
+                return;
+
+            int level = hero.GrowthComponent.Level;
+            //스킬 포인트 리셋
+            SetSkillPoint(skillType, level - 1);
+            //Send Packet
+            List<SkillLevelInfo> levelInfos = new List<SkillLevelInfo>();
+            foreach (BaseSkill skill in _skills.Values)
+            {
+                if (skill.SkillData.SkillType == skillType)
+                {
+                    skill.UpdateSkillLevel(skillType == ESkillType.Active ? 1 : 0);
+
+                    levelInfos.Add(new SkillLevelInfo() { SkillId = skill.TemplateId, SkillLevel = skill.CurrentSkillLevel });
+                }
+            }
+            SendUpdateLevelPacket(levelInfos, isInit: true);
+
+            //DB 갱신
+            DBCommander.Instance.Push(DBLogic.Instance.SaveSkillList, hero);
+            DBCommander.Instance.Push(DBLogic.Instance.SaveSkillPoint, hero, skillType, GetSkillPointBySkillType(skillType));
         }
+        #endregion
 
-        
-
-        public BaseSkill GetSkillById(int skillId)
+        #region Get/Set
+        public BaseSkill GetSkillById(int templateId)
         {
             BaseSkill skill;
-            if (_skills.TryGetValue(skillId, out skill) == false)
+            if (_skills.TryGetValue(templateId, out skill) == false)
                 return null;
 
             return skill;
+        }
+
+        public int GetSkillPointBySkillType(ESkillType skillType)
+        {
+            return skillType == ESkillType.Active ? ActiveSkillPoint : PassiveSkillPoint;
         }
 
         public Dictionary<int, int> GetAllSkillLevels()
@@ -165,32 +260,28 @@ namespace SuperServer.Game.Skill
             return allSkillLevel;
         }
 
-        public bool CheckLastSkillIsUsing()
+        public void SetSkillPoint(ESkillType skillType, int point)
         {
-            if (LastSkill == null)
-                return false;
-            return LastSkill.CheckUsingSkill();
+            if (skillType == ESkillType.Active)
+                ActiveSkillPoint = point;
+            if (skillType == ESkillType.Passive)
+                PassiveSkillPoint = point;
         }
+        #endregion
 
-        public void CancelCurrentRegisterSkill()
-        {
-            if (CurrentRegisterJob == null)
-                return;
-
-            LastSkill = null;
-            CurrentRegisterJob.IsCancel = true;
-        }
-
-        public void SendLevelUpPacket(int templateId, int level)
+        #region Send
+        private void SendUpdateLevelPacket(List<SkillLevelInfo> levelInfos, bool isInit = false)
         {
             Hero hero = Owner as Hero;
             if (hero == null)
                 return;
 
-            ResLevelUpSkillToC levelUpPacket = new ResLevelUpSkillToC();
-            levelUpPacket.SkillId = templateId;
-            levelUpPacket.SkillLevel = level;
+            UpdateSkillLevelToC levelUpPacket = new UpdateSkillLevelToC();
+            levelUpPacket.SkillLevelInfos.AddRange(levelInfos);
+            levelUpPacket.ActiveSkillPoint = ActiveSkillPoint;
+            levelUpPacket.PassiveSkillPoint = PassiveSkillPoint;
             hero?.Session.Send(levelUpPacket);
         }
+        #endregion
     }
 }

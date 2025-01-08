@@ -15,6 +15,7 @@ using SuperServer.Game.Stat;
 using Google.Protobuf.Protocol;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SuperServer.Logic;
+using SuperServer.Game.Object.HeroInfo;
 
 
 public class Hero : Creature
@@ -27,6 +28,7 @@ public class Hero : Creature
     public HeroData HeroData { get; private set; }
     public InventoryComponent Inventory { get; private set; }
     public HeroGrowthComponent GrowthComponent { get; private set; }
+    public CurrencyComponent CurrencyComponent { get; private set; }
 
     public void Init(DBHero hero, LobbyHero lobbyHero, ClientSession session)
     {
@@ -35,6 +37,7 @@ public class Hero : Creature
         InterestRegion = new InterestRegion(this);
         Inventory = new InventoryComponent(this);
         GrowthComponent = new HeroGrowthComponent(this);
+        CurrencyComponent = new CurrencyComponent(this);
 
         if (DataManager.HeroDict.TryGetValue(lobbyHero.LobbyHeroInfo.ClassType, out HeroData heroData) == true)
             HeroData = heroData;
@@ -95,6 +98,8 @@ public class Hero : Creature
             }
             SkillComponent.RegisterSkill(skills);
         }
+
+        SkillComponent.InitSkillPoint(dbHero.ActiveSkillPoint, dbHero.PassiveSkillPoint);
     }
 
     private void InitInventory(DBHero dbHero)
@@ -111,14 +116,13 @@ public class Hero : Creature
 
         base.OnDie(killer);
 
-        //??
         StatComponent.SetStat(EStatType.Mp, StatComponent.GetStat(EStatType.MaxMp));
         ReserveRespawn();
     }
     public void GiveExpAndGold(RewardTableData tableData)
     {
         GrowthComponent.AddExp(tableData.RewardExp);
-        MyHeroInfo.Gold += tableData.RewardGold;
+        CurrencyComponent.AddGold(tableData.RewardGold);
 
         RewardToC rewardPacket = new RewardToC();
         rewardPacket.Exp = tableData.RewardExp;

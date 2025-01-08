@@ -37,6 +37,7 @@ public class HeroGrowthComponent
         if (isUp == true)
         {
             Owner.LevelUp(preveLevel, Level);
+            Owner.SkillComponent.LevelUp(preveLevel, Level);
             Owner.BroadcastStat();
         }
     }

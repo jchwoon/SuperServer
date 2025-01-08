@@ -296,5 +296,13 @@ namespace SuperServer.Game.Skill
             CurrentSkillLevel = level;
         }
         #endregion
+
+        public ESkillType GetSkillType()
+        {
+            if (SkillData == null)
+                return ESkillType.None;
+
+            return SkillData.SkillType;
+        }
     }
 }

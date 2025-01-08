@@ -80,6 +80,11 @@ namespace SuperServer.Game.Object
             }
         }
 
+        public Hero FindHeroByDbId(int dbId)
+        {
+            return _heroes.Values.Where(h => h.DbHeroId == dbId).FirstOrDefault();
+        }
+
         private int GenerateId()
         {
             lock(_lock)
@@ -91,7 +96,6 @@ namespace SuperServer.Game.Object
 
                 return _objIdQueue.Dequeue();
             }
-
         }
     }
 }

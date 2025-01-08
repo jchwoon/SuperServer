@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.Struct;
+﻿using Google.Protobuf.Enum;
+using Google.Protobuf.Struct;
 using SuperServer.Game.Object;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,14 @@ namespace SuperServer.Game.Room
                 return;
 
             hero.SkillComponent.LevelUpSkill(skillId);
+        }
+
+        public void HandleInitSkillPoint(Hero hero, ESkillType skillType)
+        {
+            if (hero == null)
+                return;
+
+            hero.SkillComponent.CheckAndResetSkillPoint(skillType);
         }
     }
 }
