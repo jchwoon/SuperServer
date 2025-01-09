@@ -244,4 +244,5 @@ message UpdateSkillLevelToC
     repeated SkillLevelInfo skillLevelInfos = 1;
     int32 activeSkillPoint = 2;
     int32 passiveSkillPoint = 3;
+    int32 cost = 4;
 }

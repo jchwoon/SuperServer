@@ -227,7 +227,7 @@ namespace SuperServer.Game.Skill
                     levelInfos.Add(new SkillLevelInfo() { SkillId = skill.TemplateId, SkillLevel = skill.CurrentSkillLevel });
                 }
             }
-            SendUpdateLevelPacket(levelInfos, isInit: true);
+            SendUpdateLevelPacket(levelInfos, cost : costData.CostValue);
 
             //DB 갱신
             DBCommander.Instance.Push(DBLogic.Instance.SaveSkillList, hero);
@@ -270,7 +270,7 @@ namespace SuperServer.Game.Skill
         #endregion
 
         #region Send
-        private void SendUpdateLevelPacket(List<SkillLevelInfo> levelInfos, bool isInit = false)
+        private void SendUpdateLevelPacket(List<SkillLevelInfo> levelInfos, int cost = 0)
         {
             Hero hero = Owner as Hero;
             if (hero == null)
@@ -280,6 +280,7 @@ namespace SuperServer.Game.Skill
             levelUpPacket.SkillLevelInfos.AddRange(levelInfos);
             levelUpPacket.ActiveSkillPoint = ActiveSkillPoint;
             levelUpPacket.PassiveSkillPoint = PassiveSkillPoint;
+            levelUpPacket.Cost = cost;
             hero?.Session.Send(levelUpPacket);
         }
         #endregion
