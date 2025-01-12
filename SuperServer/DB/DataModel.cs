@@ -32,8 +32,7 @@ namespace SuperServer.DB
         public int ConsumableSlotCount { get; set; }
         public int ETCSlotCount { get; set; }
         public Dictionary<int, int> Skills { get; set; } = new Dictionary<int, int>();
-        public int ActiveSkillPoint { get; set; }
-        public int PassiveSkillPoint { get; set; }
+        public int SkillPoint { get; set; }
     }
 
     [Table("Item")]
@@ -54,12 +53,7 @@ namespace SuperServer.DB
     [Owned]
     public class Stats
     {
-        public int MaxHp { get; set; }
-        public int MaxMp { get; set; }
         public int HP { get; set; }
         public int MP { get; set; }
-        public int AtkDamage { get; set; }
-        public int Defence { get; set; }
-        public float MoveSpeed { get; set; }
     }
 }

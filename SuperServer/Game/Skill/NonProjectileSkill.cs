@@ -14,9 +14,9 @@ using SuperServer.Game.Skill.Effect;
 
 namespace SuperServer.Game.Skill
 {
-    public class NonProjectileSkill : BaseSkill
+    public class NonProjectileSkill : ActiveSkill
     {
-        public NonProjectileSkill(Creature owner, SkillData skillData, int skillId, int skillLevel) : base(owner, skillData, skillId, skillLevel)
+        public NonProjectileSkill(Creature owner, ActiveSkillData skillData, int skillId, int skillLevel) : base(owner, skillData, skillId, skillLevel)
         {
             
         }
@@ -29,7 +29,7 @@ namespace SuperServer.Game.Skill
 
             Vector2 skillCastDir = GetSkillCastDir(skillPivot.RotY);
 
-            foreach (int id in SkillData.EffectIds)
+            foreach (int id in ActiveSkillData.EffectIds)
             {
                 DataManager.EffectDict.TryGetValue(id, out EffectData effectData);
                 if (effectData != null)
@@ -40,7 +40,7 @@ namespace SuperServer.Game.Skill
                 }
             }
 
-            if (SkillData.IsMoveSkill)
+            if (ActiveSkillData.IsMoveSkill)
             {
                 MoveFromSkill(new Vector3(skillCastDir.X, 0, skillCastDir.Y));
                 BroadcastSkill(sendPos:true);
@@ -65,7 +65,7 @@ namespace SuperServer.Game.Skill
             Vector2 skillCastDir = (skillTarget != null) ? GetSkillCastDir(skillTarget, skillPos) : GetSkillCastDir(skillPivot.RotY);
 
 
-            foreach (int id in SkillData.EffectIds)
+            foreach (int id in ActiveSkillData.EffectIds)
             {
                 DataManager.EffectDict.TryGetValue(id, out EffectData effectData);
                 if (effectData != null)
@@ -76,7 +76,7 @@ namespace SuperServer.Game.Skill
                 }
             }
 
-            if (SkillData.IsMoveSkill)
+            if (ActiveSkillData.IsMoveSkill)
             {
                 MoveFromSkill(new Vector3(skillCastDir.X, 0, skillCastDir.Y));
                 BroadcastSkill(skillTargetId, sendPos: true);
@@ -99,7 +99,7 @@ namespace SuperServer.Game.Skill
             if (skillTarget == null)
                 return;
 
-            foreach (int id in SkillData.EffectIds)
+            foreach (int id in ActiveSkillData.EffectIds)
             {
                 DataManager.EffectDict.TryGetValue(id, out EffectData effectData);
                 if (effectData != null)
@@ -109,7 +109,7 @@ namespace SuperServer.Game.Skill
             }
 
             //시전자와 타겟의 방향
-            if (SkillData.IsMoveSkill)
+            if (ActiveSkillData.IsMoveSkill)
             {
                 MoveFromSkill((skillTarget.Position - Owner.Position).Normalize());
                 BroadcastSkill(skillTargetId, sendPos: true);
@@ -176,7 +176,7 @@ namespace SuperServer.Game.Skill
 
         private void MoveFromSkill(Vector3 dir, int depth = 20)
         {
-            float dist = SkillData.Dist;
+            float dist = ActiveSkillData.Dist;
             float checkUnit = 0.5f;
             Vector3 currentPos = Owner.Position;
             Vector3 destPos = currentPos + (dir * dist);

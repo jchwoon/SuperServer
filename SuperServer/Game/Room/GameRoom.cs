@@ -77,12 +77,7 @@ namespace SuperServer.Game.Room
                         SkillInfo info = new SkillInfo() { SkillId = kvp.Key, SkillLevel = kvp.Value };
                         resEnterPacket.Skills.Add(info);
                     }
-                    SkillPointInfo pointInfo = new SkillPointInfo()
-                    {
-                        ActiveSkillPoint = hero.SkillComponent.ActiveSkillPoint,
-                        PassiveSkillPoint = hero.SkillComponent.PassiveSkillPoint
-                    };
-                    resEnterPacket.SkillPointInfo = pointInfo;
+                    resEnterPacket.SkillPoint = hero.SkillComponent.SkillPoint;
                 }
 
                 hero.Session.Send(resEnterPacket);

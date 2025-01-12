@@ -61,9 +61,9 @@ message ResEnterRoomToC
 {
     MyHeroInfo myHero = 1;
     bool isChangeRoom = 2;
-    repeated ItemInfo items = 3;
-    repeated SkillInfo skills = 4;
-    SkillPointInfo skillPointInfo = 5;
+    int32 skillPoint = 3;
+    repeated ItemInfo items = 4;
+    repeated SkillInfo skills = 5;
 }
 
 message ChangeRoomToS
@@ -236,13 +236,12 @@ message ReqLevelUpSkillToS
 
 message ReqInitSkillPointToS
 {
-    ESkillType skillType = 1;
+
 }
 
 message UpdateSkillLevelToC
 {
     repeated SkillLevelInfo skillLevelInfos = 1;
-    int32 activeSkillPoint = 2;
-    int32 passiveSkillPoint = 3;
-    int32 cost = 4;
+    int32 skillPoint = 2;
+    int32 cost = 3;
 }

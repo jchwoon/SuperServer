@@ -33,9 +33,6 @@ namespace SuperServer.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ActiveSkillPoint")
-                        .HasColumnType("int");
-
                     b.Property<int>("Class")
                         .HasColumnType("int");
 
@@ -63,9 +60,6 @@ namespace SuperServer.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
-                    b.Property<int>("PassiveSkillPoint")
-                        .HasColumnType("int");
-
                     b.Property<float>("PosX")
                         .HasColumnType("real");
 
@@ -80,6 +74,9 @@ namespace SuperServer.Migrations
 
                     b.Property<float>("RotY")
                         .HasColumnType("real");
+
+                    b.Property<int>("SkillPoint")
+                        .HasColumnType("int");
 
                     b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");

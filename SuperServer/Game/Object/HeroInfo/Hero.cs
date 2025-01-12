@@ -65,9 +65,9 @@ public class Hero : Creature
     {
         StatComponent.InitHeroStat(dbHero.Level);
         if (dbHero.HeroStat.HP >= 0)
-            StatComponent.StatInfo.Hp = dbHero.HeroStat.HP;
+            StatComponent.AddedStatInfo.Hp = dbHero.HeroStat.HP;
         if (dbHero.HeroStat.MP >= 0)
-            StatComponent.StatInfo.Mp = dbHero.HeroStat.MP;
+            StatComponent.AddedStatInfo.Mp = dbHero.HeroStat.MP;
     }
     private void InitPosInfo(DBHero dbHero)
     {
@@ -85,7 +85,8 @@ public class Hero : Creature
         {
             foreach (int id in HeroData.SkillIds)
             {
-                skills.Add(id, 1);
+                if (DataManager.SkillDict.TryGetValue(id, out SkillData skillData) == true)
+                    skills.Add(id, skillData.InitLevel);
             }
             SkillComponent.RegisterSkill(skills);
             DBCommander.Instance.Push(DBLogic.Instance.SaveSkillList, this);
@@ -99,7 +100,7 @@ public class Hero : Creature
             SkillComponent.RegisterSkill(skills);
         }
 
-        SkillComponent.InitSkillPoint(dbHero.ActiveSkillPoint, dbHero.PassiveSkillPoint);
+        SkillComponent.InitSkillPoint(dbHero.SkillPoint);
     }
 
     private void InitInventory(DBHero dbHero)

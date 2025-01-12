@@ -223,6 +223,6 @@ class PacketHandler
         if (room == null)
             return;
 
-        GameCommander.Instance.Push(room.HandleInitSkillPoint, hero, initSkillPointPacket.SkillType);
+        GameCommander.Instance.Push(room.HandleInitSkillPoint, hero);
     }
 }

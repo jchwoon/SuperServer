@@ -52,25 +52,20 @@ namespace SuperServer.Logic
                 dbHero.RotY = hero.PosInfo.RotY;
 
                 //스텟
-                dbHero.HeroStat.MaxHp = hero.StatComponent.StatInfo.MaxHp;
-                dbHero.HeroStat.HP = hero.StatComponent.StatInfo.Hp;
-                dbHero.HeroStat.MaxMp = hero.StatComponent.StatInfo.MaxMp;
-                dbHero.HeroStat.MP = hero.StatComponent.StatInfo.Mp;
-                dbHero.HeroStat.AtkDamage = hero.StatComponent.StatInfo.AtkDamage;
-                dbHero.HeroStat.Defence = hero.StatComponent.StatInfo.Defence;
-                dbHero.HeroStat.MoveSpeed = hero.StatComponent.StatInfo.MoveSpeed;
+                dbHero.HeroStat.HP = hero.StatComponent.AddedStatInfo.Hp;
+                dbHero.HeroStat.MP = hero.StatComponent.AddedStatInfo.Mp;
 
                 dbHero.Exp = hero.MyHeroInfo.Exp;
                 dbHero.Gold = hero.MyHeroInfo.Gold;
                 dbHero.Level = hero.MyHeroInfo.HeroInfo.LobbyHeroInfo.Level;
 
-                if (hero.StatComponent.StatInfo.Hp == 0)
+                if (hero.StatComponent.AddedStatInfo.Hp == 0)
                 {
                     dbHero.PosX = room.RoomData.StartPosX;
                     dbHero.PosY = room.RoomData.StartPosY;
                     dbHero.PosZ = room.RoomData.StartPosZ;
 
-                    dbHero.HeroStat.HP = hero.StatComponent.StatInfo.MaxHp;
+                    dbHero.HeroStat.HP = hero.StatComponent.AddedStatInfo.MaxHp;
                 }
 
                 bool success = db.SaveChangeEx();
@@ -202,7 +197,7 @@ namespace SuperServer.Logic
             }
         }
 
-        public void SaveSkillPoint(Hero hero, ESkillType skillType, int point)
+        public void SaveSkillPoint(Hero hero, int point)
         {
             if (hero == null)
                 return;
@@ -213,15 +208,7 @@ namespace SuperServer.Logic
                 if (dbHero == null)
                     return;
 
-                if (skillType == ESkillType.Active)
-                {
-                    dbHero.ActiveSkillPoint = point;
-                }
-
-                if (skillType == ESkillType.Passive)
-                {
-                    dbHero.PassiveSkillPoint = point;
-                }
+                dbHero.SkillPoint = point;
 
                 bool success = db.SaveChangeEx();
                 if (success == false)

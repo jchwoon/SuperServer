@@ -62,7 +62,7 @@ namespace SuperServer.Game.StateMachine.State
             //타겟이 있고 거리가 되면 Skill 거리가 안되면 Move
             if (_machine.Target != null)
             {
-                BaseSkill skill = _machine.Owner.SkillComponent.GetCanUseSkill(_machine.Target);
+                ActiveSkill skill = _machine.Owner.SkillComponent.GetCanUseSkill(_machine.Target);
 
                 if (skill == null)
                 {

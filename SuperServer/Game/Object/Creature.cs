@@ -41,7 +41,7 @@ namespace SuperServer.Game.Object
             EffectComponent = new EffectComponent(this);
             ShieldComponent = new ShieldComponent(this);
             CreatureInfo.ObjectInfo = ObjectInfo;
-            CreatureInfo.StatInfo = StatComponent.StatInfo;
+            CreatureInfo.StatInfo = StatComponent.AddedStatInfo;
         }
 
         public virtual void OnDamage(Creature attacker, float damage)
@@ -56,7 +56,7 @@ namespace SuperServer.Game.Object
             int retDamage = GetCalculatedDamage(remainDamage);
             AddStat(EStatType.Hp, -retDamage, retDamage == 0 ? EFontType.Miss : EFontType.NormalHit);
 
-            if (StatComponent.StatInfo.Hp <= 0)
+            if (StatComponent.AddedStatInfo.Hp <= 0)
             {
                 OnDie(attacker);
             }
@@ -64,7 +64,7 @@ namespace SuperServer.Game.Object
 
         protected int GetCalculatedDamage(float damage)
         {
-            return Math.Max(0, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
+            return Math.Max(0, (int)MathF.Round(damage) - StatComponent.AddedStatInfo.Defence);
         }
 
         public virtual void OnDie(Creature killer)
@@ -97,7 +97,7 @@ namespace SuperServer.Game.Object
                 BroadcastOneStat(statType, StatComponent.GetStat(statType), gapValue, fontType);
         }
 
-        public void BroadcastSkill(int skillId, int skillTargetId,  string animName, bool sendPos = false)
+        public void BroadcastSkill(int skillId, int skillTargetId, bool sendPos = false)
         {
             if (Room == null)
                 return;
@@ -109,28 +109,8 @@ namespace SuperServer.Game.Object
             _skillPacket.ObjectId = this.ObjectId;
             _skillPacket.SkillInfo = new SkillInfo()
             {
-                PlayAnimName = animName,
                 SkillId = skillId,
                 SkillTargetId = skillTargetId,
-            };
-
-            Room.Broadcast(_skillPacket, Position);
-        }
-
-        public void BroadcastSkill(int skillId, string animName, bool sendPos = false)
-        {
-            if (Room == null)
-                return;
-
-            if (sendPos)
-            {
-                _skillPacket.PosInfo = this.PosInfo;
-            }
-            _skillPacket.ObjectId = this.ObjectId;
-            _skillPacket.SkillInfo = new SkillInfo()
-            {
-                PlayAnimName = animName,
-                SkillId = skillId,
             };
 
             Room.Broadcast(_skillPacket, Position);
@@ -142,7 +122,7 @@ namespace SuperServer.Game.Object
                 return;
 
             _modifyStatPacket.ObjectId = ObjectId;
-            _modifyStatPacket.StatInfo = StatComponent.StatInfo;
+            _modifyStatPacket.StatInfo = StatComponent.AddedStatInfo;
 
             Room.Broadcast(_modifyStatPacket, Position);
         }

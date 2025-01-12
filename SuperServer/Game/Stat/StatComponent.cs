@@ -18,7 +18,8 @@ namespace SuperServer.Game.Stat
 {
     public class StatComponent
     {
-        public StatInfo StatInfo { get; set; } = new StatInfo();
+        public StatInfo BaseStatInfo { get; set; } = new StatInfo();
+        public StatInfo AddedStatInfo { get; set; } = new StatInfo();
         public Creature Owner { get; private set; }
 
         public static readonly Dictionary<EStatType, Action<StatInfo, float>> SetStatDict = new Dictionary<EStatType, Action<StatInfo, float>>()
@@ -49,7 +50,7 @@ namespace SuperServer.Game.Stat
 
         public float GetStat(EStatType statType)
         {
-            return GetStatDict[statType].Invoke(StatInfo);
+            return GetStatDict[statType].Invoke(AddedStatInfo);
         }
         public void SetStat(EStatType statType, float value)
         {
@@ -77,7 +78,7 @@ namespace SuperServer.Game.Stat
                     break;
             }
 
-            SetStatDict[statType].Invoke(StatInfo, value);
+            SetStatDict[statType].Invoke(AddedStatInfo, value);
             if (gapValue != 0 && addStatType != EStatType.None)
                 Owner.AddStat(addStatType, gapValue);
         }
@@ -88,24 +89,24 @@ namespace SuperServer.Game.Stat
             if (DataManager.HeroStatDict.TryGetValue(level, out statData) == false)
                 return;
 
-            StatInfo.MaxHp = statData.MaxHp;
-            StatInfo.MaxMp = statData.MaxMp;
-            StatInfo.Hp = statData.MaxHp;
-            StatInfo.Mp = statData.MaxMp;
-            StatInfo.AtkDamage = statData.AtkDamage;
-            StatInfo.MoveSpeed = statData.MoveSpeed;
-            StatInfo.Defence = statData.Defence;
+            BaseStatInfo.MaxHp = statData.MaxHp;
+            BaseStatInfo.MaxMp = statData.MaxMp;
+            BaseStatInfo.Hp = statData.MaxHp;
+            BaseStatInfo.Mp = statData.MaxMp;
+            BaseStatInfo.AtkDamage = statData.AtkDamage;
+            BaseStatInfo.MoveSpeed = statData.MoveSpeed;
+            BaseStatInfo.Defence = statData.Defence;
         }
         public void InitSetStat(MonsterData statData)
         {
-            StatInfo.MaxHp = statData.MaxHp;
-            StatInfo.MaxMp = statData.MaxMp;
-            StatInfo.Hp = statData.MaxHp;
-            StatInfo.Mp = statData.MaxMp;
-            StatInfo.AtkDamage = statData.AtkDamage;
-            StatInfo.MoveSpeed = statData.MoveSpeed;
-            StatInfo.ChaseSpeed = statData.ChaseSpeed;
-            StatInfo.Defence = statData.Defence;
+            AddedStatInfo.MaxHp = statData.MaxHp;
+            AddedStatInfo.MaxMp = statData.MaxMp;
+            AddedStatInfo.Hp = statData.MaxHp;
+            AddedStatInfo.Mp = statData.MaxMp;
+            AddedStatInfo.AtkDamage = statData.AtkDamage;
+            AddedStatInfo.MoveSpeed = statData.MoveSpeed;
+            AddedStatInfo.ChaseSpeed = statData.ChaseSpeed;
+            AddedStatInfo.Defence = statData.Defence;
         }
     }
 }

@@ -38,8 +38,7 @@ namespace SuperServer.Migrations
                     ConsumableSlotCount = table.Column<int>(type: "int", nullable: false),
                     ETCSlotCount = table.Column<int>(type: "int", nullable: false),
                     Skills = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ActiveSkillPoint = table.Column<int>(type: "int", nullable: false),
-                    PassiveSkillPoint = table.Column<int>(type: "int", nullable: false)
+                    SkillPoint = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

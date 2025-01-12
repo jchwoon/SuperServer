@@ -27,12 +27,12 @@ namespace SuperServer.Game.Room
             hero.SkillComponent.LevelUpSkill(skillId);
         }
 
-        public void HandleInitSkillPoint(Hero hero, ESkillType skillType)
+        public void HandleInitSkillPoint(Hero hero)
         {
             if (hero == null)
                 return;
 
-            hero.SkillComponent.CheckAndResetSkillPoint(skillType);
+            hero.SkillComponent.CheckAndResetSkillPoint();
         }
     }
 }

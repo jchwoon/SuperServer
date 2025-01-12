@@ -52,7 +52,7 @@ namespace SuperServer.Game.Skill.Effect
     {
         public void Attach(Creature owner, Creature provider, EffectDataEx data)
         {
-            float damage = provider.StatComponent.StatInfo.AtkDamage * data.effectData.Ratio[data.level == 0 ? 0 : data.level - 1];
+            float damage = provider.StatComponent.AddedStatInfo.AtkDamage * data.effectData.Ratio[data.level == 0 ? 0 : data.level - 1];
             owner.OnDamage(provider, damage);
         }
 

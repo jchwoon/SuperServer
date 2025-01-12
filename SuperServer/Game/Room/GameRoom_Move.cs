@@ -38,7 +38,7 @@ namespace SuperServer.Game.Room
         private Vector3 GetExpectPos(PosInfo info, Hero hero)
         {
             
-            float dist = hero.StatComponent.StatInfo.MoveSpeed * ((hero.Session.Ping / 1000) + _sendMovePacketCycle);
+            float dist = hero.StatComponent.AddedStatInfo.MoveSpeed * ((hero.Session.Ping / 1000) + _sendMovePacketCycle);
 
             Vector3 dir = GetLookDir(info.RotY);
 

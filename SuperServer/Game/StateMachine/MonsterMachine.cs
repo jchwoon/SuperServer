@@ -21,7 +21,7 @@ namespace SuperServer.Game.StateMachine
         public HitState HitState { get; private set; }
         public Vector3? PatrolPos { get; set; }
         public BaseObject Target { get; set; }
-        public BaseSkill CurrentSkill { get; set; }
+        public ActiveSkill CurrentSkill { get; set; }
         public float ToNextPosDist { get; private set; }
         public long BehaviorLockingTick { get; set; }
         const float HIT_STUN_DUTARTION = 0.37f;
