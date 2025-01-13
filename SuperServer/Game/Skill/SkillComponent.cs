@@ -58,6 +58,7 @@ namespace SuperServer.Game.Skill
                             PassiveSkillData passiveSkillData = (PassiveSkillData)skillData;
                             skill = new PassiveSkill(Owner, passiveSkillData, s.Key, s.Value);
                             _passiveSkills.Add(s.Key, (PassiveSkill)skill);
+                            skill.UpdateSkillLevel(s.Value);
                             break;
                     }
                     if (skill != null)

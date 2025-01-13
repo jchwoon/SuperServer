@@ -91,6 +91,7 @@ namespace SuperServer.Game.Skill.Effect
                 return;
             long effectId = GenerateEffectId();
             Effect effect = GenerateEffect(effectId, Owner, provider, data, policy);
+
             _effects.Add(effectId, effect);
 
             effect.Apply();

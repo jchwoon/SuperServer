@@ -52,20 +52,20 @@ namespace SuperServer.Logic
                 dbHero.RotY = hero.PosInfo.RotY;
 
                 //스텟
-                dbHero.HeroStat.HP = hero.StatComponent.AddedStatInfo.Hp;
-                dbHero.HeroStat.MP = hero.StatComponent.AddedStatInfo.Mp;
+                dbHero.HeroStat.HP = hero.StatComponent.StatInfo.Hp;
+                dbHero.HeroStat.MP = hero.StatComponent.StatInfo.Mp;
 
                 dbHero.Exp = hero.MyHeroInfo.Exp;
                 dbHero.Gold = hero.MyHeroInfo.Gold;
                 dbHero.Level = hero.MyHeroInfo.HeroInfo.LobbyHeroInfo.Level;
 
-                if (hero.StatComponent.AddedStatInfo.Hp == 0)
+                if (hero.StatComponent.StatInfo.Hp == 0)
                 {
                     dbHero.PosX = room.RoomData.StartPosX;
                     dbHero.PosY = room.RoomData.StartPosY;
                     dbHero.PosZ = room.RoomData.StartPosZ;
 
-                    dbHero.HeroStat.HP = hero.StatComponent.AddedStatInfo.MaxHp;
+                    dbHero.HeroStat.HP = hero.StatComponent.StatInfo.MaxHp;
                 }
 
                 bool success = db.SaveChangeEx();

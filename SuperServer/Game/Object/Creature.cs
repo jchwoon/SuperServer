@@ -41,7 +41,7 @@ namespace SuperServer.Game.Object
             EffectComponent = new EffectComponent(this);
             ShieldComponent = new ShieldComponent(this);
             CreatureInfo.ObjectInfo = ObjectInfo;
-            CreatureInfo.StatInfo = StatComponent.AddedStatInfo;
+            CreatureInfo.StatInfo = StatComponent.StatInfo;
         }
 
         public virtual void OnDamage(Creature attacker, float damage)
@@ -52,11 +52,20 @@ namespace SuperServer.Game.Object
             if (CurrentState == ECreatureState.Die)
                 return;
 
-            int remainDamage = ShieldComponent.OnDamage((int)damage);
-            int retDamage = GetCalculatedDamage(remainDamage);
-            AddStat(EStatType.Hp, -retDamage, retDamage == 0 ? EFontType.Miss : EFontType.NormalHit);
+            float retDamage = damage;
+            float randomValue = (float)_rand.NextDouble();
+            EFontType fontType = EFontType.NormalHit;
+            if (randomValue <= attacker.StatComponent.GetStat(EStatType.Critical))
+            {
+                retDamage = retDamage + (retDamage * attacker.StatComponent.GetStat(EStatType.CriticalDamage));
+                fontType = EFontType.CriticalHit;
+            }
 
-            if (StatComponent.AddedStatInfo.Hp <= 0)
+            int remainDamage = ShieldComponent.OnDamage((int)retDamage);
+            int actualDamage = GetCalculatedDamage(remainDamage);
+            AddStat(EStatType.Hp, -actualDamage, actualDamage == 0 ? EFontType.Miss : fontType);
+
+            if (StatComponent.StatInfo.Hp <= 0)
             {
                 OnDie(attacker);
             }
@@ -64,7 +73,7 @@ namespace SuperServer.Game.Object
 
         protected int GetCalculatedDamage(float damage)
         {
-            return Math.Max(0, (int)MathF.Round(damage) - StatComponent.AddedStatInfo.Defence);
+            return Math.Max(0, (int)MathF.Round(damage) - StatComponent.StatInfo.Defence);
         }
 
         public virtual void OnDie(Creature killer)
@@ -122,7 +131,7 @@ namespace SuperServer.Game.Object
                 return;
 
             _modifyStatPacket.ObjectId = ObjectId;
-            _modifyStatPacket.StatInfo = StatComponent.AddedStatInfo;
+            _modifyStatPacket.StatInfo = StatComponent.StatInfo;
 
             Room.Broadcast(_modifyStatPacket, Position);
         }

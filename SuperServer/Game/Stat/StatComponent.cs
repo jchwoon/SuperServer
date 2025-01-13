@@ -18,8 +18,7 @@ namespace SuperServer.Game.Stat
 {
     public class StatComponent
     {
-        public StatInfo BaseStatInfo { get; set; } = new StatInfo();
-        public StatInfo AddedStatInfo { get; set; } = new StatInfo();
+        public StatInfo StatInfo { get; set; } = new StatInfo();
         public Creature Owner { get; private set; }
 
         public static readonly Dictionary<EStatType, Action<StatInfo, float>> SetStatDict = new Dictionary<EStatType, Action<StatInfo, float>>()
@@ -31,6 +30,10 @@ namespace SuperServer.Game.Stat
             {EStatType.Atk, (info, value) => { info.AtkDamage =(int) value; } },
             {EStatType.Defence, (info, value) => { info.Defence =(int) value; } },
             {EStatType.MoveSpeed, (info, value) => { info.MoveSpeed = value; } },
+            {EStatType.Critical, (info, value) => { info.Critical = value; } },
+            {EStatType.CriticalDamage, (info, value) => { info.CriticalDamage = value; } },
+            {EStatType.ShieldEfficiency, (info, value) => { info.ShieldEfficiency = value; } },
+            {EStatType.HealEfficiency, (info, value) => { info.HealEfficiency = value; } },
         };
         public static readonly Dictionary<EStatType, Func<StatInfo, float>> GetStatDict = new Dictionary<EStatType, Func<StatInfo, float>>()
         {
@@ -41,6 +44,10 @@ namespace SuperServer.Game.Stat
             {EStatType.Atk, (info) => { return info.AtkDamage; } },
             {EStatType.Defence, (info) => { return info.Defence; } },
             {EStatType.MoveSpeed, (info) => { return info.MoveSpeed; } },
+            {EStatType.Critical, (info) => { return info.Critical; } },
+            {EStatType.CriticalDamage, (info) => { return info.CriticalDamage; } },
+            {EStatType.ShieldEfficiency, (info) => { return info.ShieldEfficiency; } },
+            {EStatType.HealEfficiency, (info) => { return info.HealEfficiency; } },
         };
 
         public StatComponent(Creature owner)
@@ -50,7 +57,7 @@ namespace SuperServer.Game.Stat
 
         public float GetStat(EStatType statType)
         {
-            return GetStatDict[statType].Invoke(AddedStatInfo);
+            return GetStatDict[statType].Invoke(StatInfo);
         }
         public void SetStat(EStatType statType, float value)
         {
@@ -78,7 +85,7 @@ namespace SuperServer.Game.Stat
                     break;
             }
 
-            SetStatDict[statType].Invoke(AddedStatInfo, value);
+            SetStatDict[statType].Invoke(StatInfo, value);
             if (gapValue != 0 && addStatType != EStatType.None)
                 Owner.AddStat(addStatType, gapValue);
         }
@@ -89,24 +96,28 @@ namespace SuperServer.Game.Stat
             if (DataManager.HeroStatDict.TryGetValue(level, out statData) == false)
                 return;
 
-            BaseStatInfo.MaxHp = statData.MaxHp;
-            BaseStatInfo.MaxMp = statData.MaxMp;
-            BaseStatInfo.Hp = statData.MaxHp;
-            BaseStatInfo.Mp = statData.MaxMp;
-            BaseStatInfo.AtkDamage = statData.AtkDamage;
-            BaseStatInfo.MoveSpeed = statData.MoveSpeed;
-            BaseStatInfo.Defence = statData.Defence;
+            StatInfo.MaxHp = statData.MaxHp;
+            StatInfo.MaxMp = statData.MaxMp;
+            StatInfo.Hp = statData.MaxHp;
+            StatInfo.Mp = statData.MaxMp;
+            StatInfo.AtkDamage = statData.AtkDamage;
+            StatInfo.MoveSpeed = statData.MoveSpeed;
+            StatInfo.Defence = statData.Defence;
+            StatInfo.Critical = statData.Critical;
+            StatInfo.CriticalDamage = statData.CriticalDamage;
+            StatInfo.ShieldEfficiency = statData.ShieldEfficiency;
+            StatInfo.HealEfficiency = statData.HealEfficiency;
         }
         public void InitSetStat(MonsterData statData)
         {
-            AddedStatInfo.MaxHp = statData.MaxHp;
-            AddedStatInfo.MaxMp = statData.MaxMp;
-            AddedStatInfo.Hp = statData.MaxHp;
-            AddedStatInfo.Mp = statData.MaxMp;
-            AddedStatInfo.AtkDamage = statData.AtkDamage;
-            AddedStatInfo.MoveSpeed = statData.MoveSpeed;
-            AddedStatInfo.ChaseSpeed = statData.ChaseSpeed;
-            AddedStatInfo.Defence = statData.Defence;
+            StatInfo.MaxHp = statData.MaxHp;
+            StatInfo.MaxMp = statData.MaxMp;
+            StatInfo.Hp = statData.MaxHp;
+            StatInfo.Mp = statData.MaxMp;
+            StatInfo.AtkDamage = statData.AtkDamage;
+            StatInfo.MoveSpeed = statData.MoveSpeed;
+            StatInfo.ChaseSpeed = statData.ChaseSpeed;
+            StatInfo.Defence = statData.Defence;
         }
     }
 }

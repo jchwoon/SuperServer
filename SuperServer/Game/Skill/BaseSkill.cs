@@ -50,7 +50,7 @@ namespace SuperServer.Game.Skill
             return true;
         }
 
-        public void UpdateSkillLevel(int level)
+        public virtual void UpdateSkillLevel(int level)
         {
             CurrentSkillLevel = level;
         }

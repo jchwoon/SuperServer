@@ -44,7 +44,7 @@ namespace SuperServer.Game.StateMachine.State
         private void CalculateUpdateTick()
         {
             float nextDist = _machine.ToNextPosDist;
-            StatInfo info = _machine.Owner.StatComponent.AddedStatInfo;
+            StatInfo info = _machine.Owner.StatComponent.StatInfo;
             float speed = _machine.IsChaseMode() ? info.ChaseSpeed : info.MoveSpeed;
             _machine.UpdateTick = (int)((nextDist / speed) * 1000);
         }

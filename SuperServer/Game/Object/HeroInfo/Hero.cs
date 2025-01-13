@@ -65,9 +65,9 @@ public class Hero : Creature
     {
         StatComponent.InitHeroStat(dbHero.Level);
         if (dbHero.HeroStat.HP >= 0)
-            StatComponent.AddedStatInfo.Hp = dbHero.HeroStat.HP;
+            StatComponent.StatInfo.Hp = dbHero.HeroStat.HP;
         if (dbHero.HeroStat.MP >= 0)
-            StatComponent.AddedStatInfo.Mp = dbHero.HeroStat.MP;
+            StatComponent.StatInfo.Mp = dbHero.HeroStat.MP;
     }
     private void InitPosInfo(DBHero dbHero)
     {

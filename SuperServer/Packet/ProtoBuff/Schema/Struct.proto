@@ -44,6 +44,10 @@ message StatInfo
 	int32 defence = 6;
 	int32 mp = 7;
 	int32 maxMp = 8;
+	float critical = 9;
+	float criticalDamage = 10;
+	float shieldEfficiency = 11;
+	float healEfficiency = 12;
 }
 
 message PosInfo

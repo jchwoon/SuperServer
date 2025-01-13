@@ -18,6 +18,10 @@ namespace SuperServer.Data
         public float MoveSpeed;
         public int AtkDamage;
         public int Defence;
+        public float Critical;
+        public float CriticalDamage;
+        public float ShieldEfficiency;
+        public float HealEfficiency;
     }
 
     [Serializable]
