@@ -4,6 +4,7 @@ using ServerCore;
 using SuperServer.Commander;
 using SuperServer.Data;
 using SuperServer.Game.Object;
+using SuperServer.Game.Party;
 using SuperServer.Game.Room;
 using SuperServer.Logic;
 using SuperServer.Session;
@@ -39,6 +40,7 @@ namespace SuperServer
             ObjectManager.Instance.PreGenerateId(1000);
             SessionManager.Instance.PreGenerateId(1000);
             RoomManager.Instance.PreLoadRoom();
+            PartyManager.Instance.Init();
 
             IPAddress hostIP = IPAddress.Parse(ConfigManager.Config.ip);
             IPEndPoint endPoint = new IPEndPoint(hostIP, ConfigManager.Config.port);

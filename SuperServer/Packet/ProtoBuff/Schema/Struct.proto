@@ -88,3 +88,15 @@ message SkillLevelInfo
 	int32 skillId = 1;
 	int32 skillLevel = 2;
 }
+
+message MemberInfo
+{
+	string name = 1;
+	int32 level = 2;
+	EHeroClassType class = 3;
+}
+
+message PartyInfo
+{
+	repeated MemberInfo memberInfos = 1;
+}

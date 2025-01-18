@@ -2,6 +2,7 @@
 using Google.Protobuf.Protocol;
 using ServerCore;
 using SuperServer.Commander;
+using SuperServer.Data;
 using SuperServer.Game.Party;
 using SuperServer.Game.Room;
 using SuperServer.Logic;
@@ -182,18 +183,6 @@ class PacketHandler
         GameCommander.Instance.Push(room.ChangeRoom, changeRoomPacket.RoomId, hero);
     }
 
-    public static void CreatePartyToSHandler(PacketSession session, IMessage packet)
-    {
-        ClientSession cSession = (ClientSession)session;
-        CreatePartyToS createPartyPacket = (CreatePartyToS)packet;
-
-        Hero hero = cSession.PlayingHero;
-        if (hero == null)
-            return;
-        
-        GameCommander.Instance.Push(PartyManager.Instance.CreateParty, hero);
-    }
-
     public static void ReqLevelUpSkillToSHandler(PacketSession session, IMessage packet)
     {
         ClientSession cSession = (ClientSession)session;
@@ -224,5 +213,56 @@ class PacketHandler
             return;
 
         GameCommander.Instance.Push(room.HandleInitSkillPoint, hero);
+    }
+
+    public static void CreatePartyToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        CreatePartyToS createPartyPacket = (CreatePartyToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.HandleCreateParty, hero, createPartyPacket.RoomId);
+    }
+
+    public static void ReqJoinPartyToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        ReqJoinPartyToS joinPartyPacket = (ReqJoinPartyToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        GameCommander.Instance.Push(room.HandleJoinParty, hero, joinPartyPacket.PartyId, joinPartyPacket.RoomId);
+    }
+
+    public static void ReqAllPartyInfoToSHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession cSession = (ClientSession)session;
+        ReqAllPartyInfoToS allPartyInfoPacket = (ReqAllPartyInfoToS)packet;
+
+        Hero hero = cSession.PlayingHero;
+        if (hero == null)
+            return;
+
+        GameRoom room = hero.Room;
+        if (room == null)
+            return;
+
+        if (DataManager.RoomDict.TryGetValue(allPartyInfoPacket.RoomId, out RoomData roomData) == false)
+            return;
+
+        GameCommander.Instance.Push(room.HandleReqAllPartyInfosByRoomId, hero, allPartyInfoPacket.RoomId);
     }
 }

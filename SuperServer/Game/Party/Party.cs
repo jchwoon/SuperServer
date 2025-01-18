@@ -8,14 +8,23 @@ namespace SuperServer.Game.Party
 {
     public class Party
     {
-        List<Hero> members = new List<Hero>();
+        //리더까지 포함된
+        public List<Hero> Members = new List<Hero>();
         public long PartyId { get; private set; }
-        public Hero Owner { get; private set; } 
+        public Hero Leader { get; private set; } 
+        public int RoomId{ get; private set; } 
 
-        public Party(long partyId, Hero owner)
+        public Party(long partyId, int roomId,  Hero leader)
         {
             PartyId = partyId;
-            Owner = owner;
+            Leader = leader;
+            RoomId = roomId;
+            JoinParty(leader);
+        }
+
+        public void JoinParty(Hero applier)
+        {
+            Members.Add(applier);
         }
     }
 }

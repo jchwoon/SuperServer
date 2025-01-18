@@ -41,7 +41,7 @@ namespace SuperServer.Game.Room
             RoomData data;
             if (DataManager.RoomDict.TryGetValue(RoomId, out data) == true)
             {
-                Map.LoadMap(data.Name);
+                Map.LoadMap(data.MapName);
                 RoomData = data;
             }
 

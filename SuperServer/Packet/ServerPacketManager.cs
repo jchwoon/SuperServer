@@ -42,13 +42,18 @@ public enum PacketId
   EquipItemToS = 33,
   UnEquipItemToS = 34,
   ChangeSlotTypeToC = 35,
-  CreatePartyToS = 36,
-  ApplyEffectToC = 37,
-  ReleaseEffectToC = 38,
-  ChangeShieldValueToC = 39,
-  ReqLevelUpSkillToS = 40,
-  ReqInitSkillPointToS = 41,
-  UpdateSkillLevelToC = 42,
+  ApplyEffectToC = 36,
+  ReleaseEffectToC = 37,
+  ChangeShieldValueToC = 38,
+  ReqLevelUpSkillToS = 39,
+  ReqInitSkillPointToS = 40,
+  UpdateSkillLevelToC = 41,
+  CreatePartyToS = 42,
+  ReqJoinPartyToS = 43,
+  ResJoinPartyToC = 44,
+  ReqPartyJoinApprovalToC = 45,
+  ReqAllPartyInfoToS = 46,
+  ResAllPartyInfoToC = 47,
 
 }
 
@@ -111,12 +116,16 @@ class PacketManager
         _handler.Add((ushort)PacketId.EquipItemToS, PacketHandler.EquipItemToSHandler);
         _parseHandler.Add((ushort)PacketId.UnEquipItemToS, ParsePacket<UnEquipItemToS>);
         _handler.Add((ushort)PacketId.UnEquipItemToS, PacketHandler.UnEquipItemToSHandler);
-        _parseHandler.Add((ushort)PacketId.CreatePartyToS, ParsePacket<CreatePartyToS>);
-        _handler.Add((ushort)PacketId.CreatePartyToS, PacketHandler.CreatePartyToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqLevelUpSkillToS, ParsePacket<ReqLevelUpSkillToS>);
         _handler.Add((ushort)PacketId.ReqLevelUpSkillToS, PacketHandler.ReqLevelUpSkillToSHandler);
         _parseHandler.Add((ushort)PacketId.ReqInitSkillPointToS, ParsePacket<ReqInitSkillPointToS>);
         _handler.Add((ushort)PacketId.ReqInitSkillPointToS, PacketHandler.ReqInitSkillPointToSHandler);
+        _parseHandler.Add((ushort)PacketId.CreatePartyToS, ParsePacket<CreatePartyToS>);
+        _handler.Add((ushort)PacketId.CreatePartyToS, PacketHandler.CreatePartyToSHandler);
+        _parseHandler.Add((ushort)PacketId.ReqJoinPartyToS, ParsePacket<ReqJoinPartyToS>);
+        _handler.Add((ushort)PacketId.ReqJoinPartyToS, PacketHandler.ReqJoinPartyToSHandler);
+        _parseHandler.Add((ushort)PacketId.ReqAllPartyInfoToS, ParsePacket<ReqAllPartyInfoToS>);
+        _handler.Add((ushort)PacketId.ReqAllPartyInfoToS, PacketHandler.ReqAllPartyInfoToSHandler);
     
     }
 

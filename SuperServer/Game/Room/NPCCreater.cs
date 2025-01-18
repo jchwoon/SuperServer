@@ -16,17 +16,20 @@ namespace SuperServer.Game.Room
             RoomData roomData;
             if (DataManager.RoomDict.TryGetValue(room.RoomId, out roomData))
             {
-                foreach(int npcId in roomData.Npcs)
+                if (roomData.Npcs != null)
                 {
-                    NPC npc = ObjectManager.Instance.Spawn<NPC>();
+                    foreach (int npcId in roomData.Npcs)
+                    {
+                        NPC npc = ObjectManager.Instance.Spawn<NPC>();
 
-                    if(DataManager.NpcDict.TryGetValue(npcId, out NPCData npcData))
-                    {                        
-                        npc.Init(npcData);
-                        GameCommander.Instance.Push(() =>
+                        if (DataManager.NpcDict.TryGetValue(npcId, out NPCData npcData))
                         {
-                            room.EnterRoom<NPC>(npc);
-                        });
+                            npc.Init(npcData);
+                            GameCommander.Instance.Push(() =>
+                            {
+                                room.EnterRoom<NPC>(npc);
+                            });
+                        }
                     }
                 }
             }

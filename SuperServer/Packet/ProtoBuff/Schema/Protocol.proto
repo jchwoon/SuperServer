@@ -205,11 +205,6 @@ message ChangeSlotTypeToC
     ESlotType slotType = 2;
 }
 
-message CreatePartyToS
-{
-
-}
-
 message ApplyEffectToC
 {
     int32 objectId = 1;
@@ -244,4 +239,35 @@ message UpdateSkillLevelToC
     repeated SkillLevelInfo skillLevelInfos = 1;
     int32 skillPoint = 2;
     int32 cost = 3;
+}
+
+message CreatePartyToS
+{
+    int32 roomId = 1;
+}
+
+message ReqJoinPartyToS
+{
+    int64 partyId = 1;
+    int32 roomId = 2;
+}
+
+message ResJoinPartyToC
+{
+
+}
+
+message ReqPartyJoinApprovalToC
+{
+    int32 joinerId = 1;
+}
+
+message ReqAllPartyInfoToS
+{
+    int32 roomId = 1;
+}
+
+message ResAllPartyInfoToC
+{
+    repeated PartyInfo partyInfos = 1;
 }

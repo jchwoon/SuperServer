@@ -29,6 +29,14 @@ public class Hero : Creature
     public InventoryComponent Inventory { get; private set; }
     public HeroGrowthComponent GrowthComponent { get; private set; }
     public CurrencyComponent CurrencyComponent { get; private set; }
+    public EHeroClassType ClassType
+    {
+        get { return HeroInfo.LobbyHeroInfo.ClassType; }
+    }
+    public string Nickname
+    {
+        get { return HeroInfo.LobbyHeroInfo.Nickname; }
+    }
 
     public void Init(DBHero hero, LobbyHero lobbyHero, ClientSession session)
     {
